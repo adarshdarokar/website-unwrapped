@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Globe, Sparkles, Image, Type, Palette, Shapes, Zap, Code, RefreshCw, ExternalLink, Heart, GitCompare, Share2, Menu, X } from 'lucide-react';
+import { Globe, Sparkles, Image, Type, Palette, Shapes, Zap, Code, RefreshCw, ExternalLink, Heart, GitCompare, Share2, Menu, X, History } from 'lucide-react';
 import { UrlInput } from '@/components/UrlInput';
 import { QualityScore } from '@/components/QualityScore';
 import { ImageGallery } from '@/components/ImageGallery';
@@ -14,15 +14,19 @@ import { TechStack } from '@/components/TechStack';
 import { UserMenu } from '@/components/UserMenu';
 import { CompareWebsites } from '@/components/CompareWebsites';
 import { ExportAnalysis } from '@/components/ExportAnalysis';
+import { QuickActions } from '@/components/QuickActions';
+import { RecentAnalyses } from '@/components/RecentAnalyses';
 import { useWebsiteAnalyzer } from '@/hooks/useWebsiteAnalyzer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const { analyzeWebsite, isLoading, error, result } = useWebsiteAnalyzer();
   const [showCompare, setShowCompare] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background overflow-hidden">
@@ -86,6 +90,17 @@ const Index = () => {
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   variant="ghost"
+                  onClick={() => navigate('/history')}
+                  className="rounded-xl text-muted-foreground hover:text-foreground"
+                >
+                  <History className="w-4 h-4 mr-2" />
+                  History
+                </Button>
+              </motion.div>
+              
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button
+                  variant="ghost"
                   onClick={() => setShowCompare(true)}
                   className="rounded-xl text-muted-foreground hover:text-foreground"
                 >
@@ -140,6 +155,18 @@ const Index = () => {
                 className="md:hidden mt-4 overflow-hidden"
               >
                 <div className="glass-card p-4 space-y-2">
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      navigate('/history');
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full justify-start rounded-xl"
+                  >
+                    <History className="w-4 h-4 mr-2" />
+                    History
+                  </Button>
+                  
                   <Button
                     variant="ghost"
                     onClick={() => {
@@ -222,6 +249,16 @@ const Index = () => {
             </motion.p>
 
             <UrlInput onAnalyze={analyzeWebsite} isLoading={isLoading} />
+            
+            {/* Quick Actions */}
+            {!result && !isLoading && (
+              <QuickActions onAnalyze={analyzeWebsite} isLoading={isLoading} />
+            )}
+            
+            {/* Recent Analyses */}
+            {!result && !isLoading && (
+              <RecentAnalyses />
+            )}
           </div>
         </section>
 
