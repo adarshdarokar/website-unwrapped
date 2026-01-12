@@ -193,7 +193,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
       </motion.div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-4xl bg-card/95 backdrop-blur-xl border-border/50">
+        <DialogContent className="max-w-3xl w-[95vw] p-4 md:p-6 bg-card border-border/50 z-[100]">
           <VisuallyHidden>
             <DialogTitle>Image Preview</DialogTitle>
           </VisuallyHidden>
@@ -201,18 +201,25 @@ export function ImageGallery({ images }: ImageGalleryProps) {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="relative"
+              className="flex flex-col"
             >
-              <img
-                src={selectedImage.src}
-                alt={selectedImage.alt || 'Website image'}
-                className="w-full rounded-xl shadow-elevated"
-              />
-              <div className="mt-4 flex items-center justify-between gap-4">
-                <p className="text-sm text-muted-foreground truncate flex-1">
-                  {selectedImage.alt || 'No alt text provided'}
-                </p>
-                <div className="flex gap-2">
+              <div className="relative bg-muted/30 rounded-xl overflow-hidden flex items-center justify-center max-h-[60vh]">
+                <img
+                  src={selectedImage.src}
+                  alt={selectedImage.alt || 'Website image'}
+                  className="max-w-full max-h-[60vh] w-auto h-auto object-contain rounded-lg"
+                />
+              </div>
+              <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">
+                    {selectedImage.alt || 'No alt text provided'}
+                  </p>
+                  <p className="text-xs text-muted-foreground truncate mt-1">
+                    {selectedImage.src}
+                  </p>
+                </div>
+                <div className="flex gap-2 flex-shrink-0">
                   <Button
                     variant="outline"
                     size="sm"

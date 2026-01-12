@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, LogOut, History, Settings, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,12 +9,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/useAuth';
-import { AuthModal } from './AuthModal';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export function UserMenu() {
   const { user, loading, signOut } = useAuth();
-  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     const { error } = await signOut();
@@ -23,6 +22,7 @@ export function UserMenu() {
       toast.error('Failed to sign out');
     } else {
       toast.success('Signed out successfully');
+      navigate('/auth');
     }
   };
 
@@ -34,18 +34,15 @@ export function UserMenu() {
 
   if (!user) {
     return (
-      <>
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <Button
-            onClick={() => setAuthModalOpen(true)}
-            className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground rounded-xl px-5 shadow-lg shadow-primary/20 transition-all"
-          >
-            <User className="w-4 h-4 mr-2" />
-            Sign In
-          </Button>
-        </motion.div>
-        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
-      </>
+      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+        <Button
+          onClick={() => navigate('/auth')}
+          className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground rounded-xl px-5 shadow-lg shadow-primary/20 transition-all"
+        >
+          <User className="w-4 h-4 mr-2" />
+          Sign In
+        </Button>
+      </motion.div>
     );
   }
 
@@ -69,13 +66,20 @@ export function UserMenu() {
           <ChevronDown className="w-4 h-4 text-muted-foreground" />
         </motion.button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56 bg-card/95 backdrop-blur-xl border-border/50 rounded-xl p-2">
+      <DropdownMenuContent 
+        align="end" 
+        className="w-56 bg-card border-border rounded-xl p-2 z-50"
+        sideOffset={8}
+      >
         <div className="px-3 py-2 mb-2">
           <p className="text-sm font-medium truncate">{displayName}</p>
           <p className="text-xs text-muted-foreground truncate">{user.email}</p>
         </div>
         <DropdownMenuSeparator className="bg-border/50" />
-        <DropdownMenuItem className="rounded-lg cursor-pointer">
+        <DropdownMenuItem 
+          onClick={() => navigate('/history')}
+          className="rounded-lg cursor-pointer"
+        >
           <History className="w-4 h-4 mr-2" />
           My Analyses
         </DropdownMenuItem>
