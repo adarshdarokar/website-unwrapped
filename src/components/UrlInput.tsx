@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, RefObject } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Globe, Sparkles, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 interface UrlInputProps {
   onAnalyze: (url: string) => void;
   isLoading: boolean;
+  inputRef?: RefObject<HTMLInputElement>;
 }
 
 const suggestions = [
@@ -16,7 +17,7 @@ const suggestions = [
   { name: 'Linear', url: 'linear.app' },
 ];
 
-export function UrlInput({ onAnalyze, isLoading }: UrlInputProps) {
+export function UrlInput({ onAnalyze, isLoading, inputRef }: UrlInputProps) {
   const [url, setUrl] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
@@ -49,6 +50,7 @@ export function UrlInput({ onAnalyze, isLoading }: UrlInputProps) {
             <Globe className="w-5 h-5" />
           </motion.div>
           <Input
+            ref={inputRef}
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}

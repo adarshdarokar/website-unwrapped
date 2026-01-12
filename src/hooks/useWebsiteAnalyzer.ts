@@ -35,7 +35,7 @@ export function useWebsiteAnalyzer() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<AnalysisResult | null>(null);
 
-  const analyzeWebsite = async (url: string) => {
+  const analyzeWebsite = async (url: string): Promise<AnalysisResult | null> => {
     setIsLoading(true);
     setError(null);
     setResult(null);
@@ -62,12 +62,43 @@ export function useWebsiteAnalyzer() {
       }
 
       setResult(data);
+      return data;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to analyze website');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to analyze website';
+      setError(errorMessage);
+      return null;
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { analyzeWebsite, isLoading, error, result };
+  // Standalone analysis function that doesn't affect hook state
+  const analyzeWebsiteStandalone = async (url: string): Promise<AnalysisResult | null> => {
+    try {
+      let validUrl = url;
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        validUrl = 'https://' + url;
+      }
+
+      new URL(validUrl);
+
+      const { data, error: fnError } = await supabase.functions.invoke('analyze-website', {
+        body: { url: validUrl }
+      });
+
+      if (fnError) {
+        throw new Error(fnError.message);
+      }
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      return data;
+    } catch (err) {
+      return null;
+    }
+  };
+
+  return { analyzeWebsite, analyzeWebsiteStandalone, isLoading, error, result };
 }
