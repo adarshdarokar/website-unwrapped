@@ -83,7 +83,10 @@ export function UserMenu() {
           <History className="w-4 h-4 mr-2" />
           My Analyses
         </DropdownMenuItem>
-        <DropdownMenuItem className="rounded-lg cursor-pointer">
+        <DropdownMenuItem 
+          onClick={() => navigate('/settings')}
+          className="rounded-lg cursor-pointer"
+        >
           <Settings className="w-4 h-4 mr-2" />
           Settings
         </DropdownMenuItem>
