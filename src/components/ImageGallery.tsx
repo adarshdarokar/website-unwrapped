@@ -193,7 +193,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
       </motion.div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-3xl w-[95vw] p-4 md:p-6 bg-card border-border/50 z-[100]">
+        <DialogContent className="max-w-4xl w-[95vw] sm:w-[90vw] p-3 sm:p-6 bg-card border-border/50 z-[100] max-h-[90vh] overflow-y-auto">
           <VisuallyHidden>
             <DialogTitle>Image Preview</DialogTitle>
           </VisuallyHidden>
@@ -203,40 +203,43 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               animate={{ opacity: 1, scale: 1 }}
               className="flex flex-col"
             >
-              <div className="relative bg-muted/30 rounded-xl overflow-hidden flex items-center justify-center max-h-[60vh]">
+              <div className="relative bg-muted/30 rounded-xl overflow-hidden flex items-center justify-center min-h-[200px] sm:min-h-[300px]">
                 <img
                   src={selectedImage.src}
                   alt={selectedImage.alt || 'Website image'}
-                  className="max-w-full max-h-[60vh] w-auto h-auto object-contain rounded-lg"
+                  className="max-w-full max-h-[50vh] sm:max-h-[60vh] w-auto h-auto object-contain rounded-lg"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect fill="%23f0f0f0" width="200" height="200"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999" font-size="14">Image unavailable</text></svg>';
+                  }}
                 />
               </div>
-              <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">
+              <div className="mt-3 sm:mt-4 flex flex-col gap-3">
+                <div className="flex-1 min-w-0 bg-muted/30 p-3 rounded-lg">
+                  <p className="text-xs sm:text-sm font-medium break-words">
                     {selectedImage.alt || 'No alt text provided'}
                   </p>
-                  <p className="text-xs text-muted-foreground truncate mt-1">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground break-all mt-1">
                     {selectedImage.src}
                   </p>
                 </div>
-                <div className="flex gap-2 flex-shrink-0">
+                <div className="flex gap-2 flex-wrap">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => downloadImage(selectedImage.src, selectedImage.alt)}
-                    className="rounded-lg"
+                    className="rounded-lg flex-1 sm:flex-none text-xs sm:text-sm h-9 sm:h-10"
                   >
-                    <Download className="w-4 h-4 mr-2" />
+                    <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                     Download
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     asChild
-                    className="rounded-lg"
+                    className="rounded-lg flex-1 sm:flex-none text-xs sm:text-sm h-9 sm:h-10"
                   >
                     <a href={selectedImage.src} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="w-4 h-4 mr-2" />
+                      <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                       Open
                     </a>
                   </Button>
