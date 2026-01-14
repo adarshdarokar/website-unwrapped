@@ -54,18 +54,15 @@ export function TechStack({ meta, fonts, icons }: TechStackProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card-elevated p-6"
+      className="glass-card-elevated p-4 sm:p-6"
     >
-      <div className="flex items-center gap-3 mb-6">
-        <motion.div 
-          className="p-2.5 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl"
-          whileHover={{ scale: 1.05, rotate: -5 }}
-        >
-          <Code className="w-5 h-5 text-primary" />
-        </motion.div>
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
+          <Code className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+        </div>
         <div>
-          <h3 className="text-lg font-semibold">Tech Stack</h3>
-          <p className="text-sm text-muted-foreground">{technologies.length} technologies detected</p>
+          <h3 className="text-base sm:text-lg font-semibold">Tech Stack</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground">{technologies.length} detected</p>
         </div>
       </div>
 
@@ -79,16 +76,16 @@ export function TechStack({ meta, fonts, icons }: TechStackProps) {
               key={tech.name}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.05, type: 'spring' }}
-              whileHover={{ scale: 1.05, y: -2 }}
-              className="flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-xl hover:bg-muted transition-colors"
+              transition={{ delay: index * 0.04, type: 'spring' }}
+              whileHover={{ scale: 1.03 }}
+              className="flex items-center gap-2 px-2.5 py-1.5 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors"
             >
-              <div className={`w-6 h-6 rounded-md bg-gradient-to-br ${colorClass} flex items-center justify-center`}>
-                <Icon className="w-3 h-3 text-white" />
+              <div className={`w-5 h-5 rounded bg-gradient-to-br ${colorClass} flex items-center justify-center`}>
+                <Icon className="w-2.5 h-2.5 text-white" />
               </div>
               <div>
-                <p className="text-sm font-medium">{tech.name}</p>
-                <p className="text-[10px] text-muted-foreground">{tech.category}</p>
+                <p className="text-xs font-medium leading-tight">{tech.name}</p>
+                <p className="text-[9px] text-muted-foreground leading-tight">{tech.category}</p>
               </div>
             </motion.div>
           );
