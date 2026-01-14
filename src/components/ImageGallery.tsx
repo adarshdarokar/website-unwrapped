@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image as ImageIcon, ExternalLink, Download, ZoomIn, Grid, List } from 'lucide-react';
+import { Image as ImageIcon, ExternalLink, Download, ZoomIn, Grid, List, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { toast } from 'sonner';
 
 interface ImageGalleryProps {
   images: { src: string; alt: string }[];
@@ -30,14 +31,25 @@ export function ImageGallery({ images }: ImageGalleryProps) {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = alt || 'image';
+      const extension = blob.type.split('/')[1] || 'jpg';
+      a.download = `${alt || 'image'}.${extension}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-    } catch (error) {
+      toast.success('Image downloaded');
+    } catch {
       window.open(src, '_blank');
     }
+  };
+
+  const downloadAllImages = () => {
+    validImages.slice(0, 10).forEach((img, index) => {
+      setTimeout(() => {
+        downloadImage(img.src, img.alt || `image-${index + 1}`);
+      }, index * 200);
+    });
+    toast.success(`Downloading ${Math.min(validImages.length, 10)} images`);
   };
 
   const validImages = images.filter(img => !failedImages.has(img.src));
@@ -50,14 +62,14 @@ export function ImageGallery({ images }: ImageGalleryProps) {
         className="glass-card p-8 text-center"
       >
         <motion.div
-          animate={{ y: [0, -5, 0] }}
+          animate={{ y: [0, -4, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <ImageIcon className="w-16 h-16 mx-auto text-muted-foreground/50 mb-4" />
+          <ImageIcon className="w-12 h-12 mx-auto text-muted-foreground/40 mb-4" />
         </motion.div>
-        <p className="text-muted-foreground text-lg">No images found on this website</p>
-        <p className="text-muted-foreground/60 text-sm mt-2">
-          This could be because images are loaded dynamically via JavaScript
+        <p className="text-muted-foreground">No images found</p>
+        <p className="text-muted-foreground/60 text-sm mt-1">
+          Images might be loaded via JavaScript
         </p>
       </motion.div>
     );
@@ -68,39 +80,43 @@ export function ImageGallery({ images }: ImageGalleryProps) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card-elevated p-6 overflow-hidden"
+        className="glass-card-elevated p-4 sm:p-6 overflow-hidden"
       >
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <motion.div 
-              className="p-2.5 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl"
-              whileHover={{ scale: 1.05, rotate: 5 }}
-            >
-              <ImageIcon className="w-5 h-5 text-primary" />
-            </motion.div>
+        <div className="flex items-center justify-between mb-4 sm:mb-6 gap-2">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
+              <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            </div>
             <div>
-              <h3 className="text-lg font-semibold">Images</h3>
-              <p className="text-sm text-muted-foreground">{validImages.length} images discovered</p>
+              <h3 className="text-base sm:text-lg font-semibold">Images</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">{validImages.length} found</p>
             </div>
           </div>
           
-          <div className="flex gap-2">
-            <Button
-              variant={viewMode === 'grid' ? 'default' : 'ghost'}
-              size="icon"
-              onClick={() => setViewMode('grid')}
-              className="w-8 h-8 rounded-lg"
+          <div className="flex items-center gap-1 sm:gap-2">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={downloadAllImages}
+              className="flex items-center gap-1 px-2 sm:px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-medium rounded-lg transition-colors"
             >
-              <Grid className="w-4 h-4" />
-            </Button>
-            <Button
-              variant={viewMode === 'list' ? 'default' : 'ghost'}
-              size="icon"
-              onClick={() => setViewMode('list')}
-              className="w-8 h-8 rounded-lg"
-            >
-              <List className="w-4 h-4" />
-            </Button>
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">All</span>
+            </motion.button>
+            <div className="flex rounded-lg overflow-hidden border border-border/50">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-1.5 sm:p-2 transition-colors ${viewMode === 'grid' ? 'bg-primary/20 text-primary' : 'hover:bg-muted/50'}`}
+              >
+                <Grid className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-1.5 sm:p-2 transition-colors ${viewMode === 'list' ? 'bg-primary/20 text-primary' : 'hover:bg-muted/50'}`}
+              >
+                <List className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -111,34 +127,30 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3"
             >
-              {validImages.slice(0, 16).map((image, index) => (
+              {validImages.slice(0, 12).map((image, index) => (
                 <motion.div
                   key={image.src}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.05, type: 'spring', stiffness: 200 }}
-                  whileHover={{ scale: 1.02, y: -4 }}
+                  transition={{ delay: index * 0.03, type: 'spring', stiffness: 200 }}
+                  className="aspect-square rounded-lg overflow-hidden bg-muted/30 cursor-pointer group relative"
                   onClick={() => setSelectedImage(image)}
-                  className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-muted to-muted/50 cursor-pointer group relative shadow-soft hover:shadow-elevated transition-all duration-300"
                 >
                   {!loadedImages.has(image.src) && (
-                    <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-muted to-muted/30" />
+                    <div className="absolute inset-0 animate-pulse bg-muted/50" />
                   )}
                   <img
                     src={image.src}
                     alt={image.alt || 'Website image'}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     onError={() => handleImageError(image.src)}
                     onLoad={() => handleImageLoad(image.src)}
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-3">
-                    <div className="flex items-center gap-2 w-full">
-                      <ZoomIn className="w-4 h-4 text-white" />
-                      <span className="text-white text-xs truncate flex-1">{image.alt || 'View'}</span>
-                    </div>
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                    <ZoomIn className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </motion.div>
               ))}
@@ -149,19 +161,18 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="space-y-2"
+              className="space-y-1.5"
             >
-              {validImages.slice(0, 10).map((image, index) => (
+              {validImages.slice(0, 8).map((image, index) => (
                 <motion.div
                   key={image.src}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ x: 4 }}
-                  className="flex items-center gap-4 p-3 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer"
+                  transition={{ delay: index * 0.03 }}
+                  className="flex items-center gap-3 p-2 rounded-lg bg-muted/20 hover:bg-muted/40 transition-colors cursor-pointer group"
                   onClick={() => setSelectedImage(image)}
                 >
-                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                  <div className="w-12 h-12 rounded overflow-hidden bg-muted flex-shrink-0">
                     <img
                       src={image.src}
                       alt={image.alt}
@@ -170,82 +181,92 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{image.alt || 'Untitled image'}</p>
+                    <p className="text-sm font-medium truncate">{image.alt || 'Untitled'}</p>
                     <p className="text-xs text-muted-foreground truncate">{image.src}</p>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        downloadImage(image.src, image.alt);
+                      }}
+                      className="p-1.5 hover:bg-muted rounded"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </motion.div>
               ))}
             </motion.div>
           )}
         </AnimatePresence>
 
-        {validImages.length > 16 && (
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-center text-sm text-muted-foreground mt-6 py-3 bg-muted/30 rounded-xl"
-          >
-            +{validImages.length - 16} more images found
-          </motion.p>
+        {validImages.length > 12 && viewMode === 'grid' && (
+          <p className="text-center text-xs text-muted-foreground mt-4">
+            +{validImages.length - 12} more images
+          </p>
         )}
       </motion.div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-4xl w-[95vw] sm:w-[90vw] p-3 sm:p-6 bg-card border-border/50 z-[100] max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl w-[95vw] p-0 bg-background border-border overflow-hidden">
           <VisuallyHidden>
             <DialogTitle>Image Preview</DialogTitle>
           </VisuallyHidden>
           {selectedImage && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col"
-            >
-              <div className="relative bg-muted/30 rounded-xl overflow-hidden flex items-center justify-center min-h-[200px] sm:min-h-[300px]">
+            <div className="relative">
+              {/* Close button */}
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-3 right-3 z-10 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-colors"
+              >
+                <X className="w-4 h-4 text-white" />
+              </button>
+              
+              {/* Image */}
+              <div className="bg-muted/20 flex items-center justify-center min-h-[300px] max-h-[70vh]">
                 <img
                   src={selectedImage.src}
                   alt={selectedImage.alt || 'Website image'}
-                  className="max-w-full max-h-[50vh] sm:max-h-[60vh] w-auto h-auto object-contain rounded-lg"
+                  className="max-w-full max-h-[70vh] w-auto h-auto object-contain"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect fill="%23f0f0f0" width="200" height="200"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999" font-size="14">Image unavailable</text></svg>';
+                    (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
               </div>
-              <div className="mt-3 sm:mt-4 flex flex-col gap-3">
-                <div className="flex-1 min-w-0 bg-muted/30 p-3 rounded-lg">
-                  <p className="text-xs sm:text-sm font-medium break-words">
-                    {selectedImage.alt || 'No alt text provided'}
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground break-all mt-1">
-                    {selectedImage.src}
-                  </p>
-                </div>
-                <div className="flex gap-2 flex-wrap">
+              
+              {/* Footer */}
+              <div className="p-4 border-t border-border/50">
+                <p className="text-sm font-medium mb-1 truncate">
+                  {selectedImage.alt || 'No alt text'}
+                </p>
+                <p className="text-xs text-muted-foreground truncate mb-3">
+                  {selectedImage.src}
+                </p>
+                <div className="flex gap-2">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => downloadImage(selectedImage.src, selectedImage.alt)}
-                    className="rounded-lg flex-1 sm:flex-none text-xs sm:text-sm h-9 sm:h-10"
+                    className="flex-1 h-9 text-xs"
                   >
-                    <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
+                    <Download className="w-3.5 h-3.5 mr-1.5" />
                     Download
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     asChild
-                    className="rounded-lg flex-1 sm:flex-none text-xs sm:text-sm h-9 sm:h-10"
+                    className="flex-1 h-9 text-xs"
                   >
                     <a href={selectedImage.src} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
-                      Open
+                      <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
+                      Open Original
                     </a>
                   </Button>
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
         </DialogContent>
       </Dialog>
