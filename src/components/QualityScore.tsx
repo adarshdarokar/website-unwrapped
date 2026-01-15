@@ -45,24 +45,24 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4 }}
-      className="glass-card-elevated p-4 sm:p-6"
+      className="glass-card-elevated p-4 sm:p-5"
     >
-      <div className="flex items-center gap-3 mb-4">
-        <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
-          <Gauge className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="p-1.5 bg-gradient-to-br from-primary/15 to-accent/15 rounded-lg">
+          <Gauge className="w-4 h-4 text-primary" />
         </div>
         <div>
-          <h3 className="text-base sm:text-lg font-semibold">Quality Score</h3>
-          <p className="text-xs sm:text-sm text-muted-foreground">Overall rating</p>
+          <h3 className="text-sm font-semibold">Quality Score</h3>
+          <p className="text-[10px] text-muted-foreground">Overall rating</p>
         </div>
       </div>
       
       <div className="flex flex-col items-center">
-        <div className="relative w-28 h-28 sm:w-32 sm:h-32">
+        <div className="relative w-24 h-24 sm:w-28 sm:h-28">
           {/* Background glow */}
           <motion.div 
-            className={`absolute inset-2 rounded-full blur-lg opacity-40 bg-gradient-to-br ${getScoreColor()}`}
-            animate={{ scale: [1, 1.05, 1] }}
+            className={`absolute inset-2 rounded-full blur-lg opacity-30 bg-gradient-to-br ${getScoreColor()}`}
+            animate={{ scale: [1, 1.03, 1] }}
             transition={{ duration: 2.5, repeat: Infinity }}
           />
           
@@ -73,8 +73,8 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
               r="45"
               fill="none"
               stroke="hsl(var(--muted))"
-              strokeWidth="8"
-              className="opacity-30"
+              strokeWidth="6"
+              className="opacity-20"
             />
             <motion.circle
               cx="50%"
@@ -82,7 +82,7 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
               r="45"
               fill="none"
               stroke="url(#scoreGradient)"
-              strokeWidth="8"
+              strokeWidth="6"
               strokeLinecap="round"
               strokeDasharray={circumference}
               initial={{ strokeDashoffset: circumference }}
@@ -102,11 +102,11 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4, type: 'spring' }}
-              className="text-3xl sm:text-4xl font-bold font-display"
+              className="text-2xl sm:text-3xl font-bold font-display"
             >
               {score}
             </motion.span>
-            <span className="text-[10px] text-muted-foreground">/ 100</span>
+            <span className="text-[9px] text-muted-foreground">/ 100</span>
           </div>
         </div>
         
@@ -114,31 +114,31 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className={`mt-3 px-3 py-1.5 rounded-full bg-gradient-to-r ${getScoreColor()}`}
+          className={`mt-2 px-2.5 py-1 rounded-full bg-gradient-to-r ${getScoreColor()}`}
         >
-          <span className="text-white font-medium text-xs flex items-center gap-1.5">
+          <span className="text-white font-medium text-[10px] flex items-center gap-1">
             {emoji} {label}
           </span>
         </motion.div>
       </div>
 
       {/* Metrics Grid */}
-      <div className="mt-5 grid grid-cols-2 gap-2">
+      <div className="mt-4 grid grid-cols-2 gap-1.5">
         {metrics.map((metric, index) => (
           <motion.div
             key={metric.label}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 + index * 0.08 }}
-            className={`p-2.5 rounded-lg transition-colors ${
+            className={`p-2 rounded-lg transition-colors ${
               metric.active 
-                ? 'bg-accent/30 border border-primary/20' 
-                : 'bg-muted/20'
+                ? 'bg-primary/5 border border-primary/10' 
+                : 'bg-muted/10'
             }`}
           >
-            <div className="flex items-center gap-2">
-              <metric.icon className={`w-3.5 h-3.5 ${metric.active ? 'text-primary' : 'text-muted-foreground/50'}`} />
-              <span className={`text-xs font-medium ${metric.active ? 'text-foreground' : 'text-muted-foreground/50'}`}>
+            <div className="flex items-center gap-1.5">
+              <metric.icon className={`w-3 h-3 ${metric.active ? 'text-primary' : 'text-muted-foreground/40'}`} />
+              <span className={`text-[10px] font-medium ${metric.active ? 'text-foreground' : 'text-muted-foreground/40'}`}>
                 {metric.label}
               </span>
             </div>
@@ -151,10 +151,10 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        className="mt-3 p-2 bg-muted/20 rounded-lg text-center"
+        className="mt-2 p-1.5 bg-muted/10 rounded-lg text-center"
       >
-        <p className="text-xs text-muted-foreground">
-          <span className="font-medium text-foreground">{meta.imageCount}</span> images
+        <p className="text-[10px] text-muted-foreground">
+          <span className="font-medium text-foreground">{meta.imageCount}</span> images found
         </p>
       </motion.div>
     </motion.div>

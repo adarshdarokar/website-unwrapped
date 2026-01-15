@@ -127,7 +127,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3"
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
             >
               {validImages.slice(0, 12).map((image, index) => (
                 <motion.div
@@ -135,7 +135,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.03, type: 'spring', stiffness: 200 }}
-                  className="aspect-square rounded-lg overflow-hidden bg-muted/30 cursor-pointer group relative"
+                  className="aspect-[4/3] rounded-xl overflow-hidden bg-muted/30 cursor-pointer group relative border border-border/30 hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-md"
                   onClick={() => setSelectedImage(image)}
                 >
                   {!loadedImages.has(image.src) && (
@@ -144,13 +144,16 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                   <img
                     src={image.src}
                     alt={image.alt || 'Website image'}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-full object-contain bg-muted/20 transition-transform duration-300 group-hover:scale-102"
                     onError={() => handleImageError(image.src)}
                     onLoad={() => handleImageLoad(image.src)}
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                    <ZoomIn className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3">
+                    <div className="flex items-center gap-1 text-white text-xs font-medium">
+                      <ZoomIn className="w-3.5 h-3.5" />
+                      <span>View</span>
+                    </div>
                   </div>
                 </motion.div>
               ))}
