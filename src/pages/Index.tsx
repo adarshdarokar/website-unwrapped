@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Globe, Sparkles, Image, Type, Palette, Shapes, Zap, Code, RefreshCw, ExternalLink, Heart, GitCompare, Share2, Menu, X, History, Keyboard, Command } from 'lucide-react';
+import { Globe, Image, Type, Palette, Shapes, Zap, RefreshCw, ExternalLink, History, Command, GitCompare, Share2, Menu, X, Keyboard } from 'lucide-react';
 import { UrlInput } from '@/components/UrlInput';
 import { QualityScore } from '@/components/QualityScore';
 import { ImageGallery } from '@/components/ImageGallery';
@@ -18,6 +18,9 @@ import { QuickActions } from '@/components/QuickActions';
 import { RecentAnalyses } from '@/components/RecentAnalyses';
 import { CommandPalette } from '@/components/CommandPalette';
 import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
+import { HeroPreviewCard } from '@/components/HeroPreviewCard';
+import { TrustSection } from '@/components/TrustSection';
+import { FeatureRow } from '@/components/FeatureRow';
 import { useWebsiteAnalyzer } from '@/hooks/useWebsiteAnalyzer';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -35,14 +38,12 @@ const Index = () => {
   const navigate = useNavigate();
   const urlInputRef = useRef<HTMLInputElement>(null);
 
-  // Toggle theme function
   const toggleTheme = useCallback(() => {
     document.documentElement.classList.toggle('dark');
     const isDark = document.documentElement.classList.contains('dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   }, []);
 
-  // Keyboard shortcuts
   useKeyboardShortcuts({
     onSearch: () => setShowCommandPalette(true),
     onHistory: () => navigate('/history'),
@@ -61,537 +62,316 @@ const Index = () => {
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-background overflow-hidden">
-        {/* Animated gradient background */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <motion.div 
-            className="absolute top-0 left-1/4 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-gradient-to-br from-primary/8 via-accent/5 to-transparent rounded-full blur-3xl"
-            animate={{ 
-              x: [0, 50, 0],
-              y: [0, 30, 0],
-              scale: [1, 1.1, 1]
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div 
-            className="absolute bottom-1/4 right-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-gradient-to-tr from-accent/8 via-secondary/5 to-transparent rounded-full blur-3xl"
-            animate={{ 
-              x: [0, -40, 0],
-              y: [0, -50, 0],
-              scale: [1, 1.2, 1]
-            }}
-            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div 
-            className="absolute top-1/2 left-1/2 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-gradient-to-bl from-primary/5 to-transparent rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
-            animate={{ 
-              rotate: [0, 360],
-              scale: [1, 1.15, 1]
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          />
-        </div>
-
-        <div className="relative z-10">
-          {/* Header */}
-          <header className="py-4 md:py-6 px-4 sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-7xl mx-auto flex items-center justify-between"
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
+          <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+            <motion.div 
+              className="flex items-center gap-2.5 cursor-pointer"
+              whileHover={{ opacity: 0.8 }}
+              onClick={() => window.location.reload()}
             >
-              <motion.div 
-                className="flex items-center gap-2 md:gap-3 cursor-pointer"
-                whileHover={{ scale: 1.02 }}
-                onClick={() => window.location.reload()}
-              >
-                <motion.div 
-                  className="p-2 md:p-2.5 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl"
-                  whileHover={{ rotate: 10 }}
-                >
-                  <Globe className="w-5 h-5 md:w-6 md:h-6 text-primary" />
-                </motion.div>
-                <div>
-                  <span className="text-lg md:text-xl font-display font-bold">WebVision</span>
-                  <span className="text-[10px] md:text-xs text-muted-foreground block">Design Analyzer</span>
-                </div>
-              </motion.div>
-              
-              {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center gap-1">
-                {/* Command Palette Trigger */}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button
-                        variant="outline"
-                        onClick={() => setShowCommandPalette(true)}
-                        className="rounded-xl text-muted-foreground hover:text-foreground gap-2 px-3"
-                      >
-                        <Command className="w-4 h-4" />
-                        <span className="hidden lg:inline">Quick Actions</span>
-                        <kbd className="ml-1 pointer-events-none hidden lg:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium">
-                          ⌘K
-                        </kbd>
-                      </Button>
-                    </motion.div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Open command palette (⌘K)</p>
-                  </TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button
-                        variant="ghost"
-                        onClick={() => navigate('/history')}
-                        className="rounded-xl text-muted-foreground hover:text-foreground"
-                      >
-                        <History className="w-4 h-4 mr-2" />
-                        History
-                      </Button>
-                    </motion.div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>View history (H)</p>
-                  </TooltipContent>
-                </Tooltip>
-                
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                      <Button
-                        variant="ghost"
-                        onClick={() => setShowCompare(true)}
-                        className="rounded-xl text-muted-foreground hover:text-foreground"
-                      >
-                        <GitCompare className="w-4 h-4 mr-2" />
-                        Compare
-                      </Button>
-                    </motion.div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Compare websites (C)</p>
-                  </TooltipContent>
-                </Tooltip>
-                
-                {result && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        whileHover={{ scale: 1.02 }} 
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Button
-                          variant="ghost"
-                          onClick={() => setShowExport(true)}
-                          className="rounded-xl text-muted-foreground hover:text-foreground"
-                        >
-                          <Share2 className="w-4 h-4 mr-2" />
-                          Export
-                        </Button>
-                      </motion.div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Export analysis (E)</p>
-                    </TooltipContent>
-                  </Tooltip>
-                )}
-
-                <div className="w-px h-6 bg-border mx-1" />
-                
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setShowShortcuts(true)}
-                      className="rounded-xl text-muted-foreground hover:text-foreground"
-                    >
-                      <Keyboard className="w-4 h-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Keyboard shortcuts</p>
-                  </TooltipContent>
-                </Tooltip>
-                
-                <ThemeToggle />
-                <UserMenu />
+              <div className="p-1.5 bg-primary/10 rounded-lg">
+                <Globe className="w-5 h-5 text-primary" />
               </div>
+              <span className="text-lg font-display font-semibold">WebVision</span>
+            </motion.div>
+            
+            {/* Desktop Nav */}
+            <div className="hidden md:flex items-center gap-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowCommandPalette(true)}
+                    className="gap-2 text-muted-foreground hover:text-foreground"
+                  >
+                    <Command className="w-4 h-4" />
+                    <kbd className="hidden lg:inline px-1.5 py-0.5 text-[10px] font-mono bg-muted rounded">⌘K</kbd>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Quick actions</TooltipContent>
+              </Tooltip>
 
-              {/* Mobile Menu Button */}
-              <div className="flex md:hidden items-center gap-2">
-                <ThemeToggle />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/history')}
+                className="gap-2 text-muted-foreground hover:text-foreground"
+              >
+                <History className="w-4 h-4" />
+                <span className="hidden lg:inline">History</span>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowCompare(true)}
+                className="gap-2 text-muted-foreground hover:text-foreground"
+              >
+                <GitCompare className="w-4 h-4" />
+                <span className="hidden lg:inline">Compare</span>
+              </Button>
+              
+              {result && (
                 <Button
                   variant="ghost"
-                  size="icon"
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="rounded-xl"
+                  size="sm"
+                  onClick={() => setShowExport(true)}
+                  className="gap-2 text-muted-foreground hover:text-foreground"
                 >
-                  {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                  <Share2 className="w-4 h-4" />
+                  <span className="hidden lg:inline">Export</span>
                 </Button>
+              )}
+
+              <div className="w-px h-5 bg-border mx-1" />
+              
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowShortcuts(true)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <Keyboard className="w-4 h-4" />
+              </Button>
+              
+              <ThemeToggle />
+              <UserMenu />
+            </div>
+
+            {/* Mobile */}
+            <div className="flex md:hidden items-center gap-1">
+              <ThemeToggle />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </Button>
+            </div>
+          </div>
+
+          {/* Mobile Menu */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="md:hidden border-t border-border/50 bg-card"
+              >
+                <div className="p-4 space-y-2">
+                  <Button variant="ghost" className="w-full justify-start" onClick={() => { setShowCommandPalette(true); setMobileMenuOpen(false); }}>
+                    <Command className="w-4 h-4 mr-2" /> Quick Actions
+                  </Button>
+                  <Button variant="ghost" className="w-full justify-start" onClick={() => { navigate('/history'); setMobileMenuOpen(false); }}>
+                    <History className="w-4 h-4 mr-2" /> History
+                  </Button>
+                  <Button variant="ghost" className="w-full justify-start" onClick={() => { setShowCompare(true); setMobileMenuOpen(false); }}>
+                    <GitCompare className="w-4 h-4 mr-2" /> Compare
+                  </Button>
+                  <div className="pt-2 border-t border-border/50">
+                    <UserMenu />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </header>
+
+        {/* Hero Section */}
+        <section className="px-4 pt-16 md:pt-24 pb-8">
+          <div className="max-w-3xl mx-auto text-center">
+            <motion.span 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-block px-3 py-1 bg-primary/5 text-primary text-xs font-medium rounded-full border border-primary/10 mb-6"
+            >
+              Analyze any website instantly
+            </motion.span>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-3xl md:text-4xl lg:text-5xl font-display font-semibold tracking-tight text-balance mb-4"
+            >
+              Discover the design DNA
+              <br />
+              <span className="text-muted-foreground">of any website</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-muted-foreground text-base md:text-lg max-w-lg mx-auto mb-8"
+            >
+              Extract colors, fonts, images, and icons. Get a quality score and understand what makes great design.
+            </motion.p>
+
+            <UrlInput onAnalyze={analyzeWebsite} isLoading={isLoading} inputRef={urlInputRef} />
+            
+            {/* Preview Card - only show when no result */}
+            {!result && !isLoading && <HeroPreviewCard />}
+            
+            {/* Feature Row */}
+            {!result && !isLoading && <FeatureRow />}
+            
+            {/* Trust Section */}
+            {!result && !isLoading && <TrustSection />}
+            
+            {/* Quick Actions */}
+            {!result && !isLoading && <QuickActions onAnalyze={analyzeWebsite} isLoading={isLoading} />}
+            
+            {/* Recent Analyses */}
+            {!result && !isLoading && <RecentAnalyses />}
+          </div>
+        </section>
+
+        {/* Error State */}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="max-w-xl mx-auto px-4 mb-8"
+            >
+              <div className="p-4 bg-destructive/5 border border-destructive/20 rounded-xl">
+                <p className="text-destructive font-medium text-sm mb-1">{error}</p>
+                <p className="text-xs text-muted-foreground">
+                  Please check the URL and try again.
+                </p>
               </div>
             </motion.div>
-
-            {/* Mobile Menu */}
-            <AnimatePresence>
-              {mobileMenuOpen && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="md:hidden mt-4 overflow-hidden"
-                >
-                  <div className="glass-card p-4 space-y-2">
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        setShowCommandPalette(true);
-                        setMobileMenuOpen(false);
-                      }}
-                      className="w-full justify-start rounded-xl"
-                    >
-                      <Command className="w-4 h-4 mr-2" />
-                      Quick Actions
-                    </Button>
-                    
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        navigate('/history');
-                        setMobileMenuOpen(false);
-                      }}
-                      className="w-full justify-start rounded-xl"
-                    >
-                      <History className="w-4 h-4 mr-2" />
-                      History
-                    </Button>
-                    
-                    <Button
-                      variant="ghost"
-                      onClick={() => {
-                        setShowCompare(true);
-                        setMobileMenuOpen(false);
-                      }}
-                      className="w-full justify-start rounded-xl"
-                    >
-                      <GitCompare className="w-4 h-4 mr-2" />
-                      Compare Websites
-                    </Button>
-                    
-                    {result && (
-                      <Button
-                        variant="ghost"
-                        onClick={() => {
-                          setShowExport(true);
-                          setMobileMenuOpen(false);
-                        }}
-                        className="w-full justify-start rounded-xl"
-                      >
-                        <Share2 className="w-4 h-4 mr-2" />
-                        Export Analysis
-                      </Button>
-                    )}
-                    
-                    <div className="pt-2 border-t border-border/50">
-                      <UserMenu />
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </header>
-
-          {/* Hero Section */}
-          <section className="px-4 py-6 md:py-12">
-            <div className="max-w-3xl mx-auto text-center">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                className="mb-3 md:mb-4"
-              >
-                <motion.span 
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 text-primary rounded-full text-xs font-medium border border-primary/10"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <motion.div
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                  >
-                    <Sparkles className="w-3 h-3" />
-                  </motion.div>
-                  Analyze any website instantly
-                </motion.span>
-              </motion.div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-2xl sm:text-3xl md:text-4xl font-display font-semibold mb-3 md:mb-4 text-balance leading-snug tracking-tight"
-              >
-                Discover the{' '}
-                <span className="bg-gradient-to-r from-primary via-primary/70 to-accent bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
-                  Design DNA
-                </span>
-                {' '}of Any Website
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-sm md:text-base text-muted-foreground mb-6 md:mb-8 max-w-xl mx-auto"
-              >
-                Extract colors, fonts, images, icons, and animations from any URL.
-                Get a quality score and see exactly what makes a website tick.
-              </motion.p>
-
-              <UrlInput onAnalyze={analyzeWebsite} isLoading={isLoading} inputRef={urlInputRef} />
-              
-              {/* Keyboard hint */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="text-xs text-muted-foreground mt-4"
-              >
-                Press{' '}
-                <kbd className="px-1.5 py-0.5 rounded bg-muted text-[10px] font-mono">⌘K</kbd>
-                {' '}for quick actions or{' '}
-                <kbd className="px-1.5 py-0.5 rounded bg-muted text-[10px] font-mono">H</kbd>
-                {' '}for history
-              </motion.p>
-              
-              {/* Quick Actions */}
-              {!result && !isLoading && (
-                <QuickActions onAnalyze={analyzeWebsite} isLoading={isLoading} />
-              )}
-              
-              {/* Recent Analyses */}
-              {!result && !isLoading && (
-                <RecentAnalyses />
-              )}
-            </div>
-          </section>
-
-          {/* Error State */}
-          <AnimatePresence>
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                className="max-w-2xl mx-auto px-4 mb-8"
-              >
-                <div className="glass-card p-4 md:p-6 border-destructive/30 bg-destructive/5">
-                  <p className="text-destructive font-medium mb-2 text-sm md:text-base">
-                    {error}
-                  </p>
-                  <p className="text-xs md:text-sm text-muted-foreground">
-                    Please check the URL and try again. Some websites may block analysis requests due to CORS policies.
-                  </p>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Loading State */}
-          <AnimatePresence>
-            {isLoading && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="max-w-7xl mx-auto px-4"
-              >
-                <LoadingState />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Results */}
-          <AnimatePresence>
-            {result && !isLoading && (
-              <motion.section
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="max-w-7xl mx-auto px-4 pb-20"
-              >
-                {/* Analyzed URL Header */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-center mb-6 md:mb-10"
-                >
-                  <p className="text-xs md:text-sm text-muted-foreground mb-2">Analysis complete for</p>
-                  <div className="flex items-center justify-center gap-2 md:gap-3 flex-wrap">
-                    <a 
-                      href={result.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline font-medium flex items-center gap-2 max-w-xs md:max-w-lg truncate text-sm md:text-base"
-                    >
-                      <Globe className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" />
-                      <span className="truncate">{result.url}</span>
-                      <ExternalLink className="w-2.5 h-2.5 md:w-3 md:h-3 flex-shrink-0" />
-                    </a>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => analyzeWebsite(result.url)}
-                      className="text-muted-foreground hover:text-foreground text-xs md:text-sm"
-                    >
-                      <RefreshCw className="w-3 h-3 md:w-4 md:h-4 mr-1" />
-                      Re-analyze
-                    </Button>
-                  </div>
-                </motion.div>
-
-                <div className="grid lg:grid-cols-[320px_1fr] gap-5 md:gap-6 items-start">
-                  {/* Left Column */}
-                  <div className="space-y-4 lg:sticky lg:top-24">
-                    <QualityScore score={result.score} meta={result.meta} />
-                    <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
-                  </div>
-
-                  {/* Right Column - Design Elements */}
-                  <div>
-                    <Tabs defaultValue="images" className="w-full">
-                      <TabsList className="grid grid-cols-5 mb-4 md:mb-6 bg-muted/50 p-1 md:p-1.5 rounded-xl h-auto">
-                        {[
-                          { value: 'images', icon: Image, label: 'Images' },
-                          { value: 'colors', icon: Palette, label: 'Colors' },
-                          { value: 'fonts', icon: Type, label: 'Fonts' },
-                          { value: 'icons', icon: Shapes, label: 'Icons' },
-                          { value: 'animations', icon: Zap, label: 'Motion' },
-                        ].map((tab) => (
-                          <TabsTrigger 
-                            key={tab.value}
-                            value={tab.value} 
-                            className="flex items-center justify-center gap-1 md:gap-2 data-[state=active]:bg-card data-[state=active]:shadow-soft rounded-lg py-2 md:py-2.5 transition-all"
-                          >
-                            <tab.icon className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                            <span className="hidden sm:inline text-xs md:text-sm">{tab.label}</span>
-                          </TabsTrigger>
-                        ))}
-                      </TabsList>
-
-                      <TabsContent value="images" className="mt-0">
-                        <ImageGallery images={result.images} />
-                      </TabsContent>
-
-                      <TabsContent value="colors" className="mt-0">
-                        <ColorPalette colors={result.colors} />
-                      </TabsContent>
-
-                      <TabsContent value="fonts" className="mt-0">
-                        <FontDisplay fonts={result.fonts} />
-                      </TabsContent>
-
-                      <TabsContent value="icons" className="mt-0">
-                        <IconDisplay icons={result.icons} />
-                      </TabsContent>
-
-                      <TabsContent value="animations" className="mt-0">
-                        <AnimationDisplay animations={result.animations} />
-                      </TabsContent>
-                    </Tabs>
-                  </div>
-                </div>
-              </motion.section>
-            )}
-          </AnimatePresence>
-
-          {/* Feature Cards - Show when no result */}
-          {!result && !isLoading && (
-            <section className="max-w-6xl mx-auto px-4 pb-20">
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5"
-              >
-                {[
-                  {
-                    icon: Palette,
-                    title: 'Color Extraction',
-                    description: 'Discover the complete color palette with one-click copy',
-                    gradient: 'from-rose-500/20 to-pink-500/20'
-                  },
-                  {
-                    icon: Type,
-                    title: 'Typography Analysis',
-                    description: 'Identify all fonts with live previews from Google Fonts',
-                    gradient: 'from-violet-500/20 to-purple-500/20'
-                  },
-                  {
-                    icon: Image,
-                    title: 'Image Gallery',
-                    description: 'View and download all images with zoom functionality',
-                    gradient: 'from-blue-500/20 to-cyan-500/20'
-                  },
-                  {
-                    icon: Shapes,
-                    title: 'Icon Detection',
-                    description: 'Find SVGs and identify popular icon libraries',
-                    gradient: 'from-orange-500/20 to-amber-500/20'
-                  },
-                  {
-                    icon: Zap,
-                    title: 'Animation Analysis',
-                    description: 'Discover CSS animations, transitions, and keyframes',
-                    gradient: 'from-green-500/20 to-emerald-500/20'
-                  },
-                  {
-                    icon: Code,
-                    title: 'Tech Stack',
-                    description: 'Identify frameworks, libraries, and best practices',
-                    gradient: 'from-indigo-500/20 to-blue-500/20'
-                  },
-                ].map((feature, index) => (
-                  <motion.div
-                    key={feature.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
-                    whileHover={{ y: -4, scale: 1.02 }}
-                    className="glass-card p-5 md:p-6 hover:shadow-elevated transition-all duration-300 group cursor-default"
-                  >
-                    <motion.div 
-                      className={`p-2.5 md:p-3 bg-gradient-to-br ${feature.gradient} rounded-xl w-fit mb-3 md:mb-4 group-hover:scale-110 transition-transform`}
-                    >
-                      <feature.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
-                    </motion.div>
-                    <h3 className="text-base md:text-lg font-semibold mb-1 md:mb-2">{feature.title}</h3>
-                    <p className="text-muted-foreground text-xs md:text-sm">{feature.description}</p>
-                  </motion.div>
-                ))}
-              </motion.div>
-
-              {/* Made with love footer */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-                className="text-center mt-12 md:mt-16"
-              >
-                <p className="text-xs md:text-sm text-muted-foreground flex items-center justify-center gap-2">
-                  Made with <Heart className="w-3 h-3 md:w-4 md:h-4 text-rose-500 fill-rose-500" /> for designers & developers
-                </p>
-              </motion.div>
-            </section>
           )}
-        </div>
+        </AnimatePresence>
+
+        {/* Loading State */}
+        <AnimatePresence>
+          {isLoading && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="max-w-6xl mx-auto px-4"
+            >
+              <LoadingState />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Results */}
+        <AnimatePresence>
+          {result && !isLoading && (
+            <motion.section
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="max-w-6xl mx-auto px-4 pb-20"
+            >
+              {/* Result Header */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center mb-8"
+              >
+                <p className="text-xs text-muted-foreground mb-2">Analysis complete</p>
+                <div className="flex items-center justify-center gap-3 flex-wrap">
+                  <a 
+                    href={result.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline font-medium flex items-center gap-2 text-sm"
+                  >
+                    <Globe className="w-4 h-4" />
+                    <span className="truncate max-w-xs">{result.url}</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => analyzeWebsite(result.url)}
+                    className="text-muted-foreground hover:text-foreground text-xs"
+                  >
+                    <RefreshCw className="w-3 h-3 mr-1" />
+                    Re-analyze
+                  </Button>
+                </div>
+              </motion.div>
+
+              <div className="grid lg:grid-cols-[280px_1fr] gap-6">
+                {/* Sidebar */}
+                <div className="space-y-4 lg:sticky lg:top-20 lg:self-start">
+                  <QualityScore score={result.score} meta={result.meta} />
+                  <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
+                </div>
+
+                {/* Main Content */}
+                <div>
+                  <Tabs defaultValue="colors" className="w-full">
+                    <TabsList className="w-full grid grid-cols-5 bg-muted/50 p-1 rounded-xl h-auto mb-6">
+                      {[
+                        { value: 'colors', icon: Palette, label: 'Colors' },
+                        { value: 'fonts', icon: Type, label: 'Fonts' },
+                        { value: 'images', icon: Image, label: 'Images' },
+                        { value: 'icons', icon: Shapes, label: 'Icons' },
+                        { value: 'animations', icon: Zap, label: 'Motion' },
+                      ].map((tab) => (
+                        <TabsTrigger 
+                          key={tab.value}
+                          value={tab.value} 
+                          className="flex items-center justify-center gap-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg py-2.5 text-xs md:text-sm transition-all"
+                        >
+                          <tab.icon className="w-4 h-4" />
+                          <span className="hidden sm:inline">{tab.label}</span>
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+
+                    <TabsContent value="colors" className="mt-0">
+                      <ColorPalette colors={result.colors} />
+                    </TabsContent>
+
+                    <TabsContent value="fonts" className="mt-0">
+                      <FontDisplay fonts={result.fonts} />
+                    </TabsContent>
+
+                    <TabsContent value="images" className="mt-0">
+                      <ImageGallery images={result.images} />
+                    </TabsContent>
+
+                    <TabsContent value="icons" className="mt-0">
+                      <IconDisplay icons={result.icons} />
+                    </TabsContent>
+
+                    <TabsContent value="animations" className="mt-0">
+                      <AnimationDisplay animations={result.animations} />
+                    </TabsContent>
+                  </Tabs>
+                </div>
+              </div>
+            </motion.section>
+          )}
+        </AnimatePresence>
+
+        {/* Footer */}
+        {!result && !isLoading && (
+          <motion.footer
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="py-12 text-center"
+          >
+            <p className="text-xs text-muted-foreground/60">
+              Built for designers & developers
+            </p>
+          </motion.footer>
+        )}
 
         {/* Modals */}
         <CompareWebsites isOpen={showCompare} onClose={() => setShowCompare(false)} />
