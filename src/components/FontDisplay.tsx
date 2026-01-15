@@ -87,152 +87,81 @@ export function FontDisplay({ fonts }: FontDisplayProps) {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="glass-card-elevated p-4 sm:p-6"
-    >
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
-          <Type className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-        </div>
+    <div className="bg-card border border-border rounded-xl p-5">
+      <div className="flex items-center justify-between mb-5">
         <div>
-          <h3 className="text-base sm:text-lg font-semibold">Typography</h3>
-          <p className="text-xs sm:text-sm text-muted-foreground">
-            {allFonts.length + uniqueGoogleFonts.length} fonts discovered
-          </p>
+          <h3 className="text-sm font-medium">Typography</h3>
+          <p className="text-xs text-muted-foreground">{allFonts.length + uniqueGoogleFonts.length} fonts</p>
         </div>
       </div>
 
-      {/* Google Fonts with live preview */}
+      {/* Google Fonts */}
       {uniqueGoogleFonts.length > 0 && (
-        <div className="space-y-3 mb-6">
-          <p className="text-sm font-medium flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-primary" />
-            Google Fonts
-          </p>
-          <div className="space-y-3">
-            {uniqueGoogleFonts.map((font, index) => (
-              <motion.div
-                key={font}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="p-4 bg-muted/30 rounded-xl border border-border/50 hover:border-primary/30 transition-colors"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-primary">{font}</span>
-                    {loadedFonts.has(font) && (
-                      <span className="text-[10px] px-2 py-0.5 bg-green-500/20 text-green-500 rounded-full">
-                        Loaded
-                      </span>
+        <div className="space-y-3 mb-5">
+          {uniqueGoogleFonts.map((font, index) => (
+            <motion.div
+              key={font}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="p-4 bg-muted/30 rounded-lg"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium">{font}</span>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => copyFontName(font)}
+                    className="p-1.5 hover:bg-muted rounded-md transition-colors"
+                  >
+                    {copiedFont === font ? (
+                      <Check className="w-3.5 h-3.5 text-success" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5 text-muted-foreground" />
                     )}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => copyFontName(font)}
-                      className="p-1.5 hover:bg-muted rounded-md transition-colors"
-                      title="Copy font name"
-                    >
-                      {copiedFont === font ? (
-                        <Check className="w-3.5 h-3.5 text-green-500" />
-                      ) : (
-                        <Copy className="w-3.5 h-3.5 text-muted-foreground" />
-                      )}
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => downloadFontCSS(font)}
-                      className="p-1.5 hover:bg-muted rounded-md transition-colors"
-                      title="Download CSS"
-                    >
-                      <Download className="w-3.5 h-3.5 text-muted-foreground" />
-                    </motion.button>
-                    <a
-                      href={`https://fonts.google.com/specimen/${font.replace(/\s+/g, '+')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-1.5 hover:bg-muted rounded-md transition-colors"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
-                    </a>
-                  </div>
+                  </button>
+                  <button
+                    onClick={() => downloadFontCSS(font)}
+                    className="p-1.5 hover:bg-muted rounded-md transition-colors"
+                  >
+                    <Download className="w-3.5 h-3.5 text-muted-foreground" />
+                  </button>
+                  <a
+                    href={`https://fonts.google.com/specimen/${font.replace(/\s+/g, '+')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1.5 hover:bg-muted rounded-md transition-colors"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
+                  </a>
                 </div>
-                
-                {/* Font Preview - only show when loaded */}
-                <div 
-                  className="space-y-1"
-                  style={{ 
-                    fontFamily: loadedFonts.has(font) ? `"${font}", sans-serif` : 'inherit',
-                    opacity: loadedFonts.has(font) ? 1 : 0.5
-                  }}
-                >
-                  <p className="text-xl sm:text-2xl font-medium">
-                    {font}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    The quick brown fox jumps over the lazy dog
-                  </p>
-                  <p className="text-xs text-muted-foreground/60">
-                    ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+              </div>
+              
+              <div style={{ fontFamily: loadedFonts.has(font) ? `"${font}", sans-serif` : 'inherit' }}>
+                <p className="text-lg font-medium">{font}</p>
+                <p className="text-sm text-muted-foreground">The quick brown fox jumps over the lazy dog</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
       )}
 
-      {/* Detected fonts */}
+      {/* CSS Fonts */}
       {allFonts.length > 0 && (
-        <div className="space-y-3">
-          <p className="text-sm font-medium flex items-center gap-2">
-            <Type className="w-4 h-4" />
-            CSS Font Families
-          </p>
-          <div className="grid gap-2">
-            {allFonts.slice(0, 6).map((font, index) => (
-              <motion.button
-                key={font}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + index * 0.05 }}
-                onClick={() => copyFontName(font)}
-                className="p-3 bg-muted/30 rounded-lg text-left hover:bg-muted/50 transition-colors group"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-0.5">Font Family</p>
-                    <p className="text-sm font-medium truncate">{font}</p>
-                  </div>
-                  {copiedFont === font ? (
-                    <Check className="w-4 h-4 text-green-500" />
-                  ) : (
-                    <Copy className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                  )}
-                </div>
-              </motion.button>
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-2">
+          {allFonts.slice(0, 8).map((font, index) => (
+            <motion.button
+              key={font}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 + index * 0.03 }}
+              onClick={() => copyFontName(font)}
+              className="px-3 py-1.5 bg-muted/50 rounded-full text-xs font-medium hover:bg-muted transition-colors"
+            >
+              {font}
+            </motion.button>
+          ))}
         </div>
       )}
-
-      {fonts.googleFonts.length > 0 && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mt-4 pt-4 border-t border-border/50"
-        >
-          <p className="text-xs text-muted-foreground">
-            {fonts.googleFonts.length} Google Font stylesheet{fonts.googleFonts.length > 1 ? 's' : ''} detected
-          </p>
-        </motion.div>
-      )}
-    </motion.div>
+    </div>
   );
 }

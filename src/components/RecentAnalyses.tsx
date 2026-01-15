@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Globe, ArrowRight, Star } from 'lucide-react';
+import { Globe, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -48,9 +48,9 @@ export function RecentAnalyses() {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 70) return 'text-green-500';
-    if (score >= 40) return 'text-yellow-500';
-    return 'text-red-500';
+    if (score >= 70) return 'text-success';
+    if (score >= 40) return 'text-warning';
+    return 'text-destructive';
   };
 
   if (!user || loading || analyses.length === 0) return null;
@@ -59,21 +59,18 @@ export function RecentAnalyses() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5 }}
-      className="mt-12 max-w-2xl mx-auto"
+      transition={{ delay: 0.9 }}
+      className="mt-12 max-w-md mx-auto"
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-primary" />
-          <span className="text-sm font-medium">Recent Analyses</span>
-        </div>
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-xs text-muted-foreground">Recent</span>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => navigate('/history')}
-          className="text-xs text-muted-foreground hover:text-foreground"
+          className="text-xs text-muted-foreground hover:text-foreground h-auto p-0"
         >
-          View All
+          View all
           <ArrowRight className="w-3 h-3 ml-1" />
         </Button>
       </div>
@@ -82,30 +79,26 @@ export function RecentAnalyses() {
         {analyses.map((analysis, index) => (
           <motion.div
             key={analysis.id}
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 + index * 0.1 }}
-            whileHover={{ x: 4 }}
+            transition={{ delay: 1 + index * 0.1 }}
             onClick={() => navigate(`/share/${analysis.share_id}`)}
-            className="glass-card p-3 flex items-center gap-3 cursor-pointer hover:shadow-soft transition-all"
+            className="flex items-center gap-3 p-3 bg-card border border-border rounded-xl cursor-pointer hover:bg-muted/30 transition-colors"
           >
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Globe className="w-4 h-4 text-primary" />
+            <div className="p-2 bg-muted rounded-lg">
+              <Globe className="w-3.5 h-3.5 text-muted-foreground" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">
                 {analysis.url.replace(/^https?:\/\//, '').split('/')[0]}
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-[10px] text-muted-foreground">
                 {format(new Date(analysis.created_at), 'MMM d, h:mm a')}
               </p>
             </div>
-            <div className="flex items-center gap-1">
-              <Star className={`w-3 h-3 ${getScoreColor(analysis.score || 0)}`} />
-              <span className={`text-sm font-bold ${getScoreColor(analysis.score || 0)}`}>
-                {analysis.score || 0}
-              </span>
-            </div>
+            <span className={`text-sm font-semibold ${getScoreColor(analysis.score || 0)}`}>
+              {analysis.score || 0}
+            </span>
           </motion.div>
         ))}
       </div>
