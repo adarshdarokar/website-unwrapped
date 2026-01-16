@@ -135,7 +135,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.03, type: 'spring', stiffness: 200 }}
-                  className="aspect-[4/3] rounded-xl overflow-hidden bg-muted/30 cursor-pointer group relative border border-border/30 hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-md"
+                  className="aspect-[4/3] rounded-xl overflow-hidden bg-card cursor-pointer group relative border border-border/30 hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-md image-preserve"
                   onClick={() => setSelectedImage(image)}
                 >
                   {!loadedImages.has(image.src) && (
@@ -144,7 +144,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                   <img
                     src={image.src}
                     alt={image.alt || 'Website image'}
-                    className="w-full h-full object-contain bg-muted/20 transition-transform duration-300 group-hover:scale-102"
+                    className="w-full h-full object-contain bg-card transition-transform duration-300 group-hover:scale-102"
                     onError={() => handleImageError(image.src)}
                     onLoad={() => handleImageLoad(image.src)}
                     loading="lazy"
@@ -175,7 +175,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                   className="flex items-center gap-3 p-2 rounded-lg bg-muted/20 hover:bg-muted/40 transition-colors cursor-pointer group"
                   onClick={() => setSelectedImage(image)}
                 >
-                  <div className="w-12 h-12 rounded overflow-hidden bg-muted flex-shrink-0">
+                  <div className="w-12 h-12 rounded overflow-hidden bg-card flex-shrink-0 image-preserve">
                     <img
                       src={image.src}
                       alt={image.alt}
@@ -212,22 +212,22 @@ export function ImageGallery({ images }: ImageGalleryProps) {
       </motion.div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="max-w-3xl w-[95vw] p-0 bg-background border-border overflow-hidden">
+        <DialogContent className="max-w-3xl w-[95vw] p-0 bg-background border-border overflow-hidden [&>button]:hidden">
           <VisuallyHidden>
             <DialogTitle>Image Preview</DialogTitle>
           </VisuallyHidden>
           {selectedImage && (
             <div className="relative">
-              {/* Close button */}
+              {/* Single Close button */}
               <button
                 onClick={() => setSelectedImage(null)}
-                className="absolute top-3 right-3 z-10 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-colors"
+                className="absolute top-3 right-3 z-10 p-2 bg-background/90 hover:bg-background border border-border rounded-full transition-colors shadow-sm"
               >
-                <X className="w-4 h-4 text-white" />
+                <X className="w-4 h-4 text-foreground" />
               </button>
               
-              {/* Image */}
-              <div className="bg-muted/20 flex items-center justify-center min-h-[300px] max-h-[70vh]">
+              {/* Image - preserved brightness in dark mode */}
+              <div className="bg-muted/10 flex items-center justify-center min-h-[300px] max-h-[70vh] image-preserve">
                 <img
                   src={selectedImage.src}
                   alt={selectedImage.alt || 'Website image'}

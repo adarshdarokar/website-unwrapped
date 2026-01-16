@@ -119,15 +119,34 @@
 @layer base {
   * {
     @apply border-border;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', sans-serif;
+  }
+
+  /* Preserve image brightness in dark mode */
+  .dark .image-preserve img,
+  .dark .image-preserve {
+    filter: none;
+    background-color: hsl(0 0% 100%);
+  }
+
+  .dark .image-preserve {
+    background-color: hsl(0 0% 98%);
+    border-radius: inherit;
   }
 }
 
