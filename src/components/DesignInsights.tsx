@@ -142,39 +142,43 @@ export function DesignInsights({ colors, fonts, animations, score }: DesignInsig
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="bg-card border border-border rounded-xl p-5"
+      className="bg-card border border-border rounded-xl overflow-hidden"
     >
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="p-2 bg-amber-500/10 rounded-lg">
-          <Lightbulb className="w-5 h-5 text-amber-500" />
-        </div>
-        <div>
-          <h3 className="text-sm font-medium">Design Insights</h3>
-          <p className="text-xs text-muted-foreground">AI-powered analysis</p>
+      {/* Header with gradient */}
+      <div className="p-4 border-b border-border bg-gradient-to-r from-amber-500/5 to-transparent">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-amber-500/10 rounded-xl">
+            <Lightbulb className="w-5 h-5 text-amber-500" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold">Design Insights</h3>
+            <p className="text-xs text-muted-foreground">AI-powered analysis & recommendations</p>
+          </div>
         </div>
       </div>
 
-      {/* Insights grid - horizontal layout on larger screens */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {insights.slice(0, 4).map((insight, index) => (
-          <motion.div
-            key={insight.title}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className={`p-3 rounded-lg border ${getTypeStyles(insight.type)} h-full`}
-          >
-            <div className="flex flex-col h-full">
-              <div className={`p-1.5 rounded-md ${getIconBg(insight.type)} w-fit mb-2`}>
-                <insight.icon className="w-4 h-4" />
+      {/* Insights grid - horizontal layout */}
+      <div className="p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {insights.slice(0, 4).map((insight, index) => (
+            <motion.div
+              key={insight.title}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className={`p-4 rounded-xl border ${getTypeStyles(insight.type)} h-full transition-all hover:scale-[1.02] hover:shadow-lg`}
+            >
+              <div className="flex flex-col h-full">
+                <div className={`p-2 rounded-lg ${getIconBg(insight.type)} w-fit mb-3`}>
+                  <insight.icon className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-50 mb-1">{insight.category}</span>
+                <p className="text-sm font-semibold mb-2 leading-snug">{insight.title}</p>
+                <p className="text-xs opacity-75 leading-relaxed flex-1">{insight.description}</p>
               </div>
-              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-60 mb-1">{insight.category}</span>
-              <p className="text-sm font-medium mb-1 leading-tight">{insight.title}</p>
-              <p className="text-xs opacity-80 leading-relaxed flex-1">{insight.description}</p>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ))}
+        </div>
       </div>
     </motion.div>
   );

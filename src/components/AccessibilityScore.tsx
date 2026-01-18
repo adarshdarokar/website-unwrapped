@@ -132,63 +132,64 @@ export function AccessibilityScore({ images, meta, colors, fonts }: Accessibilit
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="bg-card border border-border rounded-xl p-5"
+      className="bg-card border border-border rounded-xl overflow-hidden h-full"
     >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      {/* Header with gradient */}
+      <div className="p-4 border-b border-border bg-gradient-to-r from-violet-500/5 to-transparent">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-violet-500/10 rounded-lg">
+          <div className="p-2.5 bg-violet-500/10 rounded-xl">
             <Eye className="w-5 h-5 text-violet-500" />
           </div>
-          <div>
-            <h3 className="text-sm font-medium">Accessibility</h3>
+          <div className="flex-1">
+            <h3 className="text-sm font-semibold">Accessibility</h3>
             <p className="text-xs text-muted-foreground">{passCount}/{checks.length} checks passed</p>
           </div>
-        </div>
-        
-        <div className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-          a11yScore >= 75 ? 'bg-emerald-500/10 text-emerald-500' :
-          a11yScore >= 50 ? 'bg-amber-500/10 text-amber-500' :
-          'bg-red-500/10 text-red-500'
-        }`}>
-          {a11yScore}%
+          <div className={`px-3 py-1.5 rounded-full text-sm font-bold ${
+            a11yScore >= 75 ? 'bg-emerald-500/10 text-emerald-500' :
+            a11yScore >= 50 ? 'bg-amber-500/10 text-amber-500' :
+            'bg-red-500/10 text-red-500'
+          }`}>
+            {a11yScore}%
+          </div>
         </div>
       </div>
 
-      {/* Checks */}
-      <div className="space-y-2">
-        {checks.map((check, index) => {
-          const StatusIcon = getStatusIcon(check.status);
-          return (
-            <Tooltip key={check.id}>
-              <TooltipTrigger asChild>
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className={`flex items-center gap-3 p-2.5 rounded-lg ${getStatusBg(check.status)} cursor-help transition-all hover:scale-[1.01]`}
-                >
-                  <div className={`p-1.5 rounded-md bg-background/50`}>
-                    <check.icon className={`w-4 h-4 ${getStatusColor(check.status)}`} />
-                  </div>
-                  <span className="text-sm font-medium flex-1">{check.label}</span>
-                  <StatusIcon className={`w-4 h-4 ${getStatusColor(check.status)}`} />
-                </motion.div>
-              </TooltipTrigger>
-              <TooltipContent side="left" className="max-w-xs">
-                <p>{check.description}</p>
-              </TooltipContent>
-            </Tooltip>
-          );
-        })}
-      </div>
+      <div className="p-4">
+        {/* Checks */}
+        <div className="space-y-2">
+          {checks.map((check, index) => {
+            const StatusIcon = getStatusIcon(check.status);
+            return (
+              <Tooltip key={check.id}>
+                <TooltipTrigger asChild>
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className={`flex items-center gap-3 p-3 rounded-xl ${getStatusBg(check.status)} cursor-help transition-all hover:scale-[1.01] hover:shadow-md`}
+                  >
+                    <div className={`p-2 rounded-lg bg-background/60`}>
+                      <check.icon className={`w-4 h-4 ${getStatusColor(check.status)}`} />
+                    </div>
+                    <span className="text-sm font-medium flex-1">{check.label}</span>
+                    <StatusIcon className={`w-5 h-5 ${getStatusColor(check.status)}`} />
+                  </motion.div>
+                </TooltipTrigger>
+                <TooltipContent side="left" className="max-w-xs">
+                  <p>{check.description}</p>
+                </TooltipContent>
+              </Tooltip>
+            );
+          })}
+        </div>
 
-      {/* Tip */}
-      <div className="mt-4 p-3 bg-muted/30 rounded-lg flex gap-2">
-        <Info className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-muted-foreground">
-          These are basic automated checks. For full accessibility audits, use tools like Lighthouse or axe.
-        </p>
+        {/* Tip */}
+        <div className="mt-4 p-3 bg-muted/40 rounded-xl flex gap-2 border border-border/50">
+          <Info className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            These are basic automated checks. For full accessibility audits, use tools like Lighthouse or axe.
+          </p>
+        </div>
       </div>
     </motion.div>
   );
