@@ -107,80 +107,87 @@ export function PerformanceInsights({ meta, images, score }: PerformanceInsights
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-card border border-border rounded-xl p-5"
+      className="bg-card border border-border rounded-xl overflow-hidden h-full"
     >
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-5">
-        <div className="p-2 bg-primary/10 rounded-lg">
-          <Gauge className="w-5 h-5 text-primary" />
-        </div>
-        <div>
-          <h3 className="text-sm font-medium">Performance & SEO</h3>
-          <p className="text-xs text-muted-foreground">
-            {goodCount}/{insights.length} checks passed
-          </p>
-        </div>
-      </div>
-
-      {/* Score bar */}
-      <div className="mb-5">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-muted-foreground">Health Score</span>
-          <span className={`text-sm font-semibold ${
-            performanceScore >= 80 ? 'text-emerald-500' : 
-            performanceScore >= 50 ? 'text-amber-500' : 'text-red-500'
+      {/* Header with gradient */}
+      <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-primary/10 rounded-xl">
+            <Gauge className="w-5 h-5 text-primary" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-sm font-semibold">Performance & SEO</h3>
+            <p className="text-xs text-muted-foreground">
+              {goodCount}/{insights.length} checks passed
+            </p>
+          </div>
+          <div className={`px-3 py-1.5 rounded-full text-sm font-bold ${
+            performanceScore >= 80 ? 'bg-emerald-500/10 text-emerald-500' : 
+            performanceScore >= 50 ? 'bg-amber-500/10 text-amber-500' : 'bg-red-500/10 text-red-500'
           }`}>
             {performanceScore}%
-          </span>
-        </div>
-        <div className="h-2 bg-muted rounded-full overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${performanceScore}%` }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className={`h-full rounded-full ${
-              performanceScore >= 80 ? 'bg-emerald-500' : 
-              performanceScore >= 50 ? 'bg-amber-500' : 'bg-red-500'
-            }`}
-          />
+          </div>
         </div>
       </div>
 
-      {/* Insights Grid */}
-      <div className="grid grid-cols-2 gap-2">
-        {insights.map((insight, index) => {
-          const StatusIcon = getStatusIcon(insight.status);
-          return (
-            <Tooltip key={insight.label}>
-              <TooltipTrigger asChild>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.05 }}
-                  className={`p-3 rounded-lg border ${getStatusBg(insight.status)} cursor-help transition-all hover:scale-[1.02]`}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-medium truncate">{insight.label}</span>
-                    <StatusIcon className={`w-3.5 h-3.5 ${getStatusColor(insight.status)}`} />
-                  </div>
-                  <p className={`text-sm font-semibold ${getStatusColor(insight.status)}`}>
-                    {insight.value}
-                  </p>
-                </motion.div>
-              </TooltipTrigger>
-              <TooltipContent side="top" className="max-w-xs">
-                <p>{insight.tip}</p>
-              </TooltipContent>
-            </Tooltip>
-          );
-        })}
-      </div>
+      <div className="p-4">
+        {/* Score bar */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-medium text-muted-foreground">Health Score</span>
+          </div>
+          <div className="h-2.5 bg-muted rounded-full overflow-hidden">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${performanceScore}%` }}
+              transition={{ duration: 1, ease: 'easeOut' }}
+              className={`h-full rounded-full ${
+                performanceScore >= 80 ? 'bg-gradient-to-r from-emerald-500 to-emerald-400' : 
+                performanceScore >= 50 ? 'bg-gradient-to-r from-amber-500 to-amber-400' : 'bg-gradient-to-r from-red-500 to-red-400'
+              }`}
+            />
+          </div>
+        </div>
 
-      {/* Quick Stats */}
-      <div className="mt-4 pt-4 border-t border-border/50">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">Total Images</span>
-          <span className="font-medium">{meta.imageCount}</span>
+        {/* Insights Grid */}
+        <div className="grid grid-cols-2 gap-2">
+          {insights.map((insight, index) => {
+            const StatusIcon = getStatusIcon(insight.status);
+            return (
+              <Tooltip key={insight.label}>
+                <TooltipTrigger asChild>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.05 }}
+                    className={`p-3 rounded-xl border ${getStatusBg(insight.status)} cursor-help transition-all hover:scale-[1.02] hover:shadow-md`}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[11px] font-semibold uppercase tracking-wide opacity-70">{insight.label}</span>
+                      <StatusIcon className={`w-4 h-4 ${getStatusColor(insight.status)}`} />
+                    </div>
+                    <p className={`text-sm font-bold ${getStatusColor(insight.status)}`}>
+                      {insight.value}
+                    </p>
+                  </motion.div>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-xs">
+                  <p>{insight.tip}</p>
+                </TooltipContent>
+              </Tooltip>
+            );
+          })}
+        </div>
+
+        {/* Quick Stats */}
+        <div className="mt-4 pt-4 border-t border-border/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Image className="w-4 h-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Total Images</span>
+            </div>
+            <span className="text-sm font-semibold">{meta.imageCount}</span>
+          </div>
         </div>
       </div>
     </motion.div>
