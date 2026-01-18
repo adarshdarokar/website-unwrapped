@@ -194,4 +194,14 @@
   .animate-gradient {
     animation: gradient 3s ease infinite;
   }
+
+  /* Responsive utilities */
+  @media (max-width: 480px) {
+    .xs\:hidden {
+      display: none;
+    }
+    .xs\:block {
+      display: block;
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Globe, Image, Type, Palette, Shapes, Zap, RefreshCw, ExternalLink, History, Command, GitCompare, Share2, Menu, X, Keyboard, LayoutDashboard, Eye, Search as SearchIcon, Gauge } from 'lucide-react';
+import { Globe, Image, Type, Palette, Shapes, Zap, RefreshCw, ExternalLink, History, Command, GitCompare, Share2, Menu, X, Keyboard, LayoutDashboard, Eye, Search as SearchIcon, Gauge, Monitor } from 'lucide-react';
 import { UrlInput } from '@/components/UrlInput';
 import { QualityScore } from '@/components/QualityScore';
 import { ImageGallery } from '@/components/ImageGallery';
@@ -26,6 +26,7 @@ import { AccessibilityScore } from '@/components/AccessibilityScore';
 import { DesignInsights } from '@/components/DesignInsights';
 import { SEOOverview } from '@/components/SEOOverview';
 import { AnalysisSummary } from '@/components/AnalysisSummary';
+import { ResponsivePreview } from '@/components/ResponsivePreview';
 import { useWebsiteAnalyzer } from '@/hooks/useWebsiteAnalyzer';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useAnalysisStats } from '@/hooks/useAnalysisStats';
@@ -75,6 +76,7 @@ const Index = () => {
     { value: 'images', icon: Image, label: 'Images' },
     { value: 'icons', icon: Shapes, label: 'Icons' },
     { value: 'animations', icon: Zap, label: 'Motion' },
+    { value: 'preview', icon: Monitor, label: 'Preview' },
   ];
 
   return (
@@ -321,24 +323,24 @@ const Index = () => {
               </motion.div>
 
               <Tabs value={activeResultTab} onValueChange={setActiveResultTab} className="w-full">
-                <TabsList className="w-full grid grid-cols-6 bg-muted/50 p-1 rounded-xl h-auto mb-6 max-w-2xl mx-auto">
+                <TabsList className="w-full flex flex-wrap justify-center bg-muted/50 p-1 rounded-xl h-auto mb-6 max-w-2xl mx-auto gap-1">
                   {resultTabs.map((tab) => (
                     <TabsTrigger 
                       key={tab.value}
                       value={tab.value} 
-                      className="flex items-center justify-center gap-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg py-2.5 text-xs transition-all"
+                      className="flex-1 min-w-[60px] max-w-[120px] flex items-center justify-center gap-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg py-2 sm:py-2.5 text-xs transition-all"
                     >
-                      <tab.icon className="w-4 h-4" />
-                      <span className="hidden sm:inline">{tab.label}</span>
+                      <tab.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span className="hidden xs:inline sm:inline">{tab.label}</span>
                     </TabsTrigger>
                   ))}
                 </TabsList>
 
                 {/* Overview Tab */}
                 <TabsContent value="overview" className="mt-0">
-                  <div className="grid lg:grid-cols-3 gap-4">
-                    {/* Left Column - Main Score & Summary */}
-                    <div className="lg:col-span-2 space-y-4">
+                  <div className="grid lg:grid-cols-[1fr_320px] gap-4">
+                    {/* Left Column - Main Content */}
+                    <div className="space-y-4">
                       <AnalysisSummary
                         url={result.url}
                         score={result.score}
@@ -349,6 +351,7 @@ const Index = () => {
                         onExport={() => setShowExport(true)}
                       />
                       
+                      {/* Performance & Accessibility Row */}
                       <div className="grid sm:grid-cols-2 gap-4">
                         <PerformanceInsights 
                           meta={result.meta} 
@@ -362,18 +365,20 @@ const Index = () => {
                           fonts={result.fonts}
                         />
                       </div>
-                    </div>
 
-                    {/* Right Column - Insights */}
-                    <div className="space-y-4">
-                      <QualityScore score={result.score} meta={result.meta} />
-                      <SEOOverview url={result.url} meta={result.meta} images={result.images} />
+                      {/* Design Insights - Below Performance & Accessibility */}
                       <DesignInsights
                         colors={result.colors}
                         fonts={result.fonts}
                         animations={result.animations}
                         score={result.score}
                       />
+                    </div>
+
+                    {/* Right Column - Score & SEO */}
+                    <div className="space-y-4">
+                      <QualityScore score={result.score} meta={result.meta} />
+                      <SEOOverview url={result.url} meta={result.meta} images={result.images} />
                     </div>
                   </div>
                 </TabsContent>
@@ -431,6 +436,11 @@ const Index = () => {
                       <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
                     </div>
                   </div>
+                </TabsContent>
+
+                {/* Preview Tab */}
+                <TabsContent value="preview" className="mt-0">
+                  <ResponsivePreview url={result.url} />
                 </TabsContent>
               </Tabs>
             </motion.section>

@@ -155,27 +155,23 @@ export function DesignInsights({ colors, fonts, animations, score }: DesignInsig
         </div>
       </div>
 
-      {/* Insights list */}
-      <div className="space-y-3">
+      {/* Insights grid - horizontal layout on larger screens */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {insights.slice(0, 4).map((insight, index) => (
           <motion.div
             key={insight.title}
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className={`p-3 rounded-lg border ${getTypeStyles(insight.type)}`}
+            className={`p-3 rounded-lg border ${getTypeStyles(insight.type)} h-full`}
           >
-            <div className="flex items-start gap-3">
-              <div className={`p-1.5 rounded-md ${getIconBg(insight.type)} flex-shrink-0`}>
+            <div className="flex flex-col h-full">
+              <div className={`p-1.5 rounded-md ${getIconBg(insight.type)} w-fit mb-2`}>
                 <insight.icon className="w-4 h-4" />
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-xs font-medium uppercase opacity-60">{insight.category}</span>
-                </div>
-                <p className="text-sm font-medium mb-0.5">{insight.title}</p>
-                <p className="text-xs opacity-80">{insight.description}</p>
-              </div>
+              <span className="text-[10px] font-semibold uppercase tracking-wider opacity-60 mb-1">{insight.category}</span>
+              <p className="text-sm font-medium mb-1 leading-tight">{insight.title}</p>
+              <p className="text-xs opacity-80 leading-relaxed flex-1">{insight.description}</p>
             </div>
           </motion.div>
         ))}

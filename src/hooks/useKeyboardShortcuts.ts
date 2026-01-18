@@ -26,7 +26,7 @@ export function useKeyboardShortcuts(handlers: ShortcutHandlers) {
     const modifier = isMac ? event.metaKey : event.ctrlKey;
 
     // Ctrl/Cmd + K - Open search/command palette
-    if (modifier && event.key === 'k') {
+    if (modifier && (event.key === 'k' || event.key === 'K')) {
       event.preventDefault();
       handlers.onSearch?.();
       return;
@@ -39,8 +39,9 @@ export function useKeyboardShortcuts(handlers: ShortcutHandlers) {
       return;
     }
 
-    // Single key shortcuts (no modifier needed)
-    switch (event.key) {
+    // Single key shortcuts (no modifier needed) - handle both upper and lowercase
+    const key = event.key.toLowerCase();
+    switch (key) {
       case 'h':
         event.preventDefault();
         handlers.onHistory?.();
@@ -57,7 +58,12 @@ export function useKeyboardShortcuts(handlers: ShortcutHandlers) {
         event.preventDefault();
         handlers.onToggleTheme?.();
         break;
-      case 'Escape':
+      case 'k':
+        // Also allow standalone K to open command palette
+        event.preventDefault();
+        handlers.onSearch?.();
+        break;
+      case 'escape':
         handlers.onEscape?.();
         break;
     }
