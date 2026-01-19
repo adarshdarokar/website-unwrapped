@@ -10,6 +10,7 @@ import Settings from "./pages/Settings";
 import SharedAnalysis from "./pages/SharedAnalysis";
 import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { AppShell } from "@/components/AppShell";
 
 const queryClient = new QueryClient();
 
@@ -22,29 +23,35 @@ const App = () => (
         <Routes>
           <Route path="/auth" element={<Auth />} />
           <Route path="/share/:shareId" element={<SharedAnalysis />} />
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
               <ProtectedRoute>
-                <Index />
+                <AppShell>
+                  <Index />
+                </AppShell>
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/history" 
+          <Route
+            path="/history"
             element={
               <ProtectedRoute>
-                <History />
+                <AppShell>
+                  <History />
+                </AppShell>
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/settings" 
+          <Route
+            path="/settings"
             element={
               <ProtectedRoute>
-                <Settings />
+                <AppShell>
+                  <Settings />
+                </AppShell>
               </ProtectedRoute>
-            } 
+            }
           />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -171,11 +171,13 @@ export function ResponsivePreview({ url }: ResponsivePreviewProps) {
   }, [key, url]);
 
   const handleIframeLoad = () => {
-    if (loadTimeout) window.clearTimeout(loadTimeout);
-    setIsLoading(false);
-
     // Some browsers still render a "refused to connect" page inside the iframe.
-    // We can’t introspect cross-origin content reliably, so we provide a clear fallback CTA.
+    // We can’t reliably introspect cross-origin content, so we ALWAYS show a small helper bar
+    // and rely on the embeddability check + timeout for hard fallback.
+    if (embedCheck?.embeddable) {
+      if (loadTimeout) window.clearTimeout(loadTimeout);
+    }
+    setIsLoading(false);
   };
 
   const handleIframeError = () => {
@@ -340,9 +342,23 @@ export function ResponsivePreview({ url }: ResponsivePreviewProps) {
             className="w-full bg-background rounded-xl overflow-hidden shadow-xl transition-all duration-500 relative border border-border"
             style={previewStyles}
           >
+            {/* Always-visible helper bar (prevents "it’s broken" when sites block iframes) */}
+            <div className="absolute top-0 inset-x-0 z-20">
+              <div className="mx-3 mt-3 rounded-lg border border-border bg-background/85 backdrop-blur px-3 py-2 flex items-center justify-between gap-3">
+                <p className="text-xs text-muted-foreground truncate">
+                  If the preview looks blank/broken, the site is blocking embeds.
+                </p>
+                <Button asChild size="sm" variant="outline" className="h-7 px-2.5">
+                  <a href={url} target="_blank" rel="noopener noreferrer">
+                    Open
+                  </a>
+                </Button>
+              </div>
+            </div>
+
             {/* Device frame notch for mobile */}
             {device === 'mobile' && (
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-muted rounded-b-xl z-20 border-x border-b border-border" />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-muted rounded-b-xl z-30 border-x border-b border-border" />
             )}
 
             {(isLoading || isCheckingEmbed) && !hasError && (

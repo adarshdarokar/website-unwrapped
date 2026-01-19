@@ -1,6 +1,17 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Globe, Image, Type, Palette, Shapes, Zap, RefreshCw, ExternalLink, History, Command, GitCompare, Share2, Menu, X, Keyboard, LayoutDashboard, Eye, Search as SearchIcon, Gauge, Monitor } from 'lucide-react';
+import {
+  Globe,
+  Image,
+  Type,
+  Palette,
+  Shapes,
+  Zap,
+  RefreshCw,
+  ExternalLink,
+  LayoutDashboard,
+  Monitor,
+} from 'lucide-react';
 import { UrlInput } from '@/components/UrlInput';
 import { QualityScore } from '@/components/QualityScore';
 import { ImageGallery } from '@/components/ImageGallery';
@@ -9,9 +20,7 @@ import { ColorPalette } from '@/components/ColorPalette';
 import { IconDisplay } from '@/components/IconDisplay';
 import { AnimationDisplay } from '@/components/AnimationDisplay';
 import { LoadingState } from '@/components/LoadingState';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { TechStack } from '@/components/TechStack';
-import { UserMenu } from '@/components/UserMenu';
 import { CompareWebsites } from '@/components/CompareWebsites';
 import { ExportAnalysis } from '@/components/ExportAnalysis';
 import { QuickActions } from '@/components/QuickActions';
@@ -32,8 +41,6 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useAnalysisStats } from '@/hooks/useAnalysisStats';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const Index = () => {
   const { analyzeWebsite, isLoading, error, result } = useWebsiteAnalyzer();
@@ -42,9 +49,7 @@ const Index = () => {
   const [showExport, setShowExport] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeResultTab, setActiveResultTab] = useState('overview');
-  const navigate = useNavigate();
   const urlInputRef = useRef<HTMLInputElement>(null);
 
   const toggleTheme = useCallback(() => {
@@ -53,9 +58,10 @@ const Index = () => {
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   }, []);
 
+  // Global keyboard shortcuts
   useKeyboardShortcuts({
     onSearch: () => setShowCommandPalette(true),
-    onHistory: () => navigate('/history'),
+    onHistory: () => window.dispatchEvent(new CustomEvent('app:navigate', { detail: '/history' })),
     onCompare: () => setShowCompare(true),
     onExport: () => result && setShowExport(true),
     onToggleTheme: toggleTheme,
@@ -64,10 +70,29 @@ const Index = () => {
       setShowCompare(false);
       setShowExport(false);
       setShowShortcuts(false);
-      setMobileMenuOpen(false);
     },
     onAnalyze: () => urlInputRef.current?.focus(),
   });
+
+  // Sidebar action events
+  useEffect(() => {
+    const onCommand = () => setShowCommandPalette(true);
+    const onCompare = () => setShowCompare(true);
+    const onExport = () => result && setShowExport(true);
+    const onShortcuts = () => setShowShortcuts(true);
+
+    window.addEventListener('app:commandPalette', onCommand as EventListener);
+    window.addEventListener('app:compare', onCompare as EventListener);
+    window.addEventListener('app:export', onExport as EventListener);
+    window.addEventListener('app:shortcuts', onShortcuts as EventListener);
+
+    return () => {
+      window.removeEventListener('app:commandPalette', onCommand as EventListener);
+      window.removeEventListener('app:compare', onCompare as EventListener);
+      window.removeEventListener('app:export', onExport as EventListener);
+      window.removeEventListener('app:shortcuts', onShortcuts as EventListener);
+    };
+  }, [result]);
 
   const resultTabs = [
     { value: 'overview', icon: LayoutDashboard, label: 'Overview' },
@@ -80,130 +105,57 @@ const Index = () => {
   ];
 
   return (
-    <TooltipProvider>
-      <div className="min-h-screen bg-background">
-        {/* Header */}
-        <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
-          <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
-            <motion.div 
-              className="flex items-center gap-2.5 cursor-pointer"
-              whileHover={{ opacity: 0.8 }}
-              onClick={() => window.location.reload()}
-            >
-              <div className="p-1.5 bg-primary/10 rounded-lg">
-                <Globe className="w-5 h-5 text-primary" />
-              </div>
-              <span className="text-lg font-display font-semibold">WebVision</span>
-            </motion.div>
-            
-            {/* Desktop Nav */}
-            <div className="hidden md:flex items-center gap-1">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowCommandPalette(true)}
-                    className="gap-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <Command className="w-4 h-4" />
-                    <kbd className="hidden lg:inline px-1.5 py-0.5 text-[10px] font-mono bg-muted rounded">⌘K</kbd>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Quick actions</TooltipContent>
-              </Tooltip>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="px-4 pt-10 md:pt-14 pb-8">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-block px-3 py-1 bg-primary/5 text-primary text-xs font-medium rounded-full border border-primary/10 mb-5"
+          >
+            Analyze any website instantly
+          </motion.span>
 
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/history')}
-                className="gap-2 text-muted-foreground hover:text-foreground"
-              >
-                <History className="w-4 h-4" />
-                <span className="hidden lg:inline">History</span>
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowCompare(true)}
-                className="gap-2 text-muted-foreground hover:text-foreground"
-              >
-                <GitCompare className="w-4 h-4" />
-                <span className="hidden lg:inline">Compare</span>
-              </Button>
-              
-              {result && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowExport(true)}
-                  className="gap-2 text-muted-foreground hover:text-foreground"
-                >
-                  <Share2 className="w-4 h-4" />
-                  <span className="hidden lg:inline">Export</span>
-                </Button>
-              )}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-2xl sm:text-3xl md:text-4xl font-display font-semibold tracking-tight text-balance mb-3"
+          >
+            Discover the design DNA
+            <br />
+            <span className="text-muted-foreground">of any website</span>
+          </motion.h1>
 
-              <div className="w-px h-5 bg-border mx-1" />
-              
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowShortcuts(true)}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <Keyboard className="w-4 h-4" />
-              </Button>
-              
-              <ThemeToggle />
-              <UserMenu />
-            </div>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-muted-foreground text-sm md:text-base max-w-md mx-auto mb-6"
+          >
+            Extract colors, fonts, images, and icons. Get insights on performance, accessibility, and SEO.
+          </motion.p>
 
-            {/* Mobile */}
-            <div className="flex md:hidden items-center gap-1">
-              <ThemeToggle />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </Button>
-            </div>
-          </div>
+          <UrlInput onAnalyze={analyzeWebsite} isLoading={isLoading} inputRef={urlInputRef} />
 
-          {/* Mobile Menu */}
-          <AnimatePresence>
-            {mobileMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="md:hidden border-t border-border/50 bg-card"
-              >
-                <div className="p-4 space-y-2">
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => { setShowCommandPalette(true); setMobileMenuOpen(false); }}>
-                    <Command className="w-4 h-4 mr-2" /> Quick Actions
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => { navigate('/history'); setMobileMenuOpen(false); }}>
-                    <History className="w-4 h-4 mr-2" /> History
-                  </Button>
-                  <Button variant="ghost" className="w-full justify-start" onClick={() => { setShowCompare(true); setMobileMenuOpen(false); }}>
-                    <GitCompare className="w-4 h-4 mr-2" /> Compare
-                  </Button>
-                  <div className="pt-2 border-t border-border/50">
-                    <UserMenu />
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </header>
+          {/* Preview Card - only show when no result */}
+          {!result && !isLoading && <HeroPreviewCard />}
 
-        {/* Hero Section */}
-        <section className="px-4 pt-12 md:pt-20 pb-8">
-          <div className="max-w-3xl mx-auto text-center">
+          {/* Feature Row */}
+          {!result && !isLoading && <FeatureRow />}
+
+          {/* Trust Section */}
+          {!result && !isLoading && <TrustSection />}
+
+          {/* Quick Actions */}
+          {!result && !isLoading && <QuickActions onAnalyze={analyzeWebsite} isLoading={isLoading} />}
+
+          {/* Recent Analyses */}
+          {!result && !isLoading && <RecentAnalyses />}
+        </div>
+      </section>
+
             <motion.span 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
