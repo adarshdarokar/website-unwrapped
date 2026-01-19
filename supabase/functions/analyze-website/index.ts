@@ -614,10 +614,29 @@ Deno.serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error analyzing website:', errorMessage);
+    const rawMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error analyzing website:', rawMessage);
+
+    // Provide user-friendly error messages for common issues
+    let friendlyMessage = 'Failed to analyze the website.';
+    const lower = rawMessage.toLowerCase();
+
+    if (lower.includes('dns error') || lower.includes('name or service not known') || lower.includes('getaddrinfo')) {
+      friendlyMessage = 'Could not find this website. Please check the URL for typos (e.g., "thesouledstore.com" instead of "thesouldstore.com").';
+    } else if (lower.includes('connection refused') || lower.includes('connect error')) {
+      friendlyMessage = 'The website refused the connection. It may be down or blocking automated requests.';
+    } else if (lower.includes('timeout') || lower.includes('timed out')) {
+      friendlyMessage = 'The website took too long to respond. Please try again later.';
+    } else if (lower.includes('certificate') || lower.includes('ssl')) {
+      friendlyMessage = 'The website has an invalid or expired SSL certificate.';
+    } else if (lower.includes('status: 403') || lower.includes('forbidden')) {
+      friendlyMessage = 'The website blocked access. Try a different site.';
+    } else if (lower.includes('status: 404') || lower.includes('not found')) {
+      friendlyMessage = 'The page was not found. Please verify the URL.';
+    }
+
     return new Response(
-      JSON.stringify({ error: 'Failed to analyze website: ' + errorMessage }),
+      JSON.stringify({ error: friendlyMessage }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
