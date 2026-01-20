@@ -156,277 +156,225 @@ const Index = () => {
         </div>
       </section>
 
-            <motion.span 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-block px-3 py-1 bg-primary/5 text-primary text-xs font-medium rounded-full border border-primary/10 mb-5"
-            >
-              Analyze any website instantly
-            </motion.span>
+      {/* Error State */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="max-w-xl mx-auto px-4 mb-8"
+          >
+            <div className="p-4 bg-destructive/5 border border-destructive/20 rounded-xl">
+              <p className="text-destructive font-medium text-sm mb-1">{error}</p>
+              <p className="text-xs text-muted-foreground">
+                Please check the URL and try again.
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-2xl sm:text-3xl md:text-4xl font-display font-semibold tracking-tight text-balance mb-3"
-            >
-              Discover the design DNA
-              <br />
-              <span className="text-muted-foreground">of any website</span>
-            </motion.h1>
+      {/* Loading State */}
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="max-w-7xl mx-auto px-4"
+          >
+            <LoadingState />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-muted-foreground text-sm md:text-base max-w-md mx-auto mb-6"
-            >
-              Extract colors, fonts, images, and icons. Get insights on performance, accessibility, and SEO.
-            </motion.p>
-
-            <UrlInput onAnalyze={analyzeWebsite} isLoading={isLoading} inputRef={urlInputRef} />
-            
-            {/* Preview Card - only show when no result */}
-            {!result && !isLoading && <HeroPreviewCard />}
-            
-            {/* Feature Row */}
-            {!result && !isLoading && <FeatureRow />}
-            
-            {/* Trust Section */}
-            {!result && !isLoading && <TrustSection />}
-            
-            {/* Quick Actions */}
-            {!result && !isLoading && <QuickActions onAnalyze={analyzeWebsite} isLoading={isLoading} />}
-            
-            {/* Recent Analyses */}
-            {!result && !isLoading && <RecentAnalyses />}
-          </div>
-        </section>
-
-        {/* Error State */}
-        <AnimatePresence>
-          {error && (
+      {/* Results */}
+      <AnimatePresence>
+        {result && !isLoading && (
+          <motion.section
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="max-w-7xl mx-auto px-4 pb-20"
+          >
+            {/* Result Header */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="max-w-xl mx-auto px-4 mb-8"
+              className="text-center mb-6"
             >
-              <div className="p-4 bg-destructive/5 border border-destructive/20 rounded-xl">
-                <p className="text-destructive font-medium text-sm mb-1">{error}</p>
-                <p className="text-xs text-muted-foreground">
-                  Please check the URL and try again.
-                </p>
+              <div className="flex items-center justify-center gap-3 flex-wrap">
+                <a 
+                  href={result.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline font-medium flex items-center gap-2 text-sm"
+                >
+                  <Globe className="w-4 h-4" />
+                  <span className="truncate max-w-xs">{result.url}</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => analyzeWebsite(result.url)}
+                  className="text-muted-foreground hover:text-foreground text-xs"
+                >
+                  <RefreshCw className="w-3 h-3 mr-1" />
+                  Re-analyze
+                </Button>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
 
-        {/* Loading State */}
-        <AnimatePresence>
-          {isLoading && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="max-w-7xl mx-auto px-4"
-            >
-              <LoadingState />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Results */}
-        <AnimatePresence>
-          {result && !isLoading && (
-            <motion.section
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="max-w-7xl mx-auto px-4 pb-20"
-            >
-              {/* Result Header */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-center mb-6"
-              >
-                <div className="flex items-center justify-center gap-3 flex-wrap">
-                  <a 
-                    href={result.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline font-medium flex items-center gap-2 text-sm"
+            <Tabs value={activeResultTab} onValueChange={setActiveResultTab} className="w-full">
+              <TabsList className="w-full flex flex-wrap justify-center bg-muted/50 p-1 rounded-xl h-auto mb-6 max-w-2xl mx-auto gap-1">
+                {resultTabs.map((tab) => (
+                  <TabsTrigger 
+                    key={tab.value}
+                    value={tab.value} 
+                    className="flex-1 min-w-[60px] max-w-[120px] flex items-center justify-center gap-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg py-2 sm:py-2.5 text-xs transition-all"
                   >
-                    <Globe className="w-4 h-4" />
-                    <span className="truncate max-w-xs">{result.url}</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => analyzeWebsite(result.url)}
-                    className="text-muted-foreground hover:text-foreground text-xs"
-                  >
-                    <RefreshCw className="w-3 h-3 mr-1" />
-                    Re-analyze
-                  </Button>
-                </div>
-              </motion.div>
+                    <tab.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span className="hidden xs:inline sm:inline">{tab.label}</span>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
 
-              <Tabs value={activeResultTab} onValueChange={setActiveResultTab} className="w-full">
-                <TabsList className="w-full flex flex-wrap justify-center bg-muted/50 p-1 rounded-xl h-auto mb-6 max-w-2xl mx-auto gap-1">
-                  {resultTabs.map((tab) => (
-                    <TabsTrigger 
-                      key={tab.value}
-                      value={tab.value} 
-                      className="flex-1 min-w-[60px] max-w-[120px] flex items-center justify-center gap-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg py-2 sm:py-2.5 text-xs transition-all"
-                    >
-                      <tab.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      <span className="hidden xs:inline sm:inline">{tab.label}</span>
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-
-                {/* Overview Tab */}
-                <TabsContent value="overview" className="mt-0">
-                  <div className="grid lg:grid-cols-[1fr_320px] gap-4">
-                    {/* Left Column - Main Content */}
-                    <div className="space-y-4">
-                      <AnalysisSummary
-                        url={result.url}
+              {/* Overview Tab */}
+              <TabsContent value="overview" className="mt-0">
+                <div className="grid lg:grid-cols-[1fr_320px] gap-4">
+                  <div className="space-y-4">
+                    <AnalysisSummary
+                      url={result.url}
+                      score={result.score}
+                      colorCount={stats?.colorCount || 0}
+                      fontCount={stats?.fontCount || 0}
+                      imageCount={stats?.imageCount || 0}
+                      animationCount={stats?.animationCount || 0}
+                      onExport={() => setShowExport(true)}
+                    />
+                    
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <PerformanceInsights 
+                        meta={result.meta} 
+                        images={result.images}
                         score={result.score}
-                        colorCount={stats?.colorCount || 0}
-                        fontCount={stats?.fontCount || 0}
-                        imageCount={stats?.imageCount || 0}
-                        animationCount={stats?.animationCount || 0}
-                        onExport={() => setShowExport(true)}
                       />
-                      
-                      {/* Performance & Accessibility Row */}
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        <PerformanceInsights 
-                          meta={result.meta} 
-                          images={result.images}
-                          score={result.score}
-                        />
-                        <AccessibilityScore
-                          images={result.images}
-                          meta={result.meta}
-                          colors={result.colors}
-                          fonts={result.fonts}
-                        />
-                      </div>
-
-                      {/* Design Insights - Below Performance & Accessibility */}
-                      <DesignInsights
+                      <AccessibilityScore
+                        images={result.images}
+                        meta={result.meta}
                         colors={result.colors}
                         fonts={result.fonts}
-                        animations={result.animations}
-                        score={result.score}
                       />
                     </div>
 
-                    {/* Right Column - Score & SEO */}
-                    <div className="space-y-4">
-                      <QualityScore score={result.score} meta={result.meta} />
-                      <SEOOverview url={result.url} meta={result.meta} images={result.images} />
-                    </div>
+                    <DesignInsights
+                      colors={result.colors}
+                      fonts={result.fonts}
+                      animations={result.animations}
+                      score={result.score}
+                    />
                   </div>
-                </TabsContent>
 
-                {/* Colors Tab */}
-                <TabsContent value="colors" className="mt-0">
-                  <div className="grid lg:grid-cols-[1fr_280px] gap-4">
-                    <ColorPalette colors={result.colors} />
-                    <div className="space-y-4">
-                      <QualityScore score={result.score} meta={result.meta} />
-                      <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
-                    </div>
+                  <div className="space-y-4">
+                    <QualityScore score={result.score} meta={result.meta} />
+                    <SEOOverview url={result.url} meta={result.meta} images={result.images} />
                   </div>
-                </TabsContent>
+                </div>
+              </TabsContent>
 
-                {/* Fonts Tab */}
-                <TabsContent value="fonts" className="mt-0">
-                  <div className="grid lg:grid-cols-[1fr_280px] gap-4">
-                    <FontDisplay fonts={result.fonts} />
-                    <div className="space-y-4">
-                      <QualityScore score={result.score} meta={result.meta} />
-                      <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
-                    </div>
+              {/* Colors Tab */}
+              <TabsContent value="colors" className="mt-0">
+                <div className="grid lg:grid-cols-[1fr_280px] gap-4">
+                  <ColorPalette colors={result.colors} />
+                  <div className="space-y-4">
+                    <QualityScore score={result.score} meta={result.meta} />
+                    <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
                   </div>
-                </TabsContent>
+                </div>
+              </TabsContent>
 
-                {/* Images Tab */}
-                <TabsContent value="images" className="mt-0">
-                  <div className="grid lg:grid-cols-[1fr_280px] gap-4">
-                    <ImageGallery images={result.images} />
-                    <div className="space-y-4">
-                      <QualityScore score={result.score} meta={result.meta} />
-                      <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
-                    </div>
+              {/* Fonts Tab */}
+              <TabsContent value="fonts" className="mt-0">
+                <div className="grid lg:grid-cols-[1fr_280px] gap-4">
+                  <FontDisplay fonts={result.fonts} />
+                  <div className="space-y-4">
+                    <QualityScore score={result.score} meta={result.meta} />
+                    <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
                   </div>
-                </TabsContent>
+                </div>
+              </TabsContent>
 
-                {/* Icons Tab */}
-                <TabsContent value="icons" className="mt-0">
-                  <div className="grid lg:grid-cols-[1fr_280px] gap-4">
-                    <IconDisplay icons={result.icons} />
-                    <div className="space-y-4">
-                      <QualityScore score={result.score} meta={result.meta} />
-                      <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
-                    </div>
+              {/* Images Tab */}
+              <TabsContent value="images" className="mt-0">
+                <div className="grid lg:grid-cols-[1fr_280px] gap-4">
+                  <ImageGallery images={result.images} />
+                  <div className="space-y-4">
+                    <QualityScore score={result.score} meta={result.meta} />
+                    <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
                   </div>
-                </TabsContent>
+                </div>
+              </TabsContent>
 
-                {/* Animations Tab */}
-                <TabsContent value="animations" className="mt-0">
-                  <div className="grid lg:grid-cols-[1fr_280px] gap-4">
-                    <AnimationDisplay animations={result.animations} />
-                    <div className="space-y-4">
-                      <QualityScore score={result.score} meta={result.meta} />
-                      <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
-                    </div>
+              {/* Icons Tab */}
+              <TabsContent value="icons" className="mt-0">
+                <div className="grid lg:grid-cols-[1fr_280px] gap-4">
+                  <IconDisplay icons={result.icons} />
+                  <div className="space-y-4">
+                    <QualityScore score={result.score} meta={result.meta} />
+                    <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
                   </div>
-                </TabsContent>
+                </div>
+              </TabsContent>
 
-                {/* Preview Tab */}
-                <TabsContent value="preview" className="mt-0">
-                  <ResponsivePreview url={result.url} />
-                </TabsContent>
-              </Tabs>
-            </motion.section>
-          )}
-        </AnimatePresence>
+              {/* Animations Tab */}
+              <TabsContent value="animations" className="mt-0">
+                <div className="grid lg:grid-cols-[1fr_280px] gap-4">
+                  <AnimationDisplay animations={result.animations} />
+                  <div className="space-y-4">
+                    <QualityScore score={result.score} meta={result.meta} />
+                    <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
+                  </div>
+                </div>
+              </TabsContent>
 
-        {/* Footer */}
-        {!result && !isLoading && (
-          <motion.footer
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="py-8 text-center"
-          >
-            <p className="text-xs text-muted-foreground/60">
-              Built for designers & developers
-            </p>
-          </motion.footer>
+              {/* Preview Tab */}
+              <TabsContent value="preview" className="mt-0">
+                <ResponsivePreview url={result.url} />
+              </TabsContent>
+            </Tabs>
+          </motion.section>
         )}
+      </AnimatePresence>
 
-        {/* Modals */}
-        <CompareWebsites isOpen={showCompare} onClose={() => setShowCompare(false)} />
-        <ExportAnalysis isOpen={showExport} onClose={() => setShowExport(false)} result={result} />
-        <CommandPalette 
-          isOpen={showCommandPalette} 
-          onClose={() => setShowCommandPalette(false)}
-          onCompare={() => setShowCompare(true)}
-          onExport={() => setShowExport(true)}
-          onAnalyze={analyzeWebsite}
-          hasResult={!!result}
-        />
-        <KeyboardShortcutsHelp isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />
-      </div>
-    </TooltipProvider>
+      {/* Footer */}
+      {!result && !isLoading && (
+        <motion.footer
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="py-8 text-center"
+        >
+          <p className="text-xs text-muted-foreground/60">
+            Built for designers & developers
+          </p>
+        </motion.footer>
+      )}
+
+      {/* Modals */}
+      <CompareWebsites isOpen={showCompare} onClose={() => setShowCompare(false)} />
+      <ExportAnalysis isOpen={showExport} onClose={() => setShowExport(false)} result={result} />
+      <CommandPalette 
+        isOpen={showCommandPalette} 
+        onClose={() => setShowCommandPalette(false)}
+        onCompare={() => setShowCompare(true)}
+        onExport={() => setShowExport(true)}
+        onAnalyze={analyzeWebsite}
+        hasResult={!!result}
+      />
+      <KeyboardShortcutsHelp isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />
+    </div>
   );
 };
 
