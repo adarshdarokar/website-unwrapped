@@ -1,6 +1,6 @@
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
-import { Globe } from "lucide-react";
+import { Globe, Menu } from "lucide-react";
 
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UserMenu } from "@/components/UserMenu";
@@ -20,36 +20,48 @@ function getTitle(pathname: string) {
 
 export function AppShell({ children }: PropsWithChildren) {
   const location = useLocation();
-  const title = useMemo(() => getTitle(location.pathname), [location.pathname]);
+  const title = getTitle(location.pathname);
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <div className="min-h-svh flex w-full">
         <AppSidebar />
 
         <SidebarInset>
-          <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-            <div className="h-14 px-3 sm:px-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <SidebarTrigger className="mr-1" />
-                <div className="hidden sm:flex items-center gap-2">
+          {/* Header */}
+          <header className="sticky top-0 z-40 border-b border-border/40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+            <div className="h-14 sm:h-16 px-3 sm:px-6 flex items-center justify-between">
+              {/* Left side - Menu & Logo */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                <SidebarTrigger className="h-9 w-9 sm:h-8 sm:w-8" />
+                
+                <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-primary/10 rounded-lg">
                     <Globe className="w-4 h-4 text-primary" />
                   </div>
-                  <span className="font-display font-semibold">WebVision</span>
+                  <span className="font-display font-semibold text-sm sm:text-base hidden xs:inline">
+                    WebVision
+                  </span>
                 </div>
-                <div className="ml-2 text-sm text-muted-foreground hidden md:block">
-                  {title}
+
+                {/* Page title - desktop only */}
+                <div className="hidden md:flex items-center">
+                  <span className="mx-2 text-border">/</span>
+                  <span className="text-sm text-muted-foreground font-medium">
+                    {title}
+                  </span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5">
+              {/* Right side - Actions */}
+              <div className="flex items-center gap-1 sm:gap-2">
                 <ThemeToggle />
                 <UserMenu />
               </div>
             </div>
           </header>
 
+          {/* Main content */}
           <div className="flex-1">{children}</div>
         </SidebarInset>
       </div>
