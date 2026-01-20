@@ -209,7 +209,7 @@ const Settings = () => {
       {/* Animated background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div 
-          className="absolute top-0 right-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-gradient-to-br from-primary/10 via-accent/5 to-transparent rounded-full blur-3xl"
+          className="absolute top-0 right-1/4 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-gradient-to-br from-primary/10 via-accent/5 to-transparent rounded-full blur-3xl"
           animate={{ 
             x: [0, 30, 0],
             y: [0, 50, 0],
@@ -218,7 +218,7 @@ const Settings = () => {
           transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div 
-          className="absolute bottom-1/4 left-1/4 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-gradient-to-tr from-accent/10 via-secondary/5 to-transparent rounded-full blur-3xl"
+          className="absolute bottom-1/4 left-1/4 w-[200px] md:w-[350px] h-[200px] md:h-[350px] bg-gradient-to-tr from-accent/10 via-secondary/5 to-transparent rounded-full blur-3xl"
           animate={{ 
             x: [0, -40, 0],
             y: [0, -30, 0],
@@ -228,29 +228,8 @@ const Settings = () => {
         />
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 border-b border-border/50 bg-background/80 backdrop-blur-xl sticky top-0">
-        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate('/')}
-              className="rounded-xl h-9 w-9 sm:h-10 sm:w-10"
-            >
-              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-            </Button>
-            <div>
-              <h1 className="text-lg sm:text-xl font-display font-bold">Settings</h1>
-              <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">Manage your account and preferences</p>
-            </div>
-          </div>
-          <ThemeToggle />
-        </div>
-      </header>
-
       {/* Main content */}
-      <main className="relative z-10 max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
+      <main className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
         <div className="space-y-4 sm:space-y-6">
           {/* Profile Section */}
           <motion.div

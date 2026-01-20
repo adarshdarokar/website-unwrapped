@@ -194,14 +194,23 @@
   .animate-gradient {
     animation: gradient 3s ease infinite;
   }
+}
 
-  /* Responsive utilities */
-  @media (max-width: 480px) {
-    .xs\:hidden {
-      display: none;
-    }
-    .xs\:block {
-      display: block;
-    }
+/* Responsive breakpoint utilities */
+@media (min-width: 480px) {
+  .xs\:inline {
+    display: inline !important;
+  }
+  .xs\:flex {
+    display: flex !important;
+  }
+  .xs\:block {
+    display: block !important;
+  }
+}
+
+@media (max-width: 479px) {
+  .xs\:hidden {
+    display: none !important;
   }
 }

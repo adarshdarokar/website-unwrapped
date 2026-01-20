@@ -107,12 +107,12 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="px-4 pt-10 md:pt-14 pb-8">
+      <section className="px-4 sm:px-6 pt-6 sm:pt-10 md:pt-14 pb-6 sm:pb-8">
         <div className="max-w-3xl mx-auto text-center">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-3 py-1 bg-primary/5 text-primary text-xs font-medium rounded-full border border-primary/10 mb-5"
+            className="inline-block px-3 py-1 bg-primary/5 text-primary text-xs font-medium rounded-full border border-primary/10 mb-4 sm:mb-5"
           >
             Analyze any website instantly
           </motion.span>
@@ -121,7 +121,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-2xl sm:text-3xl md:text-4xl font-display font-semibold tracking-tight text-balance mb-3"
+            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display font-semibold tracking-tight text-balance mb-2 sm:mb-3"
           >
             Discover the design DNA
             <br />
@@ -132,7 +132,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground text-sm md:text-base max-w-md mx-auto mb-6"
+            className="text-muted-foreground text-xs sm:text-sm md:text-base max-w-md mx-auto mb-4 sm:mb-6 px-2"
           >
             Extract colors, fonts, images, and icons. Get insights on performance, accessibility, and SEO.
           </motion.p>
@@ -163,11 +163,11 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="max-w-xl mx-auto px-4 mb-8"
+            className="max-w-xl mx-auto px-4 sm:px-6 mb-6 sm:mb-8"
           >
-            <div className="p-4 bg-destructive/5 border border-destructive/20 rounded-xl">
-              <p className="text-destructive font-medium text-sm mb-1">{error}</p>
-              <p className="text-xs text-muted-foreground">
+            <div className="p-3 sm:p-4 bg-destructive/5 border border-destructive/20 rounded-xl">
+              <p className="text-destructive font-medium text-xs sm:text-sm mb-1">{error}</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
                 Please check the URL and try again.
               </p>
             </div>
@@ -182,7 +182,7 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="max-w-7xl mx-auto px-4"
+            className="max-w-7xl mx-auto px-4 sm:px-6"
           >
             <LoadingState />
           </motion.div>
@@ -196,30 +196,30 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="max-w-7xl mx-auto px-4 pb-20"
+            className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 sm:pb-20"
           >
             {/* Result Header */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-6"
+              className="text-center mb-4 sm:mb-6"
             >
-              <div className="flex items-center justify-center gap-3 flex-wrap">
+              <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
                 <a 
                   href={result.url} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline font-medium flex items-center gap-2 text-sm"
+                  className="text-primary hover:underline font-medium flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
                 >
-                  <Globe className="w-4 h-4" />
-                  <span className="truncate max-w-xs">{result.url}</span>
-                  <ExternalLink className="w-3 h-3" />
+                  <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span className="truncate max-w-[200px] sm:max-w-xs">{result.url}</span>
+                  <ExternalLink className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                 </a>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => analyzeWebsite(result.url)}
-                  className="text-muted-foreground hover:text-foreground text-xs"
+                  className="text-muted-foreground hover:text-foreground text-[10px] sm:text-xs h-7 sm:h-8"
                 >
                   <RefreshCw className="w-3 h-3 mr-1" />
                   Re-analyze
@@ -228,15 +228,15 @@ const Index = () => {
             </motion.div>
 
             <Tabs value={activeResultTab} onValueChange={setActiveResultTab} className="w-full">
-              <TabsList className="w-full flex flex-wrap justify-center bg-muted/50 p-1 rounded-xl h-auto mb-6 max-w-2xl mx-auto gap-1">
+              <TabsList className="w-full flex flex-wrap justify-center bg-muted/50 p-1 rounded-xl h-auto mb-4 sm:mb-6 max-w-2xl mx-auto gap-0.5 sm:gap-1">
                 {resultTabs.map((tab) => (
                   <TabsTrigger 
                     key={tab.value}
                     value={tab.value} 
-                    className="flex-1 min-w-[60px] max-w-[120px] flex items-center justify-center gap-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg py-2 sm:py-2.5 text-xs transition-all"
+                    className="flex-1 min-w-[50px] sm:min-w-[60px] max-w-[100px] sm:max-w-[120px] flex items-center justify-center gap-1 sm:gap-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg py-1.5 sm:py-2.5 text-[10px] sm:text-xs transition-all"
                   >
-                    <tab.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    <span className="hidden xs:inline sm:inline">{tab.label}</span>
+                    <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">{tab.label}</span>
                   </TabsTrigger>
                 ))}
               </TabsList>

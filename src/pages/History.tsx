@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { History as HistoryIcon, Search, Filter, Calendar, Globe, Trash2, ExternalLink, Eye, ArrowLeft, Grid, List, SortAsc, SortDesc, Clock, Star, Share2 } from 'lucide-react';
+import { History as HistoryIcon, Search, Filter, Calendar, Globe, Trash2, ExternalLink, Eye, Grid, List, SortAsc, SortDesc, Clock, Star, Share2, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -8,8 +8,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { Link, useNavigate } from 'react-router-dom';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { UserMenu } from '@/components/UserMenu';
 import { format } from 'date-fns';
 
 interface SavedAnalysis {
@@ -205,45 +203,19 @@ const History = () => {
       {/* Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div 
-          className="absolute top-0 left-1/4 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-gradient-to-br from-primary/10 via-accent/5 to-transparent rounded-full blur-3xl"
+          className="absolute top-0 left-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-gradient-to-br from-primary/10 via-accent/5 to-transparent rounded-full blur-3xl"
           animate={{ x: [0, 50, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
           transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div 
-          className="absolute bottom-1/4 right-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-gradient-to-tr from-accent/10 via-secondary/5 to-transparent rounded-full blur-3xl"
+          className="absolute bottom-1/4 right-1/4 w-[200px] md:w-[400px] h-[200px] md:h-[400px] bg-gradient-to-tr from-accent/10 via-secondary/5 to-transparent rounded-full blur-3xl"
           animate={{ x: [0, -40, 0], y: [0, -50, 0], scale: [1, 1.2, 1] }}
           transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
         />
       </div>
 
       <div className="relative z-10">
-        {/* Header */}
-        <header className="py-4 md:py-6 px-4">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Link to="/">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button variant="ghost" size="icon" className="rounded-xl">
-                    <ArrowLeft className="w-5 h-5" />
-                  </Button>
-                </motion.div>
-              </Link>
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl">
-                  <HistoryIcon className="w-5 h-5 text-primary" />
-                </div>
-                <span className="text-xl font-display font-bold">History</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <ThemeToggle />
-              <UserMenu />
-            </div>
-          </div>
-        </header>
-
-        <main className="max-w-7xl mx-auto px-4 pb-20">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 pb-20">
           {/* Stats */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
