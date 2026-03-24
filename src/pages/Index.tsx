@@ -245,41 +245,93 @@ const Index = () => {
               <TabsContent value="overview" className="mt-0">
                 <div className="grid lg:grid-cols-[1fr_320px] gap-4">
                   <div className="space-y-4">
-                    <AnalysisSummary
-                      url={result.url}
-                      score={result.score}
-                      colorCount={stats?.colorCount || 0}
-                      fontCount={stats?.fontCount || 0}
-                      imageCount={stats?.imageCount || 0}
-                      animationCount={stats?.animationCount || 0}
-                      onExport={() => setShowExport(true)}
-                    />
+                    <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.05 }}>
+                      <AnalysisSummary
+                        url={result.url}
+                        score={result.score}
+                        colorCount={stats?.colorCount || 0}
+                        fontCount={stats?.fontCount || 0}
+                        imageCount={stats?.imageCount || 0}
+                        animationCount={stats?.animationCount || 0}
+                        onExport={() => setShowExport(true)}
+                      />
+                    </motion.div>
                     
                     <div className="grid sm:grid-cols-2 gap-4">
-                      <PerformanceInsights 
-                        meta={result.meta} 
-                        images={result.images}
-                        score={result.score}
-                      />
-                      <AccessibilityScore
-                        images={result.images}
-                        meta={result.meta}
-                        colors={result.colors}
-                        fonts={result.fonts}
-                      />
+                      <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}>
+                        <PerformanceInsights 
+                          meta={result.meta} 
+                          images={result.images}
+                          score={result.score}
+                        />
+                      </motion.div>
+                      <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.25 }}>
+                        <AccessibilityScore
+                          images={result.images}
+                          meta={result.meta}
+                          colors={result.colors}
+                          fonts={result.fonts}
+                        />
+                      </motion.div>
                     </div>
 
-                    <DesignInsights
-                      colors={result.colors}
-                      fonts={result.fonts}
-                      animations={result.animations}
-                      score={result.score}
-                    />
+                    <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.35 }}>
+                      <DesignInsights
+                        colors={result.colors}
+                        fonts={result.fonts}
+                        animations={result.animations}
+                        score={result.score}
+                      />
+                    </motion.div>
+
+                    {/* Score Reasoning Summary */}
+                    {(result as any).scoreReasons && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.45 }}
+                        className="bg-card border border-border rounded-xl overflow-hidden"
+                      >
+                        <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2.5 bg-primary/10 rounded-xl">
+                              <LayoutDashboard className="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                              <h3 className="text-sm font-semibold">Score Breakdown</h3>
+                              <p className="text-xs text-muted-foreground">Why your site scored {result.score}/100</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-4 space-y-2">
+                          {((result as any).scoreReasons as string[]).map((reason, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.5 + i * 0.04 }}
+                              className="flex items-start gap-2.5 p-2.5 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+                            >
+                              <span className={`mt-0.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                                reason.includes('+0)') ? 'bg-destructive' :
+                                reason.includes('+1)') || reason.includes('+2)') || reason.includes('+3)') ? 'bg-warning' :
+                                'bg-success'
+                              }`} />
+                              <span className="text-xs text-muted-foreground leading-relaxed">{reason}</span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
                   </div>
 
                   <div className="space-y-4">
-                    <QualityScore score={result.score} meta={result.meta} />
-                    <SEOOverview url={result.url} meta={result.meta} images={result.images} />
+                    <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
+                      <QualityScore score={result.score} meta={result.meta} />
+                    </motion.div>
+                    <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}>
+                      <SEOOverview url={result.url} meta={result.meta} images={result.images} />
+                    </motion.div>
                   </div>
                 </div>
               </TabsContent>
