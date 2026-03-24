@@ -449,90 +449,219 @@ function calculateScore(data: {
   meta: Record<string, string>;
   html: string;
   url: string;
-}): { score: number; breakdown: Record<string, number> } {
+}): { score: number; breakdown: Record<string, number>; reasons: string[] } {
   const breakdown: Record<string, number> = {};
+  const reasons: string[] = [];
   let score = 0;
-  
-  // Images (max 15 points)
+
   const imgCount = data.images.length;
-  if (imgCount > 0 && imgCount < 30) breakdown.images = 10;
-  else if (imgCount >= 30 && imgCount < 60) breakdown.images = 5;
-  else if (imgCount >= 60) breakdown.images = 2;
-  else breakdown.images = 0;
-  
-  // Alt tags (max 5 points)
   const imagesWithAlt = data.images.filter(i => i.alt && i.alt.length > 0).length;
-  if (imgCount > 0) {
-    breakdown.accessibility = Math.round((imagesWithAlt / imgCount) * 5);
-  } else {
-    breakdown.accessibility = 3;
-  }
-  
-  // Typography (max 15 points)
+  const altRatio = imgCount > 0 ? imagesWithAlt / imgCount : 1;
+
+  // === VISUAL DESIGN (40 points max) ===
+
+  // Typography quality (max 12)
   const fontCount = data.fonts.detected.length;
-  if (fontCount > 0 && fontCount <= 4) breakdown.typography = 15;
-  else if (fontCount > 4 && fontCount <= 7) breakdown.typography = 10;
-  else if (fontCount > 7) breakdown.typography = 5;
-  else breakdown.typography = 0;
-  
-  // Web fonts bonus
-  if (data.fonts.googleFonts.length > 0 || data.fonts.adobeFonts.length > 0) {
-    breakdown.typography += 3;
+  const hasWebFonts = data.fonts.googleFonts.length > 0 || data.fonts.adobeFonts.length > 0;
+  if (fontCount >= 1 && fontCount <= 3) {
+    breakdown.typography = hasWebFonts ? 12 : 9;
+    reasons.push(`Clean typography with ${fontCount} font${fontCount > 1 ? 's' : ''}${hasWebFonts ? ' using web fonts' : ''} (+${breakdown.typography})`);
+  } else if (fontCount >= 4 && fontCount <= 6) {
+    breakdown.typography = hasWebFonts ? 8 : 6;
+    reasons.push(`${fontCount} fonts detected — consider consolidating to 2-3 for consistency (+${breakdown.typography})`);
+  } else if (fontCount > 6) {
+    breakdown.typography = 3;
+    reasons.push(`Too many fonts (${fontCount}) — hurts visual consistency and load time (+3)`);
+  } else {
+    breakdown.typography = 2;
+    reasons.push('No custom fonts detected — using browser defaults (+2)');
   }
-  
-  // Color palette (max 15 points)
-  const colorCount = data.colors.hex.length + data.colors.rgb.length + data.colors.hsl.length;
-  if (colorCount >= 5 && colorCount <= 15) breakdown.colors = 15;
-  else if (colorCount > 15 && colorCount <= 30) breakdown.colors = 10;
-  else breakdown.colors = 5;
-  
-  // Gradients bonus
-  if (data.colors.gradients.length > 0) breakdown.colors += 3;
-  
-  // Icons (max 10 points)
-  if (data.icons.svgCount > 0 || data.icons.libraries.length > 0) {
-    breakdown.icons = 10;
+
+  // Color palette coherence (max 12)
+  const totalColors = data.colors.hex.length + data.colors.rgb.length + data.colors.hsl.length;
+  const hasGradients = data.colors.gradients.length > 0;
+  if (totalColors >= 4 && totalColors <= 12) {
+    breakdown.colors = hasGradients ? 12 : 10;
+    reasons.push(`Well-curated palette of ${totalColors} colors${hasGradients ? ' with gradients' : ''} (+${breakdown.colors})`);
+  } else if (totalColors >= 13 && totalColors <= 20) {
+    breakdown.colors = 7;
+    reasons.push(`${totalColors} colors — slightly broad palette, could benefit from consolidation (+7)`);
+  } else if (totalColors > 20) {
+    breakdown.colors = 4;
+    reasons.push(`${totalColors} colors is excessive — indicates inconsistent color usage (+4)`);
+  } else if (totalColors >= 1) {
+    breakdown.colors = 5;
+    reasons.push(`Minimal color palette (${totalColors} colors) — could be intentional or underdeveloped (+5)`);
+  } else {
+    breakdown.colors = 1;
+    reasons.push('No meaningful color palette detected (+1)');
+  }
+
+  // Icons & visual assets (max 8)
+  const hasIconLib = data.icons.libraries.length > 0;
+  const hasSvgs = data.icons.svgCount > 0;
+  if (hasIconLib && hasSvgs) {
+    breakdown.icons = 8;
+    reasons.push(`Using ${data.icons.libraries.join(', ')} with ${data.icons.svgCount} SVGs (+8)`);
+  } else if (hasSvgs && data.icons.svgCount >= 3) {
+    breakdown.icons = 6;
+    reasons.push(`${data.icons.svgCount} inline SVG icons — good for performance (+6)`);
+  } else if (hasSvgs || hasIconLib) {
+    breakdown.icons = 4;
+    reasons.push(`Basic icon usage detected (+4)`);
   } else {
     breakdown.icons = 0;
+    reasons.push('No SVG icons or icon libraries found (+0)');
   }
-  
-  // Animations (max 15 points)
-  const hasAnimations = data.animations.cssAnimations.length > 0 || 
-                       data.animations.keyframes.length > 0 || 
-                       data.animations.transitions.length > 0;
-  if (hasAnimations) breakdown.animations = 10;
-  else breakdown.animations = 0;
-  
-  if (data.animations.hasScrollAnimations) breakdown.animations += 3;
-  if (data.animations.hasParallax) breakdown.animations += 2;
-  
-  // Tech Stack (max 10 points)
-  if (data.techStack.length >= 3) breakdown.techStack = 10;
-  else if (data.techStack.length >= 1) breakdown.techStack = 5;
-  else breakdown.techStack = 0;
-  
-  // SEO & Meta (max 10 points)
+
+  // Motion & interaction design (max 8)
+  const animCount = data.animations.cssAnimations.length + data.animations.keyframes.length;
+  const transCount = data.animations.transitions.length;
+  const hasAdvancedMotion = data.animations.hasScrollAnimations || data.animations.hasParallax;
+  if (animCount > 0 && transCount > 0 && hasAdvancedMotion) {
+    breakdown.animations = 8;
+    reasons.push(`Rich motion design: ${animCount} animations, ${transCount} transitions, scroll effects (+8)`);
+  } else if (animCount > 0 || transCount > 2) {
+    breakdown.animations = 5;
+    reasons.push(`${animCount} animations and ${transCount} transitions — decent interactivity (+5)`);
+  } else if (transCount > 0) {
+    breakdown.animations = 3;
+    reasons.push(`Basic transitions only (${transCount}) — limited motion design (+3)`);
+  } else {
+    breakdown.animations = 0;
+    reasons.push('No animations or transitions detected — static experience (+0)');
+  }
+
+  // === SEO & DISCOVERABILITY (20 points max) ===
+
   breakdown.seo = 0;
-  if (data.meta['title']) breakdown.seo += 2;
-  if (data.meta['description']) breakdown.seo += 2;
-  if (data.meta['og:title'] || data.meta['og:image']) breakdown.seo += 2;
-  if (data.html.includes('viewport')) breakdown.seo += 2;
-  if (data.url.startsWith('https')) breakdown.seo += 2;
-  
-  // Performance hints (max 5 points)
+  const seoReasons: string[] = [];
+  if (data.meta['title'] && data.meta['title'].length >= 10 && data.meta['title'].length <= 70) {
+    breakdown.seo += 4;
+    seoReasons.push('good title tag');
+  } else if (data.meta['title']) {
+    breakdown.seo += 2;
+    seoReasons.push('title exists but suboptimal length');
+  }
+  if (data.meta['description'] && data.meta['description'].length >= 50) {
+    breakdown.seo += 4;
+    seoReasons.push('good meta description');
+  } else if (data.meta['description']) {
+    breakdown.seo += 2;
+    seoReasons.push('short meta description');
+  }
+  if (data.meta['og:title'] && data.meta['og:image']) {
+    breakdown.seo += 4;
+    seoReasons.push('Open Graph tags');
+  } else if (data.meta['og:title'] || data.meta['og:image']) {
+    breakdown.seo += 2;
+    seoReasons.push('partial Open Graph');
+  }
+  if (data.html.includes('viewport')) {
+    breakdown.seo += 4;
+    seoReasons.push('mobile viewport');
+  }
+  if (data.url.startsWith('https')) {
+    breakdown.seo += 4;
+    seoReasons.push('HTTPS');
+  }
+  reasons.push(`SEO: ${seoReasons.length > 0 ? seoReasons.join(', ') : 'no SEO signals found'} (+${breakdown.seo})`);
+
+  // === PERFORMANCE BEST PRACTICES (15 points max) ===
+
   breakdown.performance = 0;
-  if (data.html.includes('rel="preload"')) breakdown.performance += 1;
-  if (data.html.includes('rel="preconnect"')) breakdown.performance += 1;
-  if (data.html.includes('loading="lazy"')) breakdown.performance += 1;
-  if (data.html.includes('srcset')) breakdown.performance += 1;
-  if (data.html.includes('async') || data.html.includes('defer')) breakdown.performance += 1;
-  
+  const perfReasons: string[] = [];
+  if (data.html.includes('rel="preload"') || data.html.includes("rel='preload'")) {
+    breakdown.performance += 3; perfReasons.push('preload');
+  }
+  if (data.html.includes('rel="preconnect"') || data.html.includes("rel='preconnect'")) {
+    breakdown.performance += 3; perfReasons.push('preconnect');
+  }
+  if (data.html.includes('loading="lazy"') || data.html.includes("loading='lazy'")) {
+    breakdown.performance += 3; perfReasons.push('lazy loading');
+  }
+  if (data.html.includes('srcset')) {
+    breakdown.performance += 3; perfReasons.push('responsive images');
+  }
+  if (data.html.includes(' async') || data.html.includes(' defer')) {
+    breakdown.performance += 3; perfReasons.push('async/defer scripts');
+  }
+  reasons.push(`Performance: ${perfReasons.length > 0 ? perfReasons.join(', ') : 'no optimization hints'} (+${breakdown.performance})`);
+
+  // === ACCESSIBILITY (15 points max) ===
+
+  breakdown.accessibility = 0;
+  if (altRatio >= 0.8) {
+    breakdown.accessibility += 6;
+    reasons.push(`${Math.round(altRatio * 100)}% images have alt text — excellent accessibility (+6)`);
+  } else if (altRatio >= 0.5) {
+    breakdown.accessibility += 3;
+    reasons.push(`Only ${Math.round(altRatio * 100)}% images have alt text — needs improvement (+3)`);
+  } else if (imgCount > 0) {
+    breakdown.accessibility += 1;
+    reasons.push(`Poor alt text coverage (${Math.round(altRatio * 100)}%) — major accessibility gap (+1)`);
+  } else {
+    breakdown.accessibility += 4;
+    reasons.push('No images to evaluate for alt text (+4)');
+  }
+
+  // Semantic HTML signals
+  const hasLandmarks = data.html.includes('<nav') || data.html.includes('<main') || data.html.includes('<header') || data.html.includes('<footer');
+  const hasAriaLabels = data.html.includes('aria-label') || data.html.includes('aria-labelledby') || data.html.includes('role=');
+  if (hasLandmarks && hasAriaLabels) {
+    breakdown.accessibility += 6;
+    reasons.push('Good semantic HTML with ARIA landmarks (+6)');
+  } else if (hasLandmarks) {
+    breakdown.accessibility += 4;
+    reasons.push('Has semantic landmarks but limited ARIA labels (+4)');
+  } else if (hasAriaLabels) {
+    breakdown.accessibility += 3;
+    reasons.push('Has ARIA labels but missing semantic landmarks (+3)');
+  } else {
+    breakdown.accessibility += 0;
+    reasons.push('No semantic HTML landmarks or ARIA attributes detected (+0)');
+  }
+
+  // Heading structure
+  const hasH1 = data.html.includes('<h1');
+  const hasHeadingHierarchy = hasH1 && (data.html.includes('<h2') || data.html.includes('<h3'));
+  if (hasHeadingHierarchy) {
+    breakdown.accessibility += 3;
+  } else if (hasH1) {
+    breakdown.accessibility += 2;
+  }
+
+  // === IMAGE QUALITY (10 points max) ===
+
+  breakdown.images = 0;
+  if (imgCount >= 3 && imgCount <= 40) {
+    breakdown.images = 7;
+    reasons.push(`Appropriate image count (${imgCount}) — well-balanced (+7)`);
+  } else if (imgCount > 40 && imgCount <= 80) {
+    breakdown.images = 4;
+    reasons.push(`High image count (${imgCount}) — may impact load performance (+4)`);
+  } else if (imgCount > 80) {
+    breakdown.images = 2;
+    reasons.push(`Excessive images (${imgCount}) — significant performance concern (+2)`);
+  } else if (imgCount > 0) {
+    breakdown.images = 5;
+    reasons.push(`Few images (${imgCount}) — could be text-heavy or minimal design (+5)`);
+  } else {
+    breakdown.images = 2;
+    reasons.push('No images found — site may be text-only or heavily JS-rendered (+2)');
+  }
+  // Variety bonus
+  const hasMultipleTypes = new Set(data.images.map(i => i.type)).size >= 2;
+  if (hasMultipleTypes) {
+    breakdown.images += 3;
+  }
+
   // Calculate total
   for (const key in breakdown) {
     score += breakdown[key];
   }
-  
-  return { score: Math.min(100, score), breakdown };
+
+  return { score: Math.min(100, score), breakdown, reasons };
 }
 
 Deno.serve(async (req) => {
