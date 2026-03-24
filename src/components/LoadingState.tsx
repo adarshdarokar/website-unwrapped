@@ -1,59 +1,122 @@
 import { motion } from 'framer-motion';
-import { Globe, Palette, Type, Image, Zap } from 'lucide-react';
-
-const steps = [
-  { icon: Globe, label: 'Fetching website', delay: 0 },
-  { icon: Palette, label: 'Extracting colors', delay: 0.5 },
-  { icon: Type, label: 'Analyzing fonts', delay: 1 },
-  { icon: Image, label: 'Processing images', delay: 1.5 },
-  { icon: Zap, label: 'Detecting animations', delay: 2 },
-];
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function LoadingState() {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex flex-col items-center justify-center py-16"
+      className="max-w-7xl mx-auto space-y-6 pb-12"
     >
-      {/* Spinner */}
-      <div className="relative w-16 h-16 mb-8">
+      {/* Progress indicator */}
+      <div className="flex items-center justify-center gap-3 py-4">
         <motion.div
-          className="absolute inset-0 rounded-full border-2 border-muted"
-        />
-        <motion.div
-          className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary"
+          className="w-5 h-5 rounded-full border-2 border-transparent border-t-primary"
           animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
         />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Globe className="w-6 h-6 text-primary" />
+        <span className="text-sm text-muted-foreground font-medium">Analyzing website…</span>
+      </div>
+
+      {/* Skeleton: Result header */}
+      <div className="flex items-center justify-center gap-3">
+        <Skeleton className="h-4 w-4 rounded-full" />
+        <Skeleton className="h-4 w-48" />
+        <Skeleton className="h-7 w-24 rounded-md" />
+      </div>
+
+      {/* Skeleton: Tabs */}
+      <div className="flex justify-center">
+        <div className="flex gap-1 bg-muted/50 p-1 rounded-xl">
+          {Array.from({ length: 7 }).map((_, i) => (
+            <Skeleton key={i} className="h-9 w-16 sm:w-20 rounded-lg" />
+          ))}
         </div>
       </div>
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="text-sm font-medium mb-6"
-      >
-        Analyzing website...
-      </motion.p>
+      {/* Skeleton: Overview grid */}
+      <div className="grid lg:grid-cols-[1fr_320px] gap-4">
+        <div className="space-y-4">
+          {/* Summary card */}
+          <div className="bg-card border border-border rounded-xl p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-8 w-20 rounded-md" />
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="bg-muted/30 rounded-lg p-3 space-y-2">
+                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-6 w-10" />
+                </div>
+              ))}
+            </div>
+          </div>
 
-      {/* Progress steps */}
-      <div className="flex flex-wrap justify-center gap-3 max-w-md">
-        {steps.map((step, index) => (
-          <motion.div
-            key={step.label}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: step.delay }}
-            className="flex items-center gap-2 px-3 py-1.5 bg-muted/50 rounded-full"
-          >
-            <step.icon className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs text-muted-foreground">{step.label}</span>
-          </motion.div>
-        ))}
+          {/* Performance & Accessibility */}
+          <div className="grid sm:grid-cols-2 gap-4">
+            {[1, 2].map((i) => (
+              <div key={i} className="bg-card border border-border rounded-xl p-5 space-y-3">
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-2 w-full rounded-full" />
+                <div className="space-y-2">
+                  {Array.from({ length: 3 }).map((_, j) => (
+                    <div key={j} className="flex items-center gap-2">
+                      <Skeleton className="h-3 w-3 rounded-full" />
+                      <Skeleton className="h-3 w-full" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Design Insights */}
+          <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+            <Skeleton className="h-4 w-32" />
+            <div className="grid sm:grid-cols-3 gap-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="bg-muted/30 rounded-lg p-3 space-y-2">
+                  <Skeleton className="h-3 w-20" />
+                  <Skeleton className="h-3 w-full" />
+                  <Skeleton className="h-3 w-3/4" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right sidebar */}
+        <div className="space-y-4">
+          {/* Quality score */}
+          <div className="bg-card border border-border rounded-xl p-5 space-y-4">
+            <Skeleton className="h-4 w-24" />
+            <div className="flex items-center justify-center">
+              <Skeleton className="h-24 w-24 rounded-full" />
+            </div>
+            <div className="space-y-2">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex items-center justify-between">
+                  <Skeleton className="h-3 w-20" />
+                  <Skeleton className="h-2 w-16 rounded-full" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* SEO */}
+          <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+            <Skeleton className="h-4 w-28" />
+            <div className="space-y-2">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <Skeleton className="h-4 w-4 rounded" />
+                  <Skeleton className="h-3 w-full" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </motion.div>
   );
