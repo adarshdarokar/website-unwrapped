@@ -698,7 +698,7 @@ Deno.serve(async (req) => {
     const meta = extractMetaTags(html);
     
     // Calculate score
-    const { score, breakdown } = calculateScore({
+    const { score, breakdown, reasons } = calculateScore({
       images,
       fonts,
       colors,
@@ -714,6 +714,7 @@ Deno.serve(async (req) => {
       url,
       score,
       scoreBreakdown: breakdown,
+      scoreReasons: reasons,
       images: images.slice(0, 50),
       fonts,
       colors: [...colors.hex, ...colors.rgb.slice(0, 10), ...colors.hsl.slice(0, 10)],
