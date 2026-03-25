@@ -661,7 +661,44 @@ function calculateScore(data: {
     score += breakdown[key];
   }
 
-  return { score: Math.min(100, score), breakdown, reasons };
+  // Generate improvement suggestions
+  const suggestions: string[] = [];
+  
+  if ((breakdown.typography || 0) < 9) {
+    suggestions.push('Use 2-3 well-paired web fonts (e.g., from Google Fonts) for a more polished, professional look. Avoid using too many or too few fonts.');
+  }
+  if ((breakdown.colors || 0) < 8) {
+    suggestions.push('Define a cohesive color palette with 5-8 colors including primary, secondary, accent, and neutral tones. Use CSS variables for consistency.');
+  }
+  if ((breakdown.icons || 0) < 5) {
+    suggestions.push('Add SVG icons using a library like Lucide, Heroicons, or Font Awesome to improve visual communication and UI clarity.');
+  }
+  if ((breakdown.animations || 0) < 5) {
+    suggestions.push('Add subtle CSS transitions on interactive elements (buttons, links, cards) and consider scroll-based animations for a modern feel.');
+  }
+  if ((breakdown.seo || 0) < 14) {
+    if (!data.meta['title'] || data.meta['title'].length < 10) suggestions.push('Add a descriptive title tag (50-60 characters) that includes your primary keyword for better search visibility.');
+    if (!data.meta['description'] || data.meta['description'].length < 50) suggestions.push('Write a compelling meta description (120-160 characters) to improve click-through rates from search results.');
+    if (!data.meta['og:title'] || !data.meta['og:image']) suggestions.push('Add Open Graph tags (og:title, og:description, og:image) so your site looks great when shared on social media.');
+  }
+  if ((breakdown.performance || 0) < 9) {
+    const missing: string[] = [];
+    if (!data.html.includes('rel="preload"')) missing.push('preload critical resources');
+    if (!data.html.includes('rel="preconnect"')) missing.push('preconnect to third-party domains');
+    if (!data.html.includes('loading="lazy"')) missing.push('lazy-load images below the fold');
+    if (!data.html.includes('srcset')) missing.push('use srcset for responsive images');
+    if (missing.length > 0) suggestions.push(`Improve load performance: ${missing.join(', ')}.`);
+  }
+  if ((breakdown.accessibility || 0) < 10) {
+    if (altRatio < 0.8) suggestions.push(`Add descriptive alt text to all images — currently only ${Math.round(altRatio * 100)}% have alt attributes. This is critical for screen readers.`);
+    if (!data.html.includes('aria-label')) suggestions.push('Add ARIA labels to interactive elements (buttons, forms, navigation) for better assistive technology support.');
+    if (!data.html.includes('<nav') && !data.html.includes('<main')) suggestions.push('Use semantic HTML landmarks (<nav>, <main>, <header>, <footer>) for better page structure and accessibility.');
+  }
+  if ((breakdown.images || 0) < 7) {
+    suggestions.push('Optimize your image strategy — aim for 5-30 well-optimized images with proper alt text, multiple formats (WebP/AVIF), and responsive sizes.');
+  }
+
+  return { score: Math.min(100, score), breakdown, reasons, suggestions };
 }
 
 Deno.serve(async (req) => {
@@ -698,7 +735,7 @@ Deno.serve(async (req) => {
     const meta = extractMetaTags(html);
     
     // Calculate score
-    const { score, breakdown, reasons } = calculateScore({
+    const { score, breakdown, reasons, suggestions } = calculateScore({
       images,
       fonts,
       colors,
@@ -715,6 +752,7 @@ Deno.serve(async (req) => {
       score,
       scoreBreakdown: breakdown,
       scoreReasons: reasons,
+      suggestions,
       images: images.slice(0, 50),
       fonts,
       colors: [...colors.hex, ...colors.rgb.slice(0, 10), ...colors.hsl.slice(0, 10)],

@@ -36,6 +36,7 @@ import { DesignInsights } from '@/components/DesignInsights';
 import { SEOOverview } from '@/components/SEOOverview';
 import { AnalysisSummary } from '@/components/AnalysisSummary';
 import { ResponsivePreview } from '@/components/ResponsivePreview';
+import { ScoreBreakdown } from '@/components/ScoreBreakdown';
 import { useWebsiteAnalyzer } from '@/hooks/useWebsiteAnalyzer';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useAnalysisStats } from '@/hooks/useAnalysisStats';
@@ -284,45 +285,19 @@ const Index = () => {
                       />
                     </motion.div>
 
-                    {/* Score Reasoning Summary */}
-                    {(result as any).scoreReasons && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 24 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.45 }}
-                        className="bg-card border border-border rounded-xl overflow-hidden"
-                      >
-                        <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2.5 bg-primary/10 rounded-xl">
-                              <LayoutDashboard className="w-5 h-5 text-primary" />
-                            </div>
-                            <div>
-                              <h3 className="text-sm font-semibold">Score Breakdown</h3>
-                              <p className="text-xs text-muted-foreground">Why your site scored {result.score}/100</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="p-4 space-y-2">
-                          {((result as any).scoreReasons as string[]).map((reason, i) => (
-                            <motion.div
-                              key={i}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: 0.5 + i * 0.04 }}
-                              className="flex items-start gap-2.5 p-2.5 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-                            >
-                              <span className={`mt-0.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                                reason.includes('+0)') ? 'bg-destructive' :
-                                reason.includes('+1)') || reason.includes('+2)') || reason.includes('+3)') ? 'bg-warning' :
-                                'bg-success'
-                              }`} />
-                              <span className="text-xs text-muted-foreground leading-relaxed">{reason}</span>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
+                    {/* Score Breakdown with Suggestions */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: 0.45 }}
+                    >
+                      <ScoreBreakdown
+                        score={result.score}
+                        scoreBreakdown={(result as any).scoreBreakdown}
+                        scoreReasons={(result as any).scoreReasons}
+                        suggestions={(result as any).suggestions}
+                      />
+                    </motion.div>
                   </div>
 
                   <div className="space-y-4">
