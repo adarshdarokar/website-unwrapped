@@ -230,14 +230,14 @@ const Index = () => {
             </motion.div>
 
             <Tabs value={activeResultTab} onValueChange={setActiveResultTab} className="w-full">
-              <TabsList className="w-full flex flex-wrap justify-center bg-muted/50 p-1 rounded-xl h-auto mb-4 sm:mb-6 max-w-2xl mx-auto gap-0.5 sm:gap-1">
+              <TabsList className="w-full flex flex-wrap justify-center bg-muted/30 p-1 sm:p-1.5 rounded-xl h-auto mb-5 sm:mb-6 max-w-2xl mx-auto gap-0.5 sm:gap-1 border border-border/30">
                 {resultTabs.map((tab) => (
                   <TabsTrigger 
                     key={tab.value}
                     value={tab.value} 
-                    className="flex-1 min-w-[50px] sm:min-w-[60px] max-w-[100px] sm:max-w-[120px] flex items-center justify-center gap-1 sm:gap-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg py-1.5 sm:py-2.5 text-[10px] sm:text-xs transition-all"
+                    className="flex-1 min-w-[44px] sm:min-w-[60px] max-w-[100px] sm:max-w-[120px] flex items-center justify-center gap-1 sm:gap-1.5 data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:border-border/50 rounded-lg py-2 sm:py-2.5 text-[10px] sm:text-xs transition-all"
                   >
-                    <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <tab.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     <span className="hidden sm:inline">{tab.label}</span>
                   </TabsTrigger>
                 ))}
