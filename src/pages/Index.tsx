@@ -382,10 +382,13 @@ const Index = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="py-8 text-center"
+          className="py-10 sm:py-12 text-center border-t border-border/30 mt-8"
         >
-          <p className="text-xs text-muted-foreground/60">
-            Built for designers & developers
+          <p className="text-xs text-muted-foreground/60 mb-1">
+            Built with precision for designers & developers
+          </p>
+          <p className="text-[10px] text-muted-foreground/40">
+            Keyboard shortcuts: ⌘K to search · ⌘E to export · ⌘/ for help
           </p>
         </motion.footer>
       )}
