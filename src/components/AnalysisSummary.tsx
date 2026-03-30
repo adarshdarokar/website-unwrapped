@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
 import { 
   Bookmark,
-  Star,
-  Clock,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Palette,
+  Type,
+  Image,
+  Zap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -27,7 +29,6 @@ export function AnalysisSummary({
   imageCount, 
   animationCount,
   onExport,
-  onSave
 }: AnalysisSummaryProps) {
   const getScoreLabel = () => {
     if (score >= 90) return 'Exceptional';
@@ -40,19 +41,24 @@ export function AnalysisSummary({
   };
 
   const getScoreColor = () => {
-    if (score >= 80) return 'text-emerald-500';
-    if (score >= 60) return 'text-amber-500';
-    return 'text-red-500';
+    if (score >= 80) return 'text-success';
+    if (score >= 60) return 'text-warning';
+    return 'text-destructive';
+  };
+
+  const getScoreBg = () => {
+    if (score >= 80) return 'bg-success/10';
+    if (score >= 60) return 'bg-warning/10';
+    return 'bg-destructive/10';
   };
 
   const stats = [
-    { label: 'Colors', value: colorCount, suffix: '' },
-    { label: 'Fonts', value: fontCount, suffix: '' },
-    { label: 'Images', value: imageCount, suffix: '' },
-    { label: 'Animations', value: animationCount, suffix: '' },
+    { label: 'Colors', value: colorCount, icon: Palette, color: 'text-rose-500 bg-rose-500/10' },
+    { label: 'Fonts', value: fontCount, icon: Type, color: 'text-violet-500 bg-violet-500/10' },
+    { label: 'Images', value: imageCount, icon: Image, color: 'text-blue-500 bg-blue-500/10' },
+    { label: 'Animations', value: animationCount, icon: Zap, color: 'text-amber-500 bg-amber-500/10' },
   ];
 
-  // Extract domain for display
   const domain = (() => {
     try {
       return new URL(url).hostname.replace('www.', '');
@@ -65,27 +71,24 @@ export function AnalysisSummary({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-card to-muted/30 border border-border rounded-xl p-6 relative overflow-hidden"
+      className="bg-card border border-border rounded-xl overflow-hidden"
     >
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-      
       {/* Header */}
-      <div className="flex items-start justify-between mb-6 relative">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-xs font-medium text-primary">Analysis Complete</span>
+      <div className="p-4 sm:p-5 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-xl">
+              <Sparkles className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Analysis Complete</p>
+              <h2 className="text-base sm:text-lg font-semibold font-display">{domain}</h2>
+            </div>
           </div>
-          <h2 className="text-lg font-semibold truncate mb-1">{domain}</h2>
-          <div className="flex items-center gap-2">
-            <span className={`text-2xl font-bold ${getScoreColor()}`}>{score}</span>
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <span className={`text-2xl font-bold tabular-nums ${getScoreColor()}`}>{score}</span>
             <span className="text-sm text-muted-foreground">/ 100</span>
-            <span className={`text-xs px-2 py-0.5 rounded-full ${
-              score >= 80 ? 'bg-emerald-500/10 text-emerald-500' :
-              score >= 60 ? 'bg-amber-500/10 text-amber-500' :
-              'bg-red-500/10 text-red-500'
-            }`}>
+            <span className={`text-[10px] px-2 py-1 rounded-full font-semibold ${getScoreColor()} ${getScoreBg()}`}>
               {getScoreLabel()}
             </span>
           </div>
@@ -93,45 +96,50 @@ export function AnalysisSummary({
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-4 gap-3 mb-6">
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.05 }}
-            className="text-center p-3 bg-background/50 rounded-lg"
-          >
-            <p className="text-xl font-semibold">{stat.value}{stat.suffix}</p>
-            <p className="text-xs text-muted-foreground">{stat.label}</p>
-          </motion.div>
-        ))}
-      </div>
+      <div className="p-4 sm:p-5">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4 sm:mb-5">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.05 }}
+              className="text-center p-3 sm:p-4 bg-muted/20 rounded-xl border border-border/30"
+            >
+              <div className={`p-1.5 rounded-lg ${stat.color} w-fit mx-auto mb-2`}>
+                <stat.icon className="w-3.5 h-3.5" />
+              </div>
+              <p className="text-lg sm:text-xl font-bold tabular-nums">{stat.value}</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">{stat.label}</p>
+            </motion.div>
+          ))}
+        </div>
 
-      {/* Actions */}
-      <div className="flex gap-2">
-        {onExport && (
+        {/* Actions */}
+        <div className="flex flex-col sm:flex-row gap-2">
+          {onExport && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={onExport}
+              className="flex-1 gap-2 h-9"
+            >
+              <Bookmark className="w-4 h-4" />
+              Export Report
+            </Button>
+          )}
           <Button 
-            variant="outline" 
+            variant="default" 
             size="sm" 
-            onClick={onExport}
-            className="flex-1 gap-2"
+            asChild
+            className="flex-1 gap-2 h-9"
           >
-            <Bookmark className="w-4 h-4" />
-            Export
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              Visit Site
+              <ArrowRight className="w-4 h-4" />
+            </a>
           </Button>
-        )}
-        <Button 
-          variant="default" 
-          size="sm" 
-          asChild
-          className="flex-1 gap-2"
-        >
-          <a href={url} target="_blank" rel="noopener noreferrer">
-            Visit Site
-            <ArrowRight className="w-4 h-4" />
-          </a>
-        </Button>
+        </div>
       </div>
     </motion.div>
   );
