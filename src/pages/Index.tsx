@@ -108,13 +108,14 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="px-4 sm:px-6 pt-6 sm:pt-10 md:pt-14 pb-6 sm:pb-8">
+      <section className="px-4 sm:px-6 pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8">
         <div className="max-w-3xl mx-auto text-center">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-3 py-1 bg-primary/5 text-primary text-xs font-medium rounded-full border border-primary/10 mb-4 sm:mb-5"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 text-primary text-xs font-medium rounded-full border border-primary/10 mb-5 sm:mb-6"
           >
+            <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
             Analyze any website instantly
           </motion.span>
 
@@ -122,20 +123,20 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display font-semibold tracking-tight text-balance mb-2 sm:mb-3"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold tracking-tight text-balance mb-3 sm:mb-4"
           >
             Discover the design DNA
             <br />
-            <span className="text-muted-foreground">of any website</span>
+            <span className="gradient-text">of any website</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground text-xs sm:text-sm md:text-base max-w-md mx-auto mb-4 sm:mb-6 px-2"
+            className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto mb-6 sm:mb-8 px-2 leading-relaxed"
           >
-            Extract colors, fonts, images, and icons. Get insights on performance, accessibility, and SEO.
+            Extract colors, fonts, images, and icons. Get actionable insights on performance, accessibility, and SEO — all in seconds.
           </motion.p>
 
           <UrlInput onAnalyze={analyzeWebsite} isLoading={isLoading} inputRef={urlInputRef} />
