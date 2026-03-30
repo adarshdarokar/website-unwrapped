@@ -245,7 +245,7 @@ const Index = () => {
 
               {/* Overview Tab */}
               <TabsContent value="overview" className="mt-0">
-                <div className="grid lg:grid-cols-[1fr_320px] gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-4">
                   <div className="space-y-4">
                     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.05 }}>
                       <AnalysisSummary
