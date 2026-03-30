@@ -108,13 +108,14 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="px-4 sm:px-6 pt-6 sm:pt-10 md:pt-14 pb-6 sm:pb-8">
+      <section className="px-4 sm:px-6 pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8">
         <div className="max-w-3xl mx-auto text-center">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-3 py-1 bg-primary/5 text-primary text-xs font-medium rounded-full border border-primary/10 mb-4 sm:mb-5"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/5 text-primary text-xs font-medium rounded-full border border-primary/10 mb-5 sm:mb-6"
           >
+            <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
             Analyze any website instantly
           </motion.span>
 
@@ -122,20 +123,20 @@ const Index = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display font-semibold tracking-tight text-balance mb-2 sm:mb-3"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold tracking-tight text-balance mb-3 sm:mb-4"
           >
             Discover the design DNA
             <br />
-            <span className="text-muted-foreground">of any website</span>
+            <span className="gradient-text">of any website</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground text-xs sm:text-sm md:text-base max-w-md mx-auto mb-4 sm:mb-6 px-2"
+            className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto mb-6 sm:mb-8 px-2 leading-relaxed"
           >
-            Extract colors, fonts, images, and icons. Get insights on performance, accessibility, and SEO.
+            Extract colors, fonts, images, and icons. Get actionable insights on performance, accessibility, and SEO — all in seconds.
           </motion.p>
 
           <UrlInput onAnalyze={analyzeWebsite} isLoading={isLoading} inputRef={urlInputRef} />
@@ -229,14 +230,14 @@ const Index = () => {
             </motion.div>
 
             <Tabs value={activeResultTab} onValueChange={setActiveResultTab} className="w-full">
-              <TabsList className="w-full flex flex-wrap justify-center bg-muted/50 p-1 rounded-xl h-auto mb-4 sm:mb-6 max-w-2xl mx-auto gap-0.5 sm:gap-1">
+              <TabsList className="w-full flex flex-wrap justify-center bg-muted/30 p-1 sm:p-1.5 rounded-xl h-auto mb-5 sm:mb-6 max-w-2xl mx-auto gap-0.5 sm:gap-1 border border-border/30">
                 {resultTabs.map((tab) => (
                   <TabsTrigger 
                     key={tab.value}
                     value={tab.value} 
-                    className="flex-1 min-w-[50px] sm:min-w-[60px] max-w-[100px] sm:max-w-[120px] flex items-center justify-center gap-1 sm:gap-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg py-1.5 sm:py-2.5 text-[10px] sm:text-xs transition-all"
+                    className="flex-1 min-w-[44px] sm:min-w-[60px] max-w-[100px] sm:max-w-[120px] flex items-center justify-center gap-1 sm:gap-1.5 data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:border-border/50 rounded-lg py-2 sm:py-2.5 text-[10px] sm:text-xs transition-all"
                   >
-                    <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <tab.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     <span className="hidden sm:inline">{tab.label}</span>
                   </TabsTrigger>
                 ))}
@@ -244,7 +245,7 @@ const Index = () => {
 
               {/* Overview Tab */}
               <TabsContent value="overview" className="mt-0">
-                <div className="grid lg:grid-cols-[1fr_320px] gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-4">
                   <div className="space-y-4">
                     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.05 }}>
                       <AnalysisSummary
@@ -313,7 +314,7 @@ const Index = () => {
 
               {/* Colors Tab */}
               <TabsContent value="colors" className="mt-0">
-                <div className="grid lg:grid-cols-[1fr_280px] gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
                   <ColorPalette colors={result.colors} />
                   <div className="space-y-4">
                     <QualityScore score={result.score} meta={result.meta} />
@@ -324,7 +325,7 @@ const Index = () => {
 
               {/* Fonts Tab */}
               <TabsContent value="fonts" className="mt-0">
-                <div className="grid lg:grid-cols-[1fr_280px] gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
                   <FontDisplay fonts={result.fonts} />
                   <div className="space-y-4">
                     <QualityScore score={result.score} meta={result.meta} />
@@ -335,7 +336,7 @@ const Index = () => {
 
               {/* Images Tab */}
               <TabsContent value="images" className="mt-0">
-                <div className="grid lg:grid-cols-[1fr_280px] gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
                   <ImageGallery images={result.images} />
                   <div className="space-y-4">
                     <QualityScore score={result.score} meta={result.meta} />
@@ -346,7 +347,7 @@ const Index = () => {
 
               {/* Icons Tab */}
               <TabsContent value="icons" className="mt-0">
-                <div className="grid lg:grid-cols-[1fr_280px] gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
                   <IconDisplay icons={result.icons} />
                   <div className="space-y-4">
                     <QualityScore score={result.score} meta={result.meta} />
@@ -357,7 +358,7 @@ const Index = () => {
 
               {/* Animations Tab */}
               <TabsContent value="animations" className="mt-0">
-                <div className="grid lg:grid-cols-[1fr_280px] gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
                   <AnimationDisplay animations={result.animations} />
                   <div className="space-y-4">
                     <QualityScore score={result.score} meta={result.meta} />
@@ -381,10 +382,13 @@ const Index = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="py-8 text-center"
+          className="py-10 sm:py-12 text-center border-t border-border/30 mt-8"
         >
-          <p className="text-xs text-muted-foreground/60">
-            Built for designers & developers
+          <p className="text-xs text-muted-foreground/60 mb-1">
+            Built with precision for designers & developers
+          </p>
+          <p className="text-[10px] text-muted-foreground/40">
+            Keyboard shortcuts: ⌘K to search · ⌘E to export · ⌘/ for help
           </p>
         </motion.footer>
       )}

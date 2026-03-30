@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import {
   Palette, Type, Shapes, Zap, Search, Gauge, Accessibility, Image,
   CheckCircle2, AlertTriangle, XCircle, Lightbulb, TrendingUp,
-  BarChart3, ClipboardList, ChevronDown
+  BarChart3, ClipboardList, ChevronDown, ArrowUpRight
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { useState } from 'react';
@@ -14,15 +14,15 @@ interface ScoreBreakdownProps {
   suggestions?: string[];
 }
 
-const categoryConfig: Record<string, { label: string; icon: React.ElementType; maxPoints: number; color: string }> = {
-  typography: { label: 'Typography', icon: Type, maxPoints: 12, color: 'text-blue-500' },
-  colors: { label: 'Color Palette', icon: Palette, maxPoints: 12, color: 'text-purple-500' },
-  icons: { label: 'Icons & Assets', icon: Shapes, maxPoints: 8, color: 'text-emerald-500' },
-  animations: { label: 'Motion Design', icon: Zap, maxPoints: 8, color: 'text-amber-500' },
-  seo: { label: 'SEO & Discovery', icon: Search, maxPoints: 20, color: 'text-cyan-500' },
-  performance: { label: 'Performance', icon: Gauge, maxPoints: 15, color: 'text-orange-500' },
-  accessibility: { label: 'Accessibility', icon: Accessibility, maxPoints: 15, color: 'text-pink-500' },
-  images: { label: 'Image Quality', icon: Image, maxPoints: 10, color: 'text-teal-500' },
+const categoryConfig: Record<string, { label: string; icon: React.ElementType; maxPoints: number; color: string; bgColor: string }> = {
+  typography: { label: 'Typography', icon: Type, maxPoints: 12, color: 'text-blue-500', bgColor: 'bg-blue-500/10' },
+  colors: { label: 'Color Palette', icon: Palette, maxPoints: 12, color: 'text-purple-500', bgColor: 'bg-purple-500/10' },
+  icons: { label: 'Icons & Assets', icon: Shapes, maxPoints: 8, color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
+  animations: { label: 'Motion Design', icon: Zap, maxPoints: 8, color: 'text-amber-500', bgColor: 'bg-amber-500/10' },
+  seo: { label: 'SEO & Discovery', icon: Search, maxPoints: 20, color: 'text-cyan-500', bgColor: 'bg-cyan-500/10' },
+  performance: { label: 'Performance', icon: Gauge, maxPoints: 15, color: 'text-orange-500', bgColor: 'bg-orange-500/10' },
+  accessibility: { label: 'Accessibility', icon: Accessibility, maxPoints: 15, color: 'text-pink-500', bgColor: 'bg-pink-500/10' },
+  images: { label: 'Image Quality', icon: Image, maxPoints: 10, color: 'text-teal-500', bgColor: 'bg-teal-500/10' },
 };
 
 function getScoreLevel(score: number): { label: string; color: string; bg: string } {
@@ -56,24 +56,24 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
         animate={{ opacity: 1, y: 0 }}
         className="bg-card border border-border rounded-xl p-4 sm:p-5"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-primary/10 rounded-xl">
+            <div className="p-2.5 bg-primary/10 rounded-xl flex-shrink-0">
               <TrendingUp className="w-5 h-5 text-primary" />
             </div>
             <div>
               <h3 className="text-sm font-semibold font-display">Detailed Score Analysis</h3>
-              <p className="text-xs text-muted-foreground">How we evaluated your website</p>
+              <p className="text-xs text-muted-foreground">Transparent breakdown of how we evaluated your website</p>
             </div>
           </div>
-          <div className={`px-3 py-1.5 rounded-full text-xs font-semibold ${level.color} ${level.bg}`}>
+          <div className={`px-3 py-1.5 rounded-full text-xs font-bold ${level.color} ${level.bg} self-start sm:self-auto whitespace-nowrap`}>
             {score}/100 · {level.label}
           </div>
         </div>
       </motion.div>
 
       {/* Side-by-side: Category Scores + Evaluation Details */}
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* LEFT: Category Scores */}
         {scoreBreakdown && (
           <motion.div
@@ -82,15 +82,19 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
             transition={{ delay: 0.1 }}
             className="bg-card border border-border rounded-xl overflow-hidden"
           >
-            <div className="p-4 border-b border-border bg-muted/20">
-              <div className="flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-primary" />
-                <h4 className="text-xs font-semibold font-display uppercase tracking-wider">Category Scores</h4>
+            <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 bg-primary/10 rounded-lg">
+                  <BarChart3 className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-semibold font-display">Category Scores</h4>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">Points earned in each evaluation area</p>
+                </div>
               </div>
-              <p className="text-[11px] text-muted-foreground mt-0.5">Points earned in each evaluation area</p>
             </div>
-            <div className="p-4 space-y-3">
-              {Object.entries(categoryConfig).map(([key, config]) => {
+            <div className="p-3 sm:p-4 space-y-2">
+              {Object.entries(categoryConfig).map(([key, config], idx) => {
                 const points = scoreBreakdown[key] ?? 0;
                 const percentage = Math.round((points / config.maxPoints) * 100);
                 const matchingReason = scoreReasons?.find(r => {
@@ -111,20 +115,22 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
                     key={key}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.15 + Object.keys(categoryConfig).indexOf(key) * 0.04 }}
-                    className="p-2.5 rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors"
+                    transition={{ delay: 0.15 + idx * 0.04 }}
+                    className="p-2.5 sm:p-3 rounded-xl bg-muted/20 hover:bg-muted/30 transition-colors"
                   >
                     <button
                       onClick={() => setExpandedCategory(expandedCategory === key ? null : key)}
                       className="w-full text-left"
                     >
-                      <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <config.icon className={`w-3.5 h-3.5 ${config.color}`} />
+                          <div className={`p-1 rounded-md ${config.bgColor}`}>
+                            <config.icon className={`w-3 h-3 ${config.color}`} />
+                          </div>
                           <span className="text-xs font-medium">{config.label}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className={`text-xs font-semibold ${percentage >= 70 ? 'text-success' : percentage >= 40 ? 'text-warning' : 'text-destructive'}`}>
+                          <span className={`text-xs font-bold tabular-nums ${percentage >= 70 ? 'text-success' : percentage >= 40 ? 'text-warning' : 'text-destructive'}`}>
                             {points}/{config.maxPoints}
                           </span>
                           <ChevronDown className={`w-3 h-3 text-muted-foreground transition-transform duration-200 ${expandedCategory === key ? 'rotate-180' : ''}`} />
@@ -137,7 +143,7 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
-                        className="mt-2 p-2 bg-background/50 rounded-md border border-border/50"
+                        className="mt-2.5 p-2.5 bg-background/50 rounded-lg border border-border/50"
                       >
                         <div className="flex items-start gap-2">
                           {getReasonIcon(matchingReason)}
@@ -160,24 +166,28 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
             transition={{ delay: 0.2 }}
             className="bg-card border border-border rounded-xl overflow-hidden"
           >
-            <div className="p-4 border-b border-border bg-muted/20">
-              <div className="flex items-center gap-2">
-                <ClipboardList className="w-4 h-4 text-primary" />
-                <h4 className="text-xs font-semibold font-display uppercase tracking-wider">Evaluation Details</h4>
+            <div className="p-4 border-b border-border bg-gradient-to-r from-violet-500/5 to-transparent">
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 bg-violet-500/10 rounded-lg">
+                  <ClipboardList className="w-4 h-4 text-violet-500" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-semibold font-display">Evaluation Details</h4>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">What we found during analysis</p>
+                </div>
               </div>
-              <p className="text-[11px] text-muted-foreground mt-0.5">What we found during analysis</p>
             </div>
-            <div className="p-4 space-y-1.5">
+            <div className="p-3 sm:p-4 space-y-1">
               {scoreReasons.map((reason, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.25 + i * 0.03 }}
-                  className="flex items-start gap-2.5 p-2.5 rounded-lg hover:bg-muted/30 transition-colors"
+                  className="flex items-start gap-2.5 p-2.5 sm:p-3 rounded-xl hover:bg-muted/30 transition-colors"
                 >
                   {getReasonIcon(reason)}
-                  <span className="text-[11px] text-muted-foreground leading-relaxed">{reason}</span>
+                  <span className="text-[11px] sm:text-xs text-muted-foreground leading-relaxed">{reason}</span>
                 </motion.div>
               ))}
             </div>
@@ -193,26 +203,33 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
           transition={{ delay: 0.35 }}
           className="bg-card border border-border rounded-xl overflow-hidden"
         >
-          <div className="p-4 border-b border-border bg-warning/5">
-            <div className="flex items-center gap-2">
-              <Lightbulb className="w-4 h-4 text-warning" />
-              <h4 className="text-xs font-semibold font-display uppercase tracking-wider">Suggestions to Improve</h4>
+          <div className="p-4 border-b border-border bg-gradient-to-r from-warning/5 to-transparent">
+            <div className="flex items-center gap-2.5">
+              <div className="p-1.5 bg-warning/10 rounded-lg">
+                <Lightbulb className="w-4 h-4 text-warning" />
+              </div>
+              <div>
+                <h4 className="text-xs font-semibold font-display">Suggestions to Improve</h4>
+                <p className="text-[10px] text-muted-foreground mt-0.5">Actionable steps to boost your score</p>
+              </div>
             </div>
-            <p className="text-[11px] text-muted-foreground mt-0.5">Actionable steps to boost your score</p>
           </div>
-          <div className="p-4 grid sm:grid-cols-2 gap-2.5">
+          <div className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {suggestions.map((suggestion, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + i * 0.05 }}
-                className="flex items-start gap-2.5 p-3 bg-warning/5 border border-warning/10 rounded-lg"
+                className="flex items-start gap-3 p-3 sm:p-3.5 bg-warning/5 border border-warning/10 rounded-xl"
               >
-                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-warning/15 text-warning text-[10px] font-bold flex items-center justify-center mt-0.5">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-warning/15 text-warning text-[10px] font-bold flex items-center justify-center mt-0.5">
                   {i + 1}
                 </span>
-                <p className="text-xs text-foreground/80 leading-relaxed">{suggestion}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-foreground/80 leading-relaxed">{suggestion}</p>
+                </div>
+                <ArrowUpRight className="w-3.5 h-3.5 text-warning/50 flex-shrink-0 mt-0.5" />
               </motion.div>
             ))}
           </div>

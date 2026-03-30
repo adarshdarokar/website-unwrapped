@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 
 const popularSites = [
-  { name: 'Apple', url: 'https://apple.com' },
-  { name: 'Stripe', url: 'https://stripe.com' },
-  { name: 'Linear', url: 'https://linear.app' },
-  { name: 'Vercel', url: 'https://vercel.com' },
-  { name: 'Notion', url: 'https://notion.so' },
+  { name: 'Apple', url: 'https://apple.com', emoji: '🍎' },
+  { name: 'Stripe', url: 'https://stripe.com', emoji: '💳' },
+  { name: 'Linear', url: 'https://linear.app', emoji: '⚡' },
+  { name: 'Vercel', url: 'https://vercel.com', emoji: '▲' },
+  { name: 'Notion', url: 'https://notion.so', emoji: '📝' },
 ];
 
 interface QuickActionsProps {
@@ -20,13 +21,13 @@ export function QuickActions({ onAnalyze, isLoading }: QuickActionsProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.7 }}
-      className="mt-16"
+      className="mt-12 sm:mt-16"
     >
-      <p className="text-xs text-muted-foreground mb-4">
-        Try analyzing
+      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+        Quick start — try these
       </p>
       
-      <div className="flex flex-wrap justify-center gap-2">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-2.5">
         {popularSites.map((site, index) => (
           <motion.div
             key={site.name}
@@ -39,9 +40,11 @@ export function QuickActions({ onAnalyze, isLoading }: QuickActionsProps) {
               size="sm"
               onClick={() => onAnalyze(site.url)}
               disabled={isLoading}
-              className="rounded-full px-4 h-8 text-xs font-medium border-border/50 bg-transparent hover:bg-muted/50 transition-colors"
+              className="rounded-full px-4 h-9 text-xs font-medium border-border/50 bg-card/50 hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-all gap-1.5 group"
             >
-              {site.name}
+              <span>{site.emoji}</span>
+              <span>{site.name}</span>
+              <ArrowRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
             </Button>
           </motion.div>
         ))}
