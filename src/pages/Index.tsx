@@ -419,7 +419,7 @@ const Index = () => {
         onClose={() => setShowCommandPalette(false)}
         onCompare={() => setShowCompare(true)}
         onExport={() => setShowExport(true)}
-        onAnalyze={analyzeWebsite}
+        onAnalyze={handleAnalyze}
         hasResult={!!result}
       />
       <KeyboardShortcutsHelp isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />
