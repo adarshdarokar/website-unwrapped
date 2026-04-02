@@ -55,6 +55,14 @@ function AnimatedRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/pricing"
+          element={
+            <AppShell>
+              <PageTransition><Pricing /></PageTransition>
+            </AppShell>
+          }
+        />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
