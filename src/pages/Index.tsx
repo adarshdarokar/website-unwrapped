@@ -40,6 +40,8 @@ import { ScoreBreakdown } from '@/components/ScoreBreakdown';
 import { useWebsiteAnalyzer } from '@/hooks/useWebsiteAnalyzer';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useAnalysisStats } from '@/hooks/useAnalysisStats';
+import { useUsageLimits } from '@/hooks/useUsageLimits';
+import { UsageLimitBanner } from '@/components/UsageLimitBanner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 
