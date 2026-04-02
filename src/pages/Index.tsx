@@ -238,7 +238,7 @@ const Index = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => analyzeWebsite(result.url)}
+                  onClick={() => handleAnalyze(result.url)}
                   className="text-muted-foreground hover:text-foreground text-[10px] sm:text-xs h-7 sm:h-8"
                 >
                   <RefreshCw className="w-3 h-3 mr-1" />
