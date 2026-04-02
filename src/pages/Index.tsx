@@ -157,7 +157,7 @@ const Index = () => {
             Extract colors, fonts, images, and icons. Get actionable insights on performance, accessibility, and SEO — all in seconds.
           </motion.p>
 
-          <UrlInput onAnalyze={analyzeWebsite} isLoading={isLoading} inputRef={urlInputRef} />
+          <UrlInput onAnalyze={handleAnalyze} isLoading={isLoading} inputRef={urlInputRef} />
 
           {/* Preview Card - only show when no result */}
           {!result && !isLoading && <HeroPreviewCard />}
