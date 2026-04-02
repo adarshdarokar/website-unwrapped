@@ -33,7 +33,7 @@ export function UsageLimitBanner() {
               </p>
               <p className="text-xs text-muted-foreground">
                 {isLoggedIn
-                  ? 'You've used all 10 free analyses this month. Upgrade to Pro for unlimited access.'
+                  ? "You've used all 10 free analyses this month. Upgrade to Pro for unlimited access."
                   : 'Sign in for 10 free analyses, or upgrade to Pro for unlimited access.'}
               </p>
             </div>

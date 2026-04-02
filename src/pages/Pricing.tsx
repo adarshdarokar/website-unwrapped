@@ -92,7 +92,7 @@ const Pricing = () => {
               <span className="text-muted-foreground">
                 {remaining > 0
                   ? `${remaining} of ${limit} free analyses remaining`
-                  : 'You've used all free analyses'}
+                  : "You've used all free analyses"}
               </span>
             </motion.div>
           )}
