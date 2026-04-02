@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import History from "./pages/History";
 import Settings from "./pages/Settings";
+import Pricing from "./pages/Pricing";
 import SharedAnalysis from "./pages/SharedAnalysis";
 import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "./components/ProtectedRoute";
