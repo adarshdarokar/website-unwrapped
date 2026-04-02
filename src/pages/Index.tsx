@@ -169,7 +169,7 @@ const Index = () => {
           {!result && !isLoading && <TrustSection />}
 
           {/* Quick Actions */}
-          {!result && !isLoading && <QuickActions onAnalyze={analyzeWebsite} isLoading={isLoading} />}
+          {!result && !isLoading && <QuickActions onAnalyze={handleAnalyze} isLoading={isLoading} />}
 
           {/* Recent Analyses */}
           {!result && !isLoading && <RecentAnalyses />}
