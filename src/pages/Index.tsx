@@ -48,6 +48,8 @@ import { Button } from '@/components/ui/button';
 const Index = () => {
   const { analyzeWebsite, isLoading, error, result } = useWebsiteAnalyzer();
   const stats = useAnalysisStats(result);
+  const { hasReachedLimit, incrementUsage } = useUsageLimits();
+  const navigate = useNavigate();
   const [showCompare, setShowCompare] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
