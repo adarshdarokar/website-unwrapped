@@ -110,8 +110,21 @@ const Index = () => {
     { value: 'preview', icon: Monitor, label: 'Preview' },
   ];
 
+  const handleAnalyze = useCallback(async (url: string) => {
+    if (hasReachedLimit) {
+      navigate('/pricing');
+      return null;
+    }
+    const res = await analyzeWebsite(url);
+    if (res) incrementUsage();
+    return res;
+  }, [hasReachedLimit, analyzeWebsite, incrementUsage, navigate]);
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Usage Limit Banner */}
+      <UsageLimitBanner />
+
       {/* Hero Section */}
       <section className="px-4 sm:px-6 pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8">
         <div className="max-w-3xl mx-auto text-center">
