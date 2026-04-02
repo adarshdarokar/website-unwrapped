@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Globe,
@@ -40,12 +41,16 @@ import { ScoreBreakdown } from '@/components/ScoreBreakdown';
 import { useWebsiteAnalyzer } from '@/hooks/useWebsiteAnalyzer';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useAnalysisStats } from '@/hooks/useAnalysisStats';
+import { useUsageLimits } from '@/hooks/useUsageLimits';
+import { UsageLimitBanner } from '@/components/UsageLimitBanner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const { analyzeWebsite, isLoading, error, result } = useWebsiteAnalyzer();
   const stats = useAnalysisStats(result);
+  const { hasReachedLimit, incrementUsage } = useUsageLimits();
+  const navigate = useNavigate();
   const [showCompare, setShowCompare] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
@@ -105,8 +110,21 @@ const Index = () => {
     { value: 'preview', icon: Monitor, label: 'Preview' },
   ];
 
+  const handleAnalyze = useCallback(async (url: string) => {
+    if (hasReachedLimit) {
+      navigate('/pricing');
+      return null;
+    }
+    const res = await analyzeWebsite(url);
+    if (res) incrementUsage();
+    return res;
+  }, [hasReachedLimit, analyzeWebsite, incrementUsage, navigate]);
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Usage Limit Banner */}
+      <UsageLimitBanner />
+
       {/* Hero Section */}
       <section className="px-4 sm:px-6 pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8">
         <div className="max-w-3xl mx-auto text-center">
@@ -139,7 +157,7 @@ const Index = () => {
             Extract colors, fonts, images, and icons. Get actionable insights on performance, accessibility, and SEO — all in seconds.
           </motion.p>
 
-          <UrlInput onAnalyze={analyzeWebsite} isLoading={isLoading} inputRef={urlInputRef} />
+          <UrlInput onAnalyze={handleAnalyze} isLoading={isLoading} inputRef={urlInputRef} />
 
           {/* Preview Card - only show when no result */}
           {!result && !isLoading && <HeroPreviewCard />}
@@ -151,7 +169,7 @@ const Index = () => {
           {!result && !isLoading && <TrustSection />}
 
           {/* Quick Actions */}
-          {!result && !isLoading && <QuickActions onAnalyze={analyzeWebsite} isLoading={isLoading} />}
+          {!result && !isLoading && <QuickActions onAnalyze={handleAnalyze} isLoading={isLoading} />}
 
           {/* Recent Analyses */}
           {!result && !isLoading && <RecentAnalyses />}
@@ -220,7 +238,7 @@ const Index = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => analyzeWebsite(result.url)}
+                  onClick={() => handleAnalyze(result.url)}
                   className="text-muted-foreground hover:text-foreground text-[10px] sm:text-xs h-7 sm:h-8"
                 >
                   <RefreshCw className="w-3 h-3 mr-1" />
@@ -401,7 +419,7 @@ const Index = () => {
         onClose={() => setShowCommandPalette(false)}
         onCompare={() => setShowCompare(true)}
         onExport={() => setShowExport(true)}
-        onAnalyze={analyzeWebsite}
+        onAnalyze={handleAnalyze}
         hasResult={!!result}
       />
       <KeyboardShortcutsHelp isOpen={showShortcuts} onClose={() => setShowShortcuts(false)} />

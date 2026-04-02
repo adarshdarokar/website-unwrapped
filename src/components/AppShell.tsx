@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
-import { useLocation } from "react-router-dom";
-import { Globe, Menu } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Globe, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UserMenu } from "@/components/UserMenu";
@@ -15,12 +16,15 @@ function getTitle(pathname: string) {
   if (pathname === "/") return "Analyze";
   if (pathname === "/history") return "History";
   if (pathname === "/settings") return "Settings";
+  if (pathname === "/pricing") return "Upgrade Plan";
   return "";
 }
 
 export function AppShell({ children }: PropsWithChildren) {
   const location = useLocation();
+  const navigate = useNavigate();
   const title = getTitle(location.pathname);
+  const isInnerPage = location.pathname !== "/";
 
   return (
     <SidebarProvider defaultOpen={false}>
@@ -34,6 +38,17 @@ export function AppShell({ children }: PropsWithChildren) {
               {/* Left side - Menu & Logo */}
               <div className="flex items-center gap-2 sm:gap-3">
                 <SidebarTrigger className="h-9 w-9 sm:h-8 sm:w-8" />
+
+                {isInnerPage && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => navigate(-1)}
+                    className="h-8 w-8 rounded-lg"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                  </Button>
+                )}
                 
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-primary/10 rounded-lg">
