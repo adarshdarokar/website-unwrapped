@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   History,
   Settings,
+  CreditCard,
   Command,
   GitCompare,
   Share2,
@@ -35,6 +36,7 @@ const navItems = [
   { title: "Analyze", url: "/", icon: LayoutDashboard },
   { title: "History", url: "/history", icon: History },
   { title: "Settings", url: "/settings", icon: Settings },
+  { title: "Pricing", url: "/pricing", icon: CreditCard },
 ];
 
 const actionItems = [
