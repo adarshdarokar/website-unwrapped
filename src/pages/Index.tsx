@@ -161,7 +161,7 @@ const Index = () => {
           <UrlInput onAnalyze={handleAnalyze} isLoading={isLoading} inputRef={urlInputRef} />
 
           {/* Credits remaining indicator */}
-          <CreditsIndicator />
+          <CreditsIndicator remaining={remaining} limit={limit} isPaidUser={isPaidUser} hasReachedLimit={hasReachedLimit} />
 
           {/* Preview Card - only show when no result */}
           {!result && !isLoading && <HeroPreviewCard />}
