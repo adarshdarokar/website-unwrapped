@@ -50,7 +50,7 @@ import { Button } from '@/components/ui/button';
 const Index = () => {
   const { analyzeWebsite, isLoading, error, result } = useWebsiteAnalyzer();
   const stats = useAnalysisStats(result);
-  const { hasReachedLimit, incrementUsage } = useUsageLimits();
+  const { hasReachedLimit, incrementUsage, remaining, limit, isPaidUser } = useUsageLimits();
   const navigate = useNavigate();
   const [showCompare, setShowCompare] = useState(false);
   const [showExport, setShowExport] = useState(false);
@@ -161,7 +161,7 @@ const Index = () => {
           <UrlInput onAnalyze={handleAnalyze} isLoading={isLoading} inputRef={urlInputRef} />
 
           {/* Credits remaining indicator */}
-          <CreditsIndicator />
+          <CreditsIndicator remaining={remaining} limit={limit} isPaidUser={isPaidUser} hasReachedLimit={hasReachedLimit} />
 
           {/* Preview Card - only show when no result */}
           {!result && !isLoading && <HeroPreviewCard />}

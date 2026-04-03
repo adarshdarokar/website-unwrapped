@@ -1,10 +1,15 @@
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
-import { useUsageLimits } from '@/hooks/useUsageLimits';
 import { useNavigate } from 'react-router-dom';
 
-export function CreditsIndicator() {
-  const { remaining, limit, isPaidUser, hasReachedLimit } = useUsageLimits();
+interface CreditsIndicatorProps {
+  remaining: number;
+  limit: number;
+  isPaidUser: boolean;
+  hasReachedLimit: boolean;
+}
+
+export function CreditsIndicator({ remaining, limit, isPaidUser, hasReachedLimit }: CreditsIndicatorProps) {
   const navigate = useNavigate();
 
   if (isPaidUser) {
@@ -32,7 +37,6 @@ export function CreditsIndicator() {
       className="flex items-center justify-center gap-2.5 mt-3"
     >
       <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border/50">
-        {/* Mini progress bar */}
         <div className="w-16 h-1.5 rounded-full bg-border/60 overflow-hidden">
           <div
             className={`h-full rounded-full transition-all duration-500 ${
