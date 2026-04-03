@@ -14,6 +14,7 @@ import {
   Monitor,
 } from 'lucide-react';
 import { UrlInput } from '@/components/UrlInput';
+import { CreditsIndicator } from '@/components/CreditsIndicator';
 import { QualityScore } from '@/components/QualityScore';
 import { ImageGallery } from '@/components/ImageGallery';
 import { FontDisplay } from '@/components/FontDisplay';
