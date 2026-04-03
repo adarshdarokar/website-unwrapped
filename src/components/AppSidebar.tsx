@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   History,
   Settings,
+  CreditCard,
   Command,
   GitCompare,
   Share2,
