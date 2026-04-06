@@ -197,9 +197,17 @@ const Pricing = () => {
           transition={{ delay: 0.5 }}
           className="text-center text-xs text-muted-foreground/50 mt-12"
         >
-          Secure payments powered by Razorpay · Cancel anytime · No hidden fees
+        Secure payments powered by Razorpay · Cancel anytime · No hidden fees
         </motion.p>
       </div>
+
+      <RazorpayCheckout
+        isOpen={showCheckout}
+        onClose={() => setShowCheckout(false)}
+        onSuccess={handlePaymentSuccess}
+        amount={3}
+        planName="Pro"
+      />
     </div>
   );
 };
