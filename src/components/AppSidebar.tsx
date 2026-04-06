@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -9,6 +10,8 @@ import {
   Share2,
   Keyboard,
   ChevronRight,
+  Sparkles,
+  Crown,
 } from "lucide-react";
 
 import {
@@ -21,12 +24,15 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
-  SidebarHeader,
   SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { NavLink } from "@/components/NavLink";
 import { cn } from "@/lib/utils";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { RazorpayCheckout } from "@/components/RazorpayCheckout";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 function dispatchAppEvent(name: string) {
   window.dispatchEvent(new CustomEvent(name));
@@ -50,7 +56,10 @@ export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { setOpenMobile, isMobile } = useSidebar();
-  
+  const { remaining, limit, isPaidUser, hasReachedLimit } = useUsageLimits();
+  const { user } = useAuth();
+  const [showCheckout, setShowCheckout] = useState(false);
+
   const currentPath = location.pathname;
 
   const handleNavClick = () => {
@@ -66,108 +75,186 @@ export function AppSidebar() {
     }
   };
 
-  return (
-    <Sidebar 
-      variant="sidebar" 
-      collapsible="icon" 
-      className="border-r border-sidebar-border/50"
-    >
-      <SidebarHeader className="p-4">
-        <div className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <LayoutDashboard className="w-4 h-4 text-primary" />
-          </div>
-          <span className="font-display font-semibold text-sm group-data-[collapsible=icon]:hidden">
-            WebVision
-          </span>
-        </div>
-      </SidebarHeader>
+  const handleUpgradeClick = () => {
+    if (!user) {
+      toast.info("Please sign in first to upgrade.");
+      navigate("/auth");
+      handleNavClick();
+      return;
+    }
+    setShowCheckout(true);
+  };
 
-      <SidebarContent className="px-2">
-        {/* Navigation */}
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium mb-1">
-            Navigation
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navItems.map((item) => {
-                const isActive = currentPath === item.url;
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton 
-                      asChild 
-                      tooltip={item.title}
-                      isActive={isActive}
-                    >
-                      <NavLink
-                        to={item.url}
-                        end={item.url === "/"}
-                        onClick={handleNavClick}
-                        className={cn(
-                          "gap-3 transition-all duration-200",
-                          isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                        )}
-                        activeClassName="bg-sidebar-accent text-sidebar-accent-foreground"
+  const handlePaymentSuccess = () => {
+    setShowCheckout(false);
+    if (user) {
+      localStorage.setItem(`webvision_paid_${user.id}`, "true");
+    }
+    toast.success("🎉 Welcome to Pro! Unlimited analyses unlocked.");
+    window.location.reload();
+  };
+
+  const percentage = Math.round((remaining / limit) * 100);
+
+  return (
+    <>
+      <Sidebar
+        variant="sidebar"
+        collapsible="icon"
+        className="border-r border-sidebar-border/50"
+      >
+        <SidebarContent className="px-2 pt-3">
+          {/* Navigation */}
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium mb-1">
+              Navigation
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {navItems.map((item) => {
+                  const isActive = currentPath === item.url;
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        tooltip={item.title}
+                        isActive={isActive}
                       >
-                        <item.icon className="h-4 w-4 flex-shrink-0" />
-                        <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
-                        {isActive && (
-                          <ChevronRight className="ml-auto h-3 w-3 opacity-50 group-data-[collapsible=icon]:hidden" />
-                        )}
-                      </NavLink>
+                        <NavLink
+                          to={item.url}
+                          end={item.url === "/"}
+                          onClick={handleNavClick}
+                          className={cn(
+                            "gap-3 transition-all duration-200",
+                            isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                          )}
+                          activeClassName="bg-sidebar-accent text-sidebar-accent-foreground"
+                        >
+                          <item.icon className="h-4 w-4 flex-shrink-0" />
+                          <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
+                          {isActive && (
+                            <ChevronRight className="ml-auto h-3 w-3 opacity-50 group-data-[collapsible=icon]:hidden" />
+                          )}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+
+          <SidebarSeparator className="my-2" />
+
+          {/* Actions */}
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium mb-1">
+              Quick Actions
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {actionItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      onClick={() => handleActionClick(item.event)}
+                      tooltip={item.title}
+                      className="gap-3 transition-all duration-200"
+                    >
+                      <item.icon className="h-4 w-4 flex-shrink-0" />
+                      <span className="group-data-[collapsible=icon]:hidden flex-1">{item.title}</span>
+                      {item.shortcut && (
+                        <span className="text-[10px] text-muted-foreground/50 bg-muted/50 px-1.5 py-0.5 rounded font-mono group-data-[collapsible=icon]:hidden">
+                          {item.shortcut}
+                        </span>
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
 
-        <SidebarSeparator className="my-2" />
+        <SidebarFooter className="p-3 group-data-[collapsible=icon]:p-2">
+          {/* Upgrade Card */}
+          {!isPaidUser && (
+            <div className="group-data-[collapsible=icon]:hidden rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-3">
+              <div className="flex items-center gap-2">
+                <Crown className="w-4 h-4 text-primary" />
+                <span className="text-xs font-semibold text-foreground">Upgrade to Pro</span>
+              </div>
 
-        {/* Actions */}
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium mb-1">
-            Quick Actions
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {actionItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    onClick={() => handleActionClick(item.event)}
-                    tooltip={item.title}
-                    className="gap-3 transition-all duration-200"
-                  >
-                    <item.icon className="h-4 w-4 flex-shrink-0" />
-                    <span className="group-data-[collapsible=icon]:hidden flex-1">{item.title}</span>
-                    {item.shortcut && (
-                      <span className="text-[10px] text-muted-foreground/50 bg-muted/50 px-1.5 py-0.5 rounded font-mono group-data-[collapsible=icon]:hidden">
-                        {item.shortcut}
-                      </span>
-                    )}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
+              {/* Usage bar */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-muted-foreground">Credits used</span>
+                  <span className={`text-[10px] font-medium ${hasReachedLimit ? 'text-destructive' : 'text-muted-foreground'}`}>
+                    {remaining}/{limit} left
+                  </span>
+                </div>
+                <div className="w-full h-1.5 rounded-full bg-border/60 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      hasReachedLimit ? 'bg-destructive' : remaining <= 2 ? 'bg-yellow-500' : 'bg-primary'
+                    }`}
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+              </div>
 
-      <SidebarFooter className="p-3 group-data-[collapsible=icon]:p-2">
-        {currentPath !== "/" && (
-          <button
-            onClick={() => {
-              navigate("/");
-              handleNavClick();
-            }}
-            className="w-full text-left text-xs text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors py-2 px-2 rounded-md hover:bg-sidebar-accent/50 group-data-[collapsible=icon]:hidden"
-          >
-            ← Back to Analyze
-          </button>
-        )}
-      </SidebarFooter>
-    </Sidebar>
+              <button
+                onClick={handleUpgradeClick}
+                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors"
+              >
+                <Sparkles className="w-3 h-3" />
+                Get Unlimited — $3/mo
+              </button>
+            </div>
+          )}
+
+          {/* Pro badge for paid users */}
+          {isPaidUser && (
+            <div className="group-data-[collapsible=icon]:hidden rounded-lg border border-primary/20 bg-primary/5 p-3 flex items-center gap-2">
+              <Crown className="w-4 h-4 text-primary" />
+              <div>
+                <span className="text-xs font-semibold text-foreground">Pro Plan</span>
+                <p className="text-[10px] text-muted-foreground">Unlimited analyses</p>
+              </div>
+            </div>
+          )}
+
+          {/* Collapsed icon upgrade button */}
+          {!isPaidUser && (
+            <button
+              onClick={handleUpgradeClick}
+              className="hidden group-data-[collapsible=icon]:flex w-8 h-8 items-center justify-center rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors mx-auto"
+              title="Upgrade to Pro"
+            >
+              <Crown className="w-4 h-4 text-primary" />
+            </button>
+          )}
+
+          {currentPath !== "/" && (
+            <button
+              onClick={() => {
+                navigate("/");
+                handleNavClick();
+              }}
+              className="w-full text-left text-xs text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors py-2 px-2 rounded-md hover:bg-sidebar-accent/50 group-data-[collapsible=icon]:hidden"
+            >
+              ← Back to Analyze
+            </button>
+          )}
+        </SidebarFooter>
+      </Sidebar>
+
+      <RazorpayCheckout
+        isOpen={showCheckout}
+        onClose={() => setShowCheckout(false)}
+        onSuccess={handlePaymentSuccess}
+        amount={3}
+        planName="Pro"
+      />
+    </>
   );
 }
