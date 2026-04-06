@@ -34,23 +34,23 @@ export function AppShell({ children }: PropsWithChildren) {
         <SidebarInset>
           {/* Header */}
           <header className="sticky top-0 z-40 border-b border-border/40 bg-background/95 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
-            <div className="h-14 sm:h-16 px-3 sm:px-6 flex items-center justify-between">
+            <div className="h-14 sm:h-16 px-4 sm:px-6 flex items-center justify-between">
               {/* Left side - Menu & Logo */}
-              <div className="flex items-center gap-2 sm:gap-3">
-                <SidebarTrigger className="h-9 w-9 sm:h-8 sm:w-8" />
+              <div className="flex items-center gap-3 sm:gap-4">
+                <SidebarTrigger className="h-8 w-8" />
 
                 {isInnerPage && (
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => navigate(-1)}
-                    className="h-8 w-8 rounded-lg"
+                    className="h-8 w-8 rounded-lg -ml-1"
                   >
                     <ArrowLeft className="w-4 h-4" />
                   </Button>
                 )}
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <div className="p-1.5 bg-primary/10 rounded-lg">
                     <Globe className="w-4 h-4 text-primary" />
                   </div>
