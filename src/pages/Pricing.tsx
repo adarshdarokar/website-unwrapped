@@ -1,16 +1,37 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Zap, Crown, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useUsageLimits } from '@/hooks/useUsageLimits';
+import { RazorpayCheckout } from '@/components/RazorpayCheckout';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const Pricing = () => {
   const { user } = useAuth();
   const { usageCount, limit, remaining, isPaidUser } = useUsageLimits();
+  const [showCheckout, setShowCheckout] = useState(false);
+  const navigate = useNavigate();
 
   const handleUpgrade = () => {
-    toast.info('Razorpay integration coming soon! For now, enjoy the free tier.');
+    if (!user) {
+      toast.info('Please sign in first to upgrade.');
+      navigate('/auth');
+      return;
+    }
+    setShowCheckout(true);
+  };
+
+  const handlePaymentSuccess = () => {
+    setShowCheckout(false);
+    // Mark user as paid in localStorage (dummy)
+    if (user) {
+      localStorage.setItem(`webvision_paid_${user.id}`, 'true');
+    }
+    toast.success('🎉 Welcome to Pro! You now have unlimited analyses.');
+    // Force reload to update state
+    window.location.reload();
   };
 
   const plans = [
@@ -176,9 +197,17 @@ const Pricing = () => {
           transition={{ delay: 0.5 }}
           className="text-center text-xs text-muted-foreground/50 mt-12"
         >
-          Secure payments powered by Razorpay · Cancel anytime · No hidden fees
+        Secure payments powered by Razorpay · Cancel anytime · No hidden fees
         </motion.p>
       </div>
+
+      <RazorpayCheckout
+        isOpen={showCheckout}
+        onClose={() => setShowCheckout(false)}
+        onSuccess={handlePaymentSuccess}
+        amount={3}
+        planName="Pro"
+      />
     </div>
   );
 };
