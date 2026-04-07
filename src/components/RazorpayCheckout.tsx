@@ -13,6 +13,7 @@ interface RazorpayCheckoutProps {
 }
 
 type PaymentMethod = 'card' | 'upi' | 'netbanking';
+type CheckoutStep = 'form' | 'processing' | 'receipt';
 
 export function RazorpayCheckout({ isOpen, onClose, onSuccess, amount, planName }: RazorpayCheckoutProps) {
   const [method, setMethod] = useState<PaymentMethod>('card');
