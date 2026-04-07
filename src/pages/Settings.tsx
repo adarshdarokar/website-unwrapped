@@ -49,6 +49,7 @@ import { Crown } from 'lucide-react';
 const Settings = () => {
   const { user, signOut, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { isPaidUser } = useUsageLimits();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
