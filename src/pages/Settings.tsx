@@ -190,6 +190,14 @@ const Settings = () => {
     toast.error('Account deletion requires contacting support');
   };
 
+  const handleCancelSubscription = () => {
+    if (user) {
+      localStorage.removeItem(`webvision_paid_${user.id}`);
+      toast.success('Subscription cancelled. You are now on the Free plan.');
+      window.location.reload();
+    }
+  };
+
   const getInitials = (name: string) => {
     return name
       .split(' ')
