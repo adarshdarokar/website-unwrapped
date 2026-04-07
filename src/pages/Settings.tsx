@@ -43,6 +43,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { useUsageLimits } from '@/hooks/useUsageLimits';
+import { Crown } from 'lucide-react';
 
 const Settings = () => {
   const { user, signOut, loading: authLoading } = useAuth();
