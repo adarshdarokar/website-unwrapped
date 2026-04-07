@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, CreditCard, Smartphone, Building2, Shield, Check, Loader2 } from 'lucide-react';
+import { X, CreditCard, Smartphone, Building2, Shield, Check, Loader2, Receipt, Mail, Download, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
