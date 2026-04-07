@@ -17,8 +17,9 @@ type CheckoutStep = 'form' | 'processing' | 'receipt';
 
 export function RazorpayCheckout({ isOpen, onClose, onSuccess, amount, planName }: RazorpayCheckoutProps) {
   const [method, setMethod] = useState<PaymentMethod>('card');
-  const [processing, setProcessing] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [step, setStep] = useState<CheckoutStep>('form');
+  const [txnId] = useState(() => `txn_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`);
+  const [emailSent, setEmailSent] = useState(false);
 
   // Card fields
   const [cardNumber, setCardNumber] = useState('');
@@ -52,22 +53,38 @@ export function RazorpayCheckout({ isOpen, onClose, onSuccess, amount, planName 
     return false;
   };
 
+  const getPaymentMethodLabel = () => {
+    if (method === 'card') return `Card ending ••••${cardNumber.replace(/\s/g, '').slice(-4)}`;
+    if (method === 'upi') return `UPI · ${upiId}`;
+    const bank = banks.find(b => b.id === selectedBank);
+    return `Netbanking · ${bank?.name || ''}`;
+  };
+
   const handlePay = async () => {
-    setProcessing(true);
-    // Simulate payment processing
-    await new Promise(r => setTimeout(r, 2000));
-    setProcessing(false);
-    setSuccess(true);
-    await new Promise(r => setTimeout(r, 1500));
+    setStep('processing');
+    await new Promise(r => setTimeout(r, 2200));
+    setStep('receipt');
+  };
+
+  const handleContinue = () => {
     onSuccess();
-    // Reset state
-    setSuccess(false);
+    resetState();
+  };
+
+  const handleSendEmail = () => {
+    setEmailSent(true);
+    setTimeout(() => setEmailSent(false), 3000);
+  };
+
+  const resetState = () => {
+    setStep('form');
     setCardNumber('');
     setExpiry('');
     setCvv('');
     setCardName('');
     setUpiId('');
     setSelectedBank('');
+    setEmailSent(false);
   };
 
   const banks = [
