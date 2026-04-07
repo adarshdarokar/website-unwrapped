@@ -493,6 +493,85 @@ const Settings = () => {
             </Card>
           </motion.div>
 
+          {/* Subscription Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+          >
+            <Card className="glass-card-elevated overflow-hidden">
+              <CardHeader className="pb-3 sm:pb-4 px-4 sm:px-6">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="p-2 sm:p-2.5 bg-primary/10 rounded-lg sm:rounded-xl">
+                    <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-base sm:text-lg">Subscription</CardTitle>
+                    <CardDescription className="text-xs sm:text-sm">Manage your plan</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="px-4 sm:px-6">
+                {isPaidUser ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 sm:p-4 bg-primary/5 border border-primary/20 rounded-lg sm:rounded-xl">
+                      <div className="flex items-center gap-3">
+                        <Crown className="w-5 h-5 text-primary" />
+                        <div>
+                          <p className="font-medium text-sm sm:text-base">Pro Plan</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground">$3/month · Unlimited analyses</p>
+                        </div>
+                      </div>
+                      <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md font-medium">Active</span>
+                    </div>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start h-10 sm:h-12 rounded-lg sm:rounded-xl text-destructive hover:text-destructive hover:bg-destructive/10 border-destructive/30 text-sm"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2 sm:mr-3" />
+                          Cancel Subscription
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="rounded-2xl mx-4 max-w-md">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-base sm:text-lg">Cancel your Pro subscription?</AlertDialogTitle>
+                          <AlertDialogDescription className="text-sm">
+                            You'll lose unlimited analyses and revert to the free plan with 10 analyses per month. This takes effect immediately.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                          <AlertDialogCancel className="rounded-xl">Keep Pro</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={handleCancelSubscription}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"
+                          >
+                            Cancel Subscription
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between p-3 sm:p-4 bg-muted/30 rounded-lg sm:rounded-xl">
+                    <div>
+                      <p className="font-medium text-sm sm:text-base">Free Plan</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">10 analyses per month</p>
+                    </div>
+                    <Button
+                      size="sm"
+                      onClick={() => navigate('/pricing')}
+                      className="rounded-lg text-xs sm:text-sm"
+                    >
+                      Upgrade
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+
           {/* Security Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
