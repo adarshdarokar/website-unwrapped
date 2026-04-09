@@ -99,9 +99,9 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar
-        variant="sidebar"
+        variant="floating"
         collapsible="icon"
-        className="border-r border-sidebar-border/30 bg-sidebar/80 backdrop-blur-xl"
+        className="border-0"
       >
         <SidebarContent className="px-2 pt-3">
           {/* Navigation */}
@@ -178,9 +178,11 @@ export function AppSidebar() {
         <SidebarFooter className="p-3 group-data-[collapsible=icon]:p-2">
           {/* Upgrade Card */}
           {!isPaidUser && (
-            <div className="group-data-[collapsible=icon]:hidden rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-3">
+            <div className="group-data-[collapsible=icon]:hidden rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/8 via-primary/4 to-transparent p-3.5 space-y-3 backdrop-blur-sm">
               <div className="flex items-center gap-2">
-                <Crown className="w-4 h-4 text-primary" />
+                <div className="w-7 h-7 rounded-xl bg-primary/12 flex items-center justify-center">
+                  <Crown className="w-3.5 h-3.5 text-primary" />
+                </div>
                 <span className="text-xs font-semibold text-foreground">Upgrade to Pro</span>
               </div>
 
@@ -192,10 +194,10 @@ export function AppSidebar() {
                     {remaining}/{limit} left
                   </span>
                 </div>
-                <div className="w-full h-1.5 rounded-full bg-border/60 overflow-hidden">
+                <div className="w-full h-1.5 rounded-full bg-primary/10 overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${
-                      hasReachedLimit ? 'bg-destructive' : remaining <= 2 ? 'bg-yellow-500' : 'bg-primary'
+                      hasReachedLimit ? 'bg-destructive' : remaining <= 2 ? 'bg-warning' : 'bg-primary/60'
                     }`}
                     style={{ width: `${percentage}%` }}
                   />
@@ -204,7 +206,7 @@ export function AppSidebar() {
 
               <button
                 onClick={handleUpgradeClick}
-                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors"
+                className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-all duration-200 shadow-sm hover:shadow-md"
               >
                 <Sparkles className="w-3 h-3" />
                 Get Unlimited — $3/mo
@@ -214,8 +216,10 @@ export function AppSidebar() {
 
           {/* Pro badge for paid users */}
           {isPaidUser && (
-            <div className="group-data-[collapsible=icon]:hidden rounded-lg border border-primary/20 bg-primary/5 p-3 flex items-center gap-2">
-              <Crown className="w-4 h-4 text-primary" />
+            <div className="group-data-[collapsible=icon]:hidden rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/8 via-primary/4 to-transparent p-3.5 flex items-center gap-2.5 backdrop-blur-sm">
+              <div className="w-7 h-7 rounded-xl bg-primary/12 flex items-center justify-center">
+                <Crown className="w-3.5 h-3.5 text-primary" />
+              </div>
               <div>
                 <span className="text-xs font-semibold text-foreground">Pro Plan</span>
                 <p className="text-[10px] text-muted-foreground">Unlimited analyses</p>
