@@ -99,9 +99,9 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar
-        variant="sidebar"
+        variant="floating"
         collapsible="icon"
-        className="border-r border-sidebar-border/30 bg-sidebar/80 backdrop-blur-xl"
+        className="border-0"
       >
         <SidebarContent className="px-2 pt-3">
           {/* Navigation */}
