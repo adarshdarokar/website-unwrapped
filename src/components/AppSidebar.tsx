@@ -101,7 +101,7 @@ export function AppSidebar() {
       <Sidebar
         variant="sidebar"
         collapsible="icon"
-        className="border-r border-sidebar-border/50"
+        className="border-r border-sidebar-border/30 bg-sidebar/80 backdrop-blur-xl"
       >
         <SidebarContent className="px-2 pt-3">
           {/* Navigation */}
@@ -125,10 +125,10 @@ export function AppSidebar() {
                           end={item.url === "/"}
                           onClick={handleNavClick}
                           className={cn(
-                            "gap-3 transition-all duration-200",
-                            isActive && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                            "gap-3 transition-all duration-200 rounded-xl",
+                            isActive && "bg-primary/10 text-primary font-medium shadow-sm"
                           )}
-                          activeClassName="bg-sidebar-accent text-sidebar-accent-foreground"
+                          activeClassName="bg-primary/10 text-primary"
                         >
                           <item.icon className="h-4 w-4 flex-shrink-0" />
                           <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
@@ -158,7 +158,7 @@ export function AppSidebar() {
                     <SidebarMenuButton
                       onClick={() => handleActionClick(item.event)}
                       tooltip={item.title}
-                      className="gap-3 transition-all duration-200"
+                      className="gap-3 transition-all duration-200 rounded-xl hover:bg-primary/5"
                     >
                       <item.icon className="h-4 w-4 flex-shrink-0" />
                       <span className="group-data-[collapsible=icon]:hidden flex-1">{item.title}</span>
