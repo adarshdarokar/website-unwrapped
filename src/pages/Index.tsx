@@ -170,6 +170,9 @@ const Index = () => {
           {/* Feature Row */}
           {!result && !isLoading && <FeatureRow />}
 
+          {/* Demo Analytics - sample charts */}
+          {!result && !isLoading && <DemoAnalytics />}
+
           {/* Trust Section */}
           {!result && !isLoading && <TrustSection />}
 
