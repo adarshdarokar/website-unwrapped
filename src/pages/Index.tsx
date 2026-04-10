@@ -30,6 +30,7 @@ import { RecentAnalyses } from '@/components/RecentAnalyses';
 import { CommandPalette } from '@/components/CommandPalette';
 import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
 import { HeroPreviewCard } from '@/components/HeroPreviewCard';
+import { DemoAnalytics } from '@/components/DemoAnalytics';
 import { TrustSection } from '@/components/TrustSection';
 import { FeatureRow } from '@/components/FeatureRow';
 import { PerformanceInsights } from '@/components/PerformanceInsights';
