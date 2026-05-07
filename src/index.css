@@ -8,11 +8,18 @@
 
 @layer base {
   :root {
-    --background: 240 30% 96%;
+    --background: 240 25% 94%;
     --foreground: 240 20% 15%;
 
-    --card: 240 30% 99%;
+    --card: 240 25% 94%;
     --card-foreground: 240 20% 15%;
+
+    /* Neumorphism shadow tokens (light) */
+    --neu-light: 255 255 255;
+    --neu-dark: 200 200 220;
+    --shadow-neu: 8px 8px 20px rgba(var(--neu-dark) / 0.55), -8px -8px 20px rgba(var(--neu-light) / 0.9);
+    --shadow-neu-sm: 4px 4px 10px rgba(var(--neu-dark) / 0.5), -4px -4px 10px rgba(var(--neu-light) / 0.85);
+    --shadow-neu-inset: inset 4px 4px 10px rgba(var(--neu-dark) / 0.45), inset -4px -4px 10px rgba(var(--neu-light) / 0.85);
 
     --popover: 240 30% 99%;
     --popover-foreground: 240 20% 15%;
@@ -66,20 +73,27 @@
   }
 
   .dark {
-    --background: 220 25% 8%;
+    --background: 230 18% 14%;
     --foreground: 210 20% 95%;
 
-    --card: 220 25% 12%;
+    --card: 230 18% 14%;
     --card-foreground: 210 20% 95%;
 
-    --popover: 220 25% 12%;
+    --popover: 230 18% 16%;
     --popover-foreground: 210 20% 95%;
 
-    --primary: 200 70% 55%;
-    --primary-foreground: 220 25% 8%;
+    --primary: 245 70% 65%;
+    --primary-foreground: 230 18% 10%;
 
-    --secondary: 220 20% 18%;
+    --secondary: 230 15% 20%;
     --secondary-foreground: 210 20% 90%;
+
+    /* Neumorphism shadow tokens (dark) */
+    --neu-light: 60 65 85;
+    --neu-dark: 10 12 20;
+    --shadow-neu: 8px 8px 20px rgba(var(--neu-dark) / 0.7), -8px -8px 20px rgba(var(--neu-light) / 0.4);
+    --shadow-neu-sm: 4px 4px 10px rgba(var(--neu-dark) / 0.65), -4px -4px 10px rgba(var(--neu-light) / 0.35);
+    --shadow-neu-inset: inset 4px 4px 10px rgba(var(--neu-dark) / 0.65), inset -4px -4px 10px rgba(var(--neu-light) / 0.35);
 
     --muted: 220 20% 15%;
     --muted-foreground: 220 15% 55%;
@@ -152,27 +166,51 @@
 
 @layer components {
   .glass-card {
-    @apply bg-card/80 backdrop-blur-xl border border-border/40 rounded-2xl;
-    box-shadow: var(--shadow-soft);
+    @apply bg-card border-0 rounded-2xl;
+    box-shadow: var(--shadow-neu);
   }
 
   .glass-card-elevated {
-    @apply bg-card/90 backdrop-blur-xl border border-border/40 rounded-2xl;
-    box-shadow: var(--shadow-elevated);
+    @apply bg-card border-0 rounded-2xl;
+    box-shadow: var(--shadow-neu);
+  }
+
+  .neu {
+    @apply bg-background rounded-2xl border-0;
+    box-shadow: var(--shadow-neu);
+  }
+
+  .neu-sm {
+    @apply bg-background rounded-xl border-0;
+    box-shadow: var(--shadow-neu-sm);
+  }
+
+  .neu-inset {
+    @apply bg-background rounded-2xl border-0;
+    box-shadow: var(--shadow-neu-inset);
+  }
+
+  .neu-pressable {
+    @apply bg-background rounded-2xl border-0 transition-all duration-200;
+    box-shadow: var(--shadow-neu-sm);
+  }
+  .neu-pressable:hover {
+    box-shadow: var(--shadow-neu);
+  }
+  .neu-pressable:active {
+    box-shadow: var(--shadow-neu-inset);
   }
 
   .glass-popup {
-    background: linear-gradient(135deg, hsla(240, 30%, 99%, 0.92) 0%, hsla(245, 35%, 97%, 0.88) 100%);
-    backdrop-filter: blur(24px) saturate(1.5);
-    -webkit-backdrop-filter: blur(24px) saturate(1.5);
-    border: 1px solid hsla(245, 40%, 85%, 0.5);
-    box-shadow: 0 8px 40px -8px hsla(245, 50%, 50%, 0.15), 0 2px 8px -2px hsla(245, 50%, 50%, 0.08);
+    @apply bg-card rounded-2xl;
+    box-shadow: var(--shadow-neu);
+    border: 1px solid hsl(var(--border) / 0.3);
   }
 
   .dark .glass-popup {
-    background: linear-gradient(135deg, hsla(220, 25%, 12%, 0.92) 0%, hsla(220, 30%, 14%, 0.88) 100%);
-    border-color: hsla(220, 20%, 22%, 0.6);
-    box-shadow: 0 8px 40px -8px hsla(220, 40%, 5%, 0.5), 0 2px 8px -2px hsla(220, 40%, 5%, 0.3);
+    @apply bg-card;
+    box-shadow: var(--shadow-neu);
+    border-color: hsl(var(--border) / 0.3);
   }
 
   .gradient-text {
