@@ -79,14 +79,21 @@
     --card: 220 25% 12%;
     --card-foreground: 210 20% 95%;
 
-    --popover: 220 25% 12%;
+    --background: 230 18% 14%;
+    --foreground: 210 20% 95%;
+
+    --card: 230 18% 14%;
+    --card-foreground: 210 20% 95%;
+
+    --popover: 230 18% 16%;
     --popover-foreground: 210 20% 95%;
 
-    --primary: 200 70% 55%;
-    --primary-foreground: 220 25% 8%;
-
-    --secondary: 220 20% 18%;
-    --secondary-foreground: 210 20% 90%;
+    /* Neumorphism shadow tokens (dark) */
+    --neu-light: 60 65 85;
+    --neu-dark: 10 12 20;
+    --shadow-neu: 8px 8px 20px rgba(var(--neu-dark) / 0.7), -8px -8px 20px rgba(var(--neu-light) / 0.4);
+    --shadow-neu-sm: 4px 4px 10px rgba(var(--neu-dark) / 0.65), -4px -4px 10px rgba(var(--neu-light) / 0.35);
+    --shadow-neu-inset: inset 4px 4px 10px rgba(var(--neu-dark) / 0.65), inset -4px -4px 10px rgba(var(--neu-light) / 0.35);
 
     --muted: 220 20% 15%;
     --muted-foreground: 220 15% 55%;
