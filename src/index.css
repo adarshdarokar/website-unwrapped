@@ -166,27 +166,51 @@
 
 @layer components {
   .glass-card {
-    @apply bg-card/80 backdrop-blur-xl border border-border/40 rounded-2xl;
-    box-shadow: var(--shadow-soft);
+    @apply bg-card border-0 rounded-2xl;
+    box-shadow: var(--shadow-neu);
   }
 
   .glass-card-elevated {
-    @apply bg-card/90 backdrop-blur-xl border border-border/40 rounded-2xl;
-    box-shadow: var(--shadow-elevated);
+    @apply bg-card border-0 rounded-2xl;
+    box-shadow: var(--shadow-neu);
+  }
+
+  .neu {
+    @apply bg-background rounded-2xl border-0;
+    box-shadow: var(--shadow-neu);
+  }
+
+  .neu-sm {
+    @apply bg-background rounded-xl border-0;
+    box-shadow: var(--shadow-neu-sm);
+  }
+
+  .neu-inset {
+    @apply bg-background rounded-2xl border-0;
+    box-shadow: var(--shadow-neu-inset);
+  }
+
+  .neu-pressable {
+    @apply bg-background rounded-2xl border-0 transition-all duration-200;
+    box-shadow: var(--shadow-neu-sm);
+  }
+  .neu-pressable:hover {
+    box-shadow: var(--shadow-neu);
+  }
+  .neu-pressable:active {
+    box-shadow: var(--shadow-neu-inset);
   }
 
   .glass-popup {
-    background: linear-gradient(135deg, hsla(240, 30%, 99%, 0.92) 0%, hsla(245, 35%, 97%, 0.88) 100%);
-    backdrop-filter: blur(24px) saturate(1.5);
-    -webkit-backdrop-filter: blur(24px) saturate(1.5);
-    border: 1px solid hsla(245, 40%, 85%, 0.5);
-    box-shadow: 0 8px 40px -8px hsla(245, 50%, 50%, 0.15), 0 2px 8px -2px hsla(245, 50%, 50%, 0.08);
+    @apply bg-card rounded-2xl;
+    box-shadow: var(--shadow-neu);
+    border: 1px solid hsl(var(--border) / 0.3);
   }
 
   .dark .glass-popup {
-    background: linear-gradient(135deg, hsla(220, 25%, 12%, 0.92) 0%, hsla(220, 30%, 14%, 0.88) 100%);
-    border-color: hsla(220, 20%, 22%, 0.6);
-    box-shadow: 0 8px 40px -8px hsla(220, 40%, 5%, 0.5), 0 2px 8px -2px hsla(220, 40%, 5%, 0.3);
+    @apply bg-card;
+    box-shadow: var(--shadow-neu);
+    border-color: hsl(var(--border) / 0.3);
   }
 
   .gradient-text {
