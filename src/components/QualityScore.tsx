@@ -69,14 +69,14 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-      className="bg-card border border-border rounded-xl p-5">
+      className="glass-card p-4 sm:p-5">
       <h3 className="text-sm font-medium text-muted-foreground mb-4">Design Score</h3>
       
       <div className="flex items-center gap-4 mb-4">
-        <div className="relative w-[80px] h-[80px]">
+        <div className="relative w-[80px] h-[80px] neu-inset flex items-center justify-center" style={{ borderRadius: '50%' }}>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
-              <Pie data={donutData} cx="50%" cy="50%" innerRadius={28} outerRadius={36}
+              <Pie data={donutData} cx="50%" cy="50%" innerRadius={26} outerRadius={34}
                 startAngle={90} endAngle={-270} dataKey="value" stroke="none">
                 <Cell fill={scoreColor} />
                 <Cell fill={remainColor} />
@@ -88,9 +88,9 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
               className="text-xl font-semibold">{score}</motion.span>
           </div>
         </div>
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <p className="text-sm font-medium">{getScoreLabel()}</p>
-          <p className="text-xs text-muted-foreground">{meta.imageCount} images found</p>
+          <p className="text-xs text-muted-foreground truncate">{meta.imageCount} images found</p>
         </div>
       </div>
 
@@ -98,11 +98,12 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
         {metrics.map((metric, index) => (
           <motion.div key={metric.label} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ delay: 0.2 + index * 0.05 }}
-            className={`flex items-center gap-2 p-2.5 rounded-lg transition-colors ${
+            className={`flex items-center gap-2 p-2.5 rounded-xl transition-all ${
               metric.active 
-                ? 'bg-emerald-500/8 text-emerald-400 dark:text-emerald-300 border border-emerald-500/15' 
-                : 'bg-muted/30 text-muted-foreground border border-transparent'
-            }`}>
+                ? 'bg-emerald-500/8 text-emerald-500 dark:text-emerald-300' 
+                : 'text-muted-foreground'
+            }`}
+            style={{ boxShadow: 'var(--shadow-neu-sm)' }}>
             <metric.icon className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="text-xs font-medium truncate">{metric.label}</span>
           </motion.div>
@@ -110,7 +111,7 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
       </div>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-        className="pt-4 border-t border-border/50">
+        className="pt-4 border-t border-border/30">
         <div className="flex items-center gap-1.5 mb-3">
           <Info className="w-3.5 h-3.5 text-muted-foreground" />
           <span className="text-xs font-medium text-muted-foreground">Score Analysis</span>
@@ -119,7 +120,7 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
           <div className="space-y-1.5 mb-3">
             {breakdown.slice(0, 3).map((item, i) => (
               <div key={i} className="flex items-start gap-2">
-                <Check className="w-3 h-3 text-emerald-400 mt-0.5 flex-shrink-0" />
+                <Check className="w-3 h-3 text-emerald-500 mt-0.5 flex-shrink-0" />
                 <span className="text-xs text-muted-foreground leading-tight">{item}</span>
               </div>
             ))}
@@ -129,7 +130,7 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
           <div className="space-y-1.5">
             {issues.slice(0, 2).map((item, i) => (
               <div key={i} className="flex items-start gap-2">
-                <AlertTriangle className="w-3 h-3 text-amber-400 mt-0.5 flex-shrink-0" />
+                <AlertTriangle className="w-3 h-3 text-amber-500 mt-0.5 flex-shrink-0" />
                 <span className="text-xs text-muted-foreground leading-tight">{item}</span>
               </div>
             ))}
