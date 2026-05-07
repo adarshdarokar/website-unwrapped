@@ -271,7 +271,7 @@ const Index = () => {
 
               {/* Overview Tab */}
               <TabsContent value="overview" className="mt-0">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_280px] xl:grid-cols-[1fr_320px] gap-4">
                   <div className="space-y-4">
                     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.05 }}>
                       <AnalysisSummary
@@ -340,7 +340,7 @@ const Index = () => {
 
               {/* Colors Tab */}
               <TabsContent value="colors" className="mt-0">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <ColorPalette colors={result.colors} />
                   <div className="space-y-4">
                     <QualityScore score={result.score} meta={result.meta} />
@@ -351,7 +351,7 @@ const Index = () => {
 
               {/* Fonts Tab */}
               <TabsContent value="fonts" className="mt-0">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <FontDisplay fonts={result.fonts} />
                   <div className="space-y-4">
                     <QualityScore score={result.score} meta={result.meta} />
@@ -362,7 +362,7 @@ const Index = () => {
 
               {/* Images Tab */}
               <TabsContent value="images" className="mt-0">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <ImageGallery images={result.images} />
                   <div className="space-y-4">
                     <QualityScore score={result.score} meta={result.meta} />
@@ -373,7 +373,7 @@ const Index = () => {
 
               {/* Icons Tab */}
               <TabsContent value="icons" className="mt-0">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <IconDisplay icons={result.icons} />
                   <div className="space-y-4">
                     <QualityScore score={result.score} meta={result.meta} />
@@ -384,7 +384,7 @@ const Index = () => {
 
               {/* Animations Tab */}
               <TabsContent value="animations" className="mt-0">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <AnimationDisplay animations={result.animations} />
                   <div className="space-y-4">
                     <QualityScore score={result.score} meta={result.meta} />
