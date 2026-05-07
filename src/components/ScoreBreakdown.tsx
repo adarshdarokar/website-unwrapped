@@ -74,7 +74,7 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
     <div className="space-y-4">
       {/* Overall Score Header */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-        className="bg-card border border-border rounded-xl p-4 sm:p-5">
+        className="glass-card p-4 sm:p-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-primary/10 rounded-xl flex-shrink-0">
@@ -96,7 +96,7 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Bar Chart */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="bg-card border border-border rounded-xl overflow-hidden">
+            className="glass-card overflow-hidden">
             <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
               <div className="flex items-center gap-2.5">
                 <div className="p-1.5 bg-primary/10 rounded-lg">
@@ -128,7 +128,7 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
 
           {/* Radar Chart */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-            className="bg-card border border-border rounded-xl overflow-hidden">
+            className="glass-card overflow-hidden">
             <div className="p-4 border-b border-border bg-gradient-to-r from-violet-500/5 to-transparent">
               <div className="flex items-center gap-2.5">
                 <div className="p-1.5 bg-violet-500/10 rounded-lg">
@@ -159,7 +159,7 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {scoreBreakdown && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-            className="bg-card border border-border rounded-xl overflow-hidden">
+            className="glass-card overflow-hidden">
             <div className="p-4 border-b border-border">
               <h4 className="text-xs font-semibold font-display">Point Details</h4>
             </div>
@@ -221,7 +221,7 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
 
         {scoreReasons && scoreReasons.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-            className="bg-card border border-border rounded-xl overflow-hidden">
+            className="glass-card overflow-hidden">
             <div className="p-4 border-b border-border">
               <h4 className="text-xs font-semibold font-display">Evaluation Details</h4>
             </div>
@@ -242,7 +242,7 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
       {/* Suggestions */}
       {suggestions && suggestions.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
-          className="bg-card border border-border rounded-xl overflow-hidden">
+          className="glass-card overflow-hidden">
           <div className="p-4 border-b border-border bg-gradient-to-r from-warning/5 to-transparent">
             <div className="flex items-center gap-2.5">
               <div className="p-1.5 bg-warning/10 rounded-lg">
