@@ -327,7 +327,7 @@ const Index = () => {
                     </motion.div>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-4 md:sticky md:top-20 md:self-start">
                     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
                       <QualityScore score={result.score} meta={result.meta} />
                     </motion.div>
