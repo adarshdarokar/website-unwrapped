@@ -183,32 +183,34 @@ export function AppSidebar() {
       {/* Desktop floating rail */}
       <aside
         className={cn(
-          "hidden md:flex fixed left-3 top-3 bottom-3 z-30 flex-col items-stretch rounded-2xl bg-sidebar/85 backdrop-blur-xl border border-sidebar-border/40 shadow-[0_8px_30px_-10px_hsla(245,40%,40%,0.18)] transition-all duration-300",
+          "hidden md:flex fixed top-3 bottom-3 z-30 w-[60px] py-3 px-2 flex-col items-stretch rounded-2xl bg-sidebar/85 backdrop-blur-xl border border-sidebar-border/40 shadow-[0_8px_30px_-10px_hsla(245,40%,40%,0.18)] transition-[left,transform,opacity] duration-300",
           collapsed
-            ? "w-[44px] py-2 px-1.5 overflow-hidden"
-            : "w-[60px] py-3 px-2"
+            ? "left-0 -translate-x-full opacity-0 pointer-events-none"
+            : "left-3 translate-x-0 opacity-100"
         )}
       >
-        {!collapsed && (
-          <div className="flex flex-col flex-1">
-            <RailContent />
-          </div>
-        )}
-
-        {/* Floating collapse toggle on outer edge */}
-        <button
-          onClick={() => setCollapsed((c) => !c)}
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className="absolute -right-3 top-6 w-6 h-6 flex items-center justify-center rounded-full bg-card border border-border/60 shadow-md text-muted-foreground hover:text-foreground hover:bg-card/95 transition-all"
-        >
-          {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
-        </button>
+        <div className="flex flex-col flex-1 min-h-0">
+          <RailContent />
+        </div>
       </aside>
+
+      {/* Floating collapse/expand toggle — always visible */}
+      <button
+        onClick={() => setCollapsed((c) => !c)}
+        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        className={cn(
+          "hidden md:flex fixed top-6 z-40 w-6 h-6 items-center justify-center rounded-full bg-card border border-border/60 shadow-md text-muted-foreground hover:text-foreground hover:bg-card/95 transition-all duration-300",
+          collapsed ? "left-2" : "left-[60px]"
+        )}
+      >
+        {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+      </button>
+
       {/* Spacer to reserve layout width on desktop */}
       <div
         className={cn(
           "hidden md:block flex-shrink-0 transition-all duration-300",
-          collapsed ? "w-[60px]" : "w-[76px]"
+          collapsed ? "w-4" : "w-[76px]"
         )}
         aria-hidden
       />
