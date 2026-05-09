@@ -10,7 +10,8 @@ import {
   Share2,
   Keyboard,
   Crown,
-  Globe,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -97,12 +98,6 @@ function RailContent() {
 
   return (
     <>
-      {/* Logo */}
-      <div className="flex justify-center pt-1 pb-3">
-        <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center shadow-md">
-          <Globe className="w-[18px] h-[18px]" />
-        </div>
-      </div>
 
       {/* Nav */}
       <div className="flex flex-col items-center gap-1.5">
@@ -194,20 +189,20 @@ export function AppSidebar() {
             : "w-[60px] py-3 px-2"
         )}
       >
-        {/* Collapse toggle */}
-        <button
-          onClick={() => setCollapsed((c) => !c)}
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className="w-9 h-9 mx-auto flex items-center justify-center rounded-xl bg-primary/10 text-primary hover:bg-primary/15 transition-all"
-        >
-          <LayoutDashboard className="w-[16px] h-[16px]" />
-        </button>
-
         {!collapsed && (
-          <div className="flex flex-col flex-1 mt-2">
+          <div className="flex flex-col flex-1">
             <RailContent />
           </div>
         )}
+
+        {/* Floating collapse toggle on outer edge */}
+        <button
+          onClick={() => setCollapsed((c) => !c)}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="absolute -right-3 top-6 w-6 h-6 flex items-center justify-center rounded-full bg-card border border-border/60 shadow-md text-muted-foreground hover:text-foreground hover:bg-card/95 transition-all"
+        >
+          {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+        </button>
       </aside>
       {/* Spacer to reserve layout width on desktop */}
       <div
