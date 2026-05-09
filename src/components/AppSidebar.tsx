@@ -10,7 +10,8 @@ import {
   Share2,
   Keyboard,
   Crown,
-  Globe,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
