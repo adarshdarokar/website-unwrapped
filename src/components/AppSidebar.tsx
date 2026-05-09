@@ -163,23 +163,60 @@ function RailContent() {
 
 export function AppSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("webvision_sidebar_collapsed") === "1";
+  });
 
   useEffect(() => {
     const open = () => setMobileOpen(true);
+    const toggleDesktop = () => setCollapsed((c) => !c);
     window.addEventListener("app:toggleSidebar", open);
-    return () => window.removeEventListener("app:toggleSidebar", open);
+    window.addEventListener("app:toggleSidebarDesktop", toggleDesktop);
+    return () => {
+      window.removeEventListener("app:toggleSidebar", open);
+      window.removeEventListener("app:toggleSidebarDesktop", toggleDesktop);
+    };
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("webvision_sidebar_collapsed", collapsed ? "1" : "0");
+  }, [collapsed]);
 
   return (
     <>
       {/* Desktop floating rail */}
       <aside
-        className="hidden md:flex fixed left-3 top-3 bottom-3 z-30 w-[60px] flex-col items-stretch py-3 px-2 rounded-2xl bg-sidebar/85 backdrop-blur-xl border border-sidebar-border/40 shadow-[0_8px_30px_-10px_hsla(245,40%,40%,0.18)]"
+        className={cn(
+          "hidden md:flex fixed left-3 top-3 bottom-3 z-30 flex-col items-stretch rounded-2xl bg-sidebar/85 backdrop-blur-xl border border-sidebar-border/40 shadow-[0_8px_30px_-10px_hsla(245,40%,40%,0.18)] transition-all duration-300",
+          collapsed
+            ? "w-[44px] py-2 px-1.5 overflow-hidden"
+            : "w-[60px] py-3 px-2"
+        )}
       >
-        <RailContent />
+        {/* Collapse toggle */}
+        <button
+          onClick={() => setCollapsed((c) => !c)}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="w-9 h-9 mx-auto flex items-center justify-center rounded-xl bg-primary/10 text-primary hover:bg-primary/15 transition-all"
+        >
+          <LayoutDashboard className="w-[16px] h-[16px]" />
+        </button>
+
+        {!collapsed && (
+          <div className="flex flex-col flex-1 mt-2">
+            <RailContent />
+          </div>
+        )}
       </aside>
       {/* Spacer to reserve layout width on desktop */}
-      <div className="hidden md:block w-[76px] flex-shrink-0" aria-hidden />
+      <div
+        className={cn(
+          "hidden md:block flex-shrink-0 transition-all duration-300",
+          collapsed ? "w-[60px]" : "w-[76px]"
+        )}
+        aria-hidden
+      />
 
       {/* Mobile drawer */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
