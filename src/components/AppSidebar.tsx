@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -9,29 +9,16 @@ import {
   GitCompare,
   Share2,
   Keyboard,
-  ChevronRight,
-  Sparkles,
   Crown,
+  Globe,
 } from "lucide-react";
-
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarSeparator,
-  SidebarFooter,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { NavLink } from "@/components/NavLink";
-import { cn } from "@/lib/utils";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { RazorpayCheckout } from "@/components/RazorpayCheckout";
 import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 function dispatchAppEvent(name: string) {
@@ -46,40 +33,56 @@ const navItems = [
 ];
 
 const actionItems = [
-  { title: "Command", icon: Command, event: "app:commandPalette", shortcut: "⌘K" },
+  { title: "Command (⌘K)", icon: Command, event: "app:commandPalette" },
   { title: "Compare", icon: GitCompare, event: "app:compare" },
   { title: "Export", icon: Share2, event: "app:export" },
-  { title: "Shortcuts", icon: Keyboard, event: "app:shortcuts", shortcut: "?" },
+  { title: "Shortcuts", icon: Keyboard, event: "app:shortcuts" },
 ];
 
-export function AppSidebar() {
+interface RailItemProps {
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  active?: boolean;
+  onClick: () => void;
+}
+
+function RailItem({ label, icon: Icon, active, onClick }: RailItemProps) {
+  return (
+    <TooltipProvider delayDuration={150}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={onClick}
+            aria-label={label}
+            className={cn(
+              "w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200",
+              active
+                ? "bg-primary/12 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.15)]"
+                : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
+            )}
+          >
+            <Icon className="w-[18px] h-[18px]" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={12} className="text-xs">
+          {label}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
+
+function RailContent() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { setOpenMobile, isMobile } = useSidebar();
-  const { remaining, limit, isPaidUser, hasReachedLimit } = useUsageLimits();
+  const { isPaidUser } = useUsageLimits();
   const { user } = useAuth();
   const [showCheckout, setShowCheckout] = useState(false);
-
-  const currentPath = location.pathname;
-
-  const handleNavClick = () => {
-    if (isMobile) {
-      setOpenMobile(false);
-    }
-  };
-
-  const handleActionClick = (event: string) => {
-    dispatchAppEvent(event);
-    if (isMobile) {
-      setOpenMobile(false);
-    }
-  };
 
   const handleUpgradeClick = () => {
     if (!user) {
       toast.info("Please sign in first to upgrade.");
       navigate("/auth");
-      handleNavClick();
       return;
     }
     setShowCheckout(true);
@@ -87,170 +90,65 @@ export function AppSidebar() {
 
   const handlePaymentSuccess = () => {
     setShowCheckout(false);
-    if (user) {
-      localStorage.setItem(`webvision_paid_${user.id}`, "true");
-    }
+    if (user) localStorage.setItem(`webvision_paid_${user.id}`, "true");
     toast.success("🎉 Welcome to Pro! Unlimited analyses unlocked.");
     window.location.reload();
   };
 
-  const percentage = Math.round((remaining / limit) * 100);
-
   return (
     <>
-      <Sidebar
-        variant="floating"
-        collapsible="icon"
-        className="border-0"
-      >
-        <SidebarContent className="px-2 pt-3">
-          {/* Navigation */}
-          <SidebarGroup>
-            <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium mb-1">
-              Navigation
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {navItems.map((item) => {
-                  const isActive = currentPath === item.url;
-                  return (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        asChild
-                        tooltip={item.title}
-                        isActive={isActive}
-                      >
-                        <NavLink
-                          to={item.url}
-                          end={item.url === "/"}
-                          onClick={handleNavClick}
-                          className={cn(
-                            "gap-3 transition-all duration-200 rounded-xl",
-                            isActive && "bg-primary/10 text-primary font-medium shadow-sm"
-                          )}
-                          activeClassName="bg-primary/10 text-primary"
-                        >
-                          <item.icon className="h-4 w-4 flex-shrink-0" />
-                          <span className="group-data-[collapsible=icon]:hidden">{item.title}</span>
-                          {isActive && (
-                            <ChevronRight className="ml-auto h-3 w-3 opacity-50 group-data-[collapsible=icon]:hidden" />
-                          )}
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+      {/* Logo */}
+      <div className="flex justify-center pt-1 pb-3">
+        <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center shadow-md">
+          <Globe className="w-[18px] h-[18px]" />
+        </div>
+      </div>
 
-          <SidebarSeparator className="my-2" />
+      {/* Nav */}
+      <div className="flex flex-col items-center gap-1.5">
+        {navItems.map((item) => (
+          <RailItem
+            key={item.title}
+            label={item.title}
+            icon={item.icon}
+            active={location.pathname === item.url}
+            onClick={() => navigate(item.url)}
+          />
+        ))}
+      </div>
 
-          {/* Actions */}
-          <SidebarGroup>
-            <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-medium mb-1">
-              Quick Actions
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {actionItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      onClick={() => handleActionClick(item.event)}
-                      tooltip={item.title}
-                      className="gap-3 transition-all duration-200 rounded-xl hover:bg-primary/5"
-                    >
-                      <item.icon className="h-4 w-4 flex-shrink-0" />
-                      <span className="group-data-[collapsible=icon]:hidden flex-1">{item.title}</span>
-                      {item.shortcut && (
-                        <span className="text-[10px] text-muted-foreground/50 bg-muted/50 px-1.5 py-0.5 rounded font-mono group-data-[collapsible=icon]:hidden">
-                          {item.shortcut}
-                        </span>
-                      )}
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
+      {/* Divider */}
+      <div className="my-3 mx-3 h-px bg-border/60" />
 
-        <SidebarFooter className="p-3 group-data-[collapsible=icon]:p-2">
-          {/* Upgrade Card */}
-          {!isPaidUser && (
-            <div className="group-data-[collapsible=icon]:hidden rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/8 via-primary/4 to-transparent p-3.5 space-y-3 backdrop-blur-sm">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-xl bg-primary/12 flex items-center justify-center">
-                  <Crown className="w-3.5 h-3.5 text-primary" />
-                </div>
-                <span className="text-xs font-semibold text-foreground">Upgrade to Pro</span>
-              </div>
+      {/* Actions */}
+      <div className="flex flex-col items-center gap-1.5">
+        {actionItems.map((item) => (
+          <RailItem
+            key={item.title}
+            label={item.title}
+            icon={item.icon}
+            onClick={() => dispatchAppEvent(item.event)}
+          />
+        ))}
+      </div>
 
-              {/* Usage bar */}
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-muted-foreground">Credits used</span>
-                  <span className={`text-[10px] font-medium ${hasReachedLimit ? 'text-destructive' : 'text-muted-foreground'}`}>
-                    {remaining}/{limit} left
-                  </span>
-                </div>
-                <div className="w-full h-1.5 rounded-full bg-primary/10 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-500 ${
-                      hasReachedLimit ? 'bg-destructive' : remaining <= 2 ? 'bg-warning' : 'bg-primary/60'
-                    }`}
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
-              </div>
-
-              <button
-                onClick={handleUpgradeClick}
-                className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-all duration-200 shadow-sm hover:shadow-md"
-              >
-                <Sparkles className="w-3 h-3" />
-                Get Unlimited — $3/mo
-              </button>
-            </div>
+      {/* Bottom: theme toggle + upgrade/pro */}
+      <div className="mt-auto flex flex-col items-center gap-2 pt-3">
+        <div className="my-1 mx-3 h-px bg-border/60 w-8" />
+        <div className="flex items-center justify-center">
+          <ThemeToggle />
+        </div>
+        <button
+          onClick={handleUpgradeClick}
+          aria-label={isPaidUser ? "Pro plan" : "Upgrade to Pro"}
+          className={cn(
+            "w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200",
+            "bg-primary/10 text-primary hover:bg-primary/15"
           )}
-
-          {/* Pro badge for paid users */}
-          {isPaidUser && (
-            <div className="group-data-[collapsible=icon]:hidden rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/8 via-primary/4 to-transparent p-3.5 flex items-center gap-2.5 backdrop-blur-sm">
-              <div className="w-7 h-7 rounded-xl bg-primary/12 flex items-center justify-center">
-                <Crown className="w-3.5 h-3.5 text-primary" />
-              </div>
-              <div>
-                <span className="text-xs font-semibold text-foreground">Pro Plan</span>
-                <p className="text-[10px] text-muted-foreground">Unlimited analyses</p>
-              </div>
-            </div>
-          )}
-
-          {/* Collapsed icon upgrade button */}
-          {!isPaidUser && (
-            <button
-              onClick={handleUpgradeClick}
-              className="hidden group-data-[collapsible=icon]:flex w-8 h-8 items-center justify-center rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors mx-auto"
-              title="Upgrade to Pro"
-            >
-              <Crown className="w-4 h-4 text-primary" />
-            </button>
-          )}
-
-          {currentPath !== "/" && (
-            <button
-              onClick={() => {
-                navigate("/");
-                handleNavClick();
-              }}
-              className="w-full text-left text-xs text-sidebar-foreground/60 hover:text-sidebar-foreground transition-colors py-2 px-2 rounded-md hover:bg-sidebar-accent/50 group-data-[collapsible=icon]:hidden"
-            >
-              ← Back to Analyze
-            </button>
-          )}
-        </SidebarFooter>
-      </Sidebar>
+        >
+          <Crown className="w-[18px] h-[18px]" />
+        </button>
+      </div>
 
       <RazorpayCheckout
         isOpen={showCheckout}
@@ -259,6 +157,41 @@ export function AppSidebar() {
         amount={3}
         planName="Pro"
       />
+    </>
+  );
+}
+
+export function AppSidebar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const open = () => setMobileOpen(true);
+    window.addEventListener("app:toggleSidebar", open);
+    return () => window.removeEventListener("app:toggleSidebar", open);
+  }, []);
+
+  return (
+    <>
+      {/* Desktop floating rail */}
+      <aside
+        className="hidden md:flex fixed left-3 top-3 bottom-3 z-30 w-[60px] flex-col items-stretch py-3 px-2 rounded-2xl bg-sidebar/85 backdrop-blur-xl border border-sidebar-border/40 shadow-[0_8px_30px_-10px_hsla(245,40%,40%,0.18)]"
+      >
+        <RailContent />
+      </aside>
+      {/* Spacer to reserve layout width on desktop */}
+      <div className="hidden md:block w-[76px] flex-shrink-0" aria-hidden />
+
+      {/* Mobile drawer */}
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        <SheetContent
+          side="left"
+          className="w-[80px] p-3 bg-sidebar/95 backdrop-blur-xl border-sidebar-border/40 [&>button]:hidden"
+        >
+          <div className="flex h-full flex-col items-stretch">
+            <RailContent />
+          </div>
+        </SheetContent>
+      </Sheet>
     </>
   );
 }
