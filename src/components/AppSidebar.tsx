@@ -97,12 +97,6 @@ function RailContent() {
 
   return (
     <>
-      {/* Logo */}
-      <div className="flex justify-center pt-1 pb-3">
-        <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center shadow-md">
-          <Globe className="w-[18px] h-[18px]" />
-        </div>
-      </div>
 
       {/* Nav */}
       <div className="flex flex-col items-center gap-1.5">
