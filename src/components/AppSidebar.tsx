@@ -16,11 +16,9 @@ import {
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
-import { RazorpayCheckout } from "@/components/RazorpayCheckout";
-import { useAuth } from "@/hooks/useAuth";
+import { PricingModal } from "@/components/PricingModal";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 
 function dispatchAppEvent(name: string) {
   window.dispatchEvent(new CustomEvent(name));
