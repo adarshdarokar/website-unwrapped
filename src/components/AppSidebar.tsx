@@ -4,7 +4,6 @@ import {
   LayoutDashboard,
   History,
   Settings,
-  CreditCard,
   Command,
   GitCompare,
   Share2,
@@ -16,11 +15,9 @@ import {
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
-import { RazorpayCheckout } from "@/components/RazorpayCheckout";
-import { useAuth } from "@/hooks/useAuth";
+import { PricingModal } from "@/components/PricingModal";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 
 function dispatchAppEvent(name: string) {
   window.dispatchEvent(new CustomEvent(name));
@@ -30,7 +27,6 @@ const navItems = [
   { title: "Analyze", url: "/", icon: LayoutDashboard },
   { title: "History", url: "/history", icon: History },
   { title: "Settings", url: "/settings", icon: Settings },
-  { title: "Pricing", url: "/pricing", icon: CreditCard },
 ];
 
 const actionItems = [
@@ -86,24 +82,7 @@ function RailContent({ expanded }: { expanded: boolean }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { isPaidUser } = useUsageLimits();
-  const { user } = useAuth();
-  const [showCheckout, setShowCheckout] = useState(false);
-
-  const handleUpgradeClick = () => {
-    if (!user) {
-      toast.info("Please sign in first to upgrade.");
-      navigate("/auth");
-      return;
-    }
-    setShowCheckout(true);
-  };
-
-  const handlePaymentSuccess = () => {
-    setShowCheckout(false);
-    if (user) localStorage.setItem(`webvision_paid_${user.id}`, "true");
-    toast.success("🎉 Welcome to Pro! Unlimited analyses unlocked.");
-    window.location.reload();
-  };
+  const [showPricing, setShowPricing] = useState(false);
 
   return (
     <>
@@ -140,7 +119,7 @@ function RailContent({ expanded }: { expanded: boolean }) {
           <ThemeToggle />
         </div>
         <button
-          onClick={handleUpgradeClick}
+          onClick={() => setShowPricing(true)}
           aria-label={isPaidUser ? "Pro plan" : "Upgrade to Pro"}
           className={cn(
             "h-10 flex items-center rounded-xl transition-all duration-200 overflow-hidden bg-primary/10 text-primary hover:bg-primary/15",
@@ -156,13 +135,7 @@ function RailContent({ expanded }: { expanded: boolean }) {
         </button>
       </div>
 
-      <RazorpayCheckout
-        isOpen={showCheckout}
-        onClose={() => setShowCheckout(false)}
-        onSuccess={handlePaymentSuccess}
-        amount={3}
-        planName="Pro"
-      />
+      <PricingModal open={showPricing} onOpenChange={setShowPricing} />
     </>
   );
 }
