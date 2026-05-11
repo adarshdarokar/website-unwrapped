@@ -34,7 +34,7 @@ const navItems = [
 ];
 
 const actionItems = [
-  { title: "Command (⌘K)", icon: Command, event: "app:commandPalette" },
+  { title: "Command", icon: Command, event: "app:commandPalette" },
   { title: "Compare", icon: GitCompare, event: "app:compare" },
   { title: "Export", icon: Share2, event: "app:export" },
   { title: "Shortcuts", icon: Keyboard, event: "app:shortcuts" },
@@ -44,27 +44,36 @@ interface RailItemProps {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   active?: boolean;
+  expanded?: boolean;
   onClick: () => void;
 }
 
-function RailItem({ label, icon: Icon, active, onClick }: RailItemProps) {
+function RailItem({ label, icon: Icon, active, expanded, onClick }: RailItemProps) {
+  const button = (
+    <button
+      onClick={onClick}
+      aria-label={label}
+      className={cn(
+        "h-10 flex items-center rounded-xl transition-all duration-200 overflow-hidden",
+        expanded ? "w-full px-3 gap-3 justify-start" : "w-10 justify-center",
+        active
+          ? "bg-primary/12 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.15)]"
+          : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
+      )}
+    >
+      <Icon className="w-[18px] h-[18px] shrink-0" />
+      {expanded && (
+        <span className="text-sm font-medium truncate">{label}</span>
+      )}
+    </button>
+  );
+
+  if (expanded) return button;
+
   return (
     <TooltipProvider delayDuration={150}>
       <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={onClick}
-            aria-label={label}
-            className={cn(
-              "w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200",
-              active
-                ? "bg-primary/12 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.15)]"
-                : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
-            )}
-          >
-            <Icon className="w-[18px] h-[18px]" />
-          </button>
-        </TooltipTrigger>
+        <TooltipTrigger asChild>{button}</TooltipTrigger>
         <TooltipContent side="right" sideOffset={12} className="text-xs">
           {label}
         </TooltipContent>
@@ -73,7 +82,7 @@ function RailItem({ label, icon: Icon, active, onClick }: RailItemProps) {
   );
 }
 
-function RailContent() {
+function RailContent({ expanded }: { expanded: boolean }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { isPaidUser } = useUsageLimits();
@@ -98,50 +107,52 @@ function RailContent() {
 
   return (
     <>
-
-      {/* Nav */}
-      <div className="flex flex-col items-center gap-1.5">
+      <div className={cn("flex flex-col gap-1", expanded ? "items-stretch" : "items-center")}>
         {navItems.map((item) => (
           <RailItem
             key={item.title}
             label={item.title}
             icon={item.icon}
+            expanded={expanded}
             active={location.pathname === item.url}
             onClick={() => navigate(item.url)}
           />
         ))}
       </div>
 
-      {/* Divider */}
-      <div className="my-3 mx-3 h-px bg-border/60" />
+      <div className="my-3 h-px bg-border/60 mx-2" />
 
-      {/* Actions */}
-      <div className="flex flex-col items-center gap-1.5">
+      <div className={cn("flex flex-col gap-1", expanded ? "items-stretch" : "items-center")}>
         {actionItems.map((item) => (
           <RailItem
             key={item.title}
             label={item.title}
             icon={item.icon}
+            expanded={expanded}
             onClick={() => dispatchAppEvent(item.event)}
           />
         ))}
       </div>
 
-      {/* Bottom: theme toggle + upgrade/pro */}
-      <div className="mt-auto flex flex-col items-center gap-2 pt-3">
-        <div className="my-1 mx-3 h-px bg-border/60 w-8" />
-        <div className="flex items-center justify-center">
+      <div className={cn("mt-auto flex flex-col gap-2 pt-3", expanded ? "items-stretch" : "items-center")}>
+        <div className="h-px bg-border/60 mx-2" />
+        <div className={cn("flex", expanded ? "justify-start px-1" : "justify-center")}>
           <ThemeToggle />
         </div>
         <button
           onClick={handleUpgradeClick}
           aria-label={isPaidUser ? "Pro plan" : "Upgrade to Pro"}
           className={cn(
-            "w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200",
-            "bg-primary/10 text-primary hover:bg-primary/15"
+            "h-10 flex items-center rounded-xl transition-all duration-200 overflow-hidden bg-primary/10 text-primary hover:bg-primary/15",
+            expanded ? "w-full px-3 gap-3 justify-start" : "w-10 justify-center"
           )}
         >
-          <Crown className="w-[18px] h-[18px]" />
+          <Crown className="w-[18px] h-[18px] shrink-0" />
+          {expanded && (
+            <span className="text-sm font-medium truncate">
+              {isPaidUser ? "Pro" : "Upgrade"}
+            </span>
+          )}
         </button>
       </div>
 
@@ -158,9 +169,10 @@ function RailContent() {
 
 export function AppSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  // collapsed = compact icon-only rail (default). expanded = wider with labels.
   const [collapsed, setCollapsed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("webvision_sidebar_collapsed") === "1";
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem("webvision_sidebar_collapsed") !== "0";
   });
 
   useEffect(() => {
@@ -178,40 +190,37 @@ export function AppSidebar() {
     localStorage.setItem("webvision_sidebar_collapsed", collapsed ? "1" : "0");
   }, [collapsed]);
 
+  const railWidth = collapsed ? 56 : 220;
+
   return (
     <>
-      {/* Desktop floating rail */}
+      {/* Desktop floating rail — always visible */}
       <aside
+        style={{ width: railWidth }}
         className={cn(
-          "hidden md:flex fixed top-3 bottom-3 z-30 w-[60px] py-3 px-2 flex-col items-stretch rounded-2xl bg-sidebar/85 backdrop-blur-xl border border-sidebar-border/40 shadow-[0_8px_30px_-10px_hsla(245,40%,40%,0.18)] transition-[left,transform,opacity] duration-300",
-          collapsed
-            ? "left-0 -translate-x-full opacity-0 pointer-events-none"
-            : "left-3 translate-x-0 opacity-100"
+          "hidden md:flex fixed top-3 bottom-3 left-3 z-30 flex-col rounded-2xl bg-sidebar/85 backdrop-blur-xl border border-sidebar-border/40 shadow-[0_8px_30px_-10px_hsla(245,40%,40%,0.18)] overflow-hidden transition-[width] duration-300 ease-out",
+          collapsed ? "px-2 py-3" : "px-3 py-3"
         )}
       >
-        <div className="flex flex-col flex-1 min-h-0">
-          <RailContent />
+        <div className="flex flex-col flex-1 min-h-0 min-w-0 overflow-hidden">
+          <RailContent expanded={!collapsed} />
         </div>
       </aside>
 
-      {/* Floating collapse/expand toggle — always visible */}
+      {/* Floating collapse/expand toggle */}
       <button
         onClick={() => setCollapsed((c) => !c)}
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        className={cn(
-          "hidden md:flex fixed top-6 z-40 w-6 h-6 items-center justify-center rounded-full bg-card border border-border/60 shadow-md text-muted-foreground hover:text-foreground hover:bg-card/95 transition-all duration-300",
-          collapsed ? "left-2" : "left-[60px]"
-        )}
+        style={{ left: railWidth + 6 }}
+        className="hidden md:flex fixed top-6 z-40 w-6 h-6 items-center justify-center rounded-full bg-card border border-border/60 shadow-md text-muted-foreground hover:text-foreground hover:bg-card/95 transition-[left] duration-300 ease-out"
       >
         {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
       </button>
 
       {/* Spacer to reserve layout width on desktop */}
       <div
-        className={cn(
-          "hidden md:block flex-shrink-0 transition-all duration-300",
-          collapsed ? "w-4" : "w-[76px]"
-        )}
+        style={{ width: railWidth + 18 }}
+        className="hidden md:block flex-shrink-0 transition-[width] duration-300 ease-out"
         aria-hidden
       />
 
@@ -219,10 +228,10 @@ export function AppSidebar() {
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent
           side="left"
-          className="w-[80px] p-3 bg-sidebar/95 backdrop-blur-xl border-sidebar-border/40 [&>button]:hidden"
+          className="w-[80px] p-3 bg-sidebar/95 backdrop-blur-xl border-sidebar-border/40 [&>button]:hidden overflow-hidden"
         >
-          <div className="flex h-full flex-col items-stretch">
-            <RailContent />
+          <div className="flex h-full flex-col items-stretch min-w-0 overflow-hidden">
+            <RailContent expanded={false} />
           </div>
         </SheetContent>
       </Sheet>
