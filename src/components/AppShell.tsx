@@ -1,7 +1,8 @@
 import { PropsWithChildren } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Globe, ArrowLeft, Menu } from "lucide-react";
+import { ArrowLeft, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logoVision from "@/assets/logo-vision.jpg";
 
 import { UserMenu } from "@/components/UserMenu";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -51,8 +52,8 @@ export function AppShell({ children }: PropsWithChildren) {
               )}
 
               <div className="flex items-center gap-2.5">
-                <div className="p-1.5 bg-primary/10 rounded-lg">
-                  <Globe className="w-4 h-4 text-primary" />
+                <div className="p-1.5 bg-primary/10 rounded-lg overflow-hidden">
+                  <img src={logoVision} alt="WebVision logo" className="w-4 h-4 object-cover rounded-sm" />
                 </div>
                 <span className="font-display font-semibold text-sm sm:text-base hidden xs:inline">
                   WebVision

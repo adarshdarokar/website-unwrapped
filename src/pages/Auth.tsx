@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, User, Loader2, Sparkles, ArrowRight, Globe, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, Loader2, Sparkles, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import logoVision from '@/assets/logo-vision.jpg';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -115,8 +116,8 @@ const Auth = () => {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => navigate('/')}
         >
-          <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl">
-            <Globe className="w-5 h-5 text-primary" />
+          <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl overflow-hidden">
+            <img src={logoVision} alt="WebVision logo" className="w-5 h-5 object-cover rounded-md" />
           </div>
           <div>
             <span className="text-lg font-display font-bold">WebVision</span>
