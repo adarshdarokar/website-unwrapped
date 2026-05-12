@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, User, Loader2, Sparkles, ArrowRight, Globe, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, Loader2, Sparkles, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import logoVision from '@/assets/logo-vision.jpg';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
