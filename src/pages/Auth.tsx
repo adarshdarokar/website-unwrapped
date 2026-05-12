@@ -144,7 +144,7 @@ const Auth = () => {
                 transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
                 className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/25 overflow-hidden p-0 m-0"
               >
-                <img src={logoVision} alt="WebVision logo" className="w-full h-full object-contain scale-110" />
+                <Logo size={64} priority className="scale-110" />
               </motion.div>
               
               <motion.h1 
