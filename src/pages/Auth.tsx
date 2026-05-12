@@ -117,7 +117,7 @@ const Auth = () => {
           onClick={() => navigate('/')}
         >
           <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl overflow-hidden">
-            <img src={logoVision} alt="WebVision logo" className="w-5 h-5 object-cover rounded-md" />
+            <img src={logoVision} alt="WebVision logo" className="w-5 h-5 object-contain rounded-md transition-transform duration-300 hover:scale-110" />
           </div>
           <div>
             <span className="text-lg font-display font-bold">WebVision</span>

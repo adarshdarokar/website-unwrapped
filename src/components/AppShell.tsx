@@ -53,7 +53,7 @@ export function AppShell({ children }: PropsWithChildren) {
 
               <div className="flex items-center gap-2.5">
                 <div className="p-1.5 bg-primary/10 rounded-lg overflow-hidden">
-                  <img src={logoVision} alt="WebVision logo" className="w-4 h-4 object-cover rounded-sm" />
+                  <img src={logoVision} alt="WebVision logo" className="w-4 h-4 object-contain rounded-sm transition-transform duration-300 hover:scale-110" />
                 </div>
                 <span className="font-display font-semibold text-sm sm:text-base hidden xs:inline">
                   WebVision
