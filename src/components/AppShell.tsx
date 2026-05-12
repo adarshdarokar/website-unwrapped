@@ -2,7 +2,7 @@ import { PropsWithChildren } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logoVision from "@/assets/logo-vision.jpg";
+import { Logo } from "@/components/Logo";
 
 import { UserMenu } from "@/components/UserMenu";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -52,8 +52,8 @@ export function AppShell({ children }: PropsWithChildren) {
               )}
 
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 bg-primary/10 rounded-lg overflow-hidden flex items-center justify-center p-0 m-0">
-                  <img src={logoVision} alt="WebVision logo" className="w-full h-full object-contain scale-110 transition-transform duration-300 hover:scale-125" />
+                <div className="w-7 h-7 bg-primary/10 rounded-lg overflow-hidden flex items-center justify-center p-0 m-0 transition-transform duration-300 hover:scale-110">
+                  <Logo size={28} priority className="scale-110" />
                 </div>
                 <span className="font-display font-semibold text-sm sm:text-base hidden xs:inline">
                   WebVision

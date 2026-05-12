@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, User, Loader2, Sparkles, ArrowRight, Eye, EyeOff } from 'lucide-react';
-import logoVision from '@/assets/logo-vision.jpg';
+import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -116,8 +116,8 @@ const Auth = () => {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => navigate('/')}
         >
-          <div className="w-9 h-9 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl overflow-hidden flex items-center justify-center p-0 m-0">
-            <img src={logoVision} alt="WebVision logo" className="w-full h-full object-contain scale-110 transition-transform duration-300 hover:scale-125" />
+          <div className="w-9 h-9 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl overflow-hidden flex items-center justify-center p-0 m-0 transition-transform duration-300 hover:scale-110">
+            <Logo size={36} priority className="scale-110" />
           </div>
           <div>
             <span className="text-lg font-display font-bold">WebVision</span>
@@ -144,7 +144,7 @@ const Auth = () => {
                 transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
                 className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/25 overflow-hidden p-0 m-0"
               >
-                <img src={logoVision} alt="WebVision logo" className="w-full h-full object-contain scale-110" />
+                <Logo size={64} priority className="scale-110" />
               </motion.div>
               
               <motion.h1 
