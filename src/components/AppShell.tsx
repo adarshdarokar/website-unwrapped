@@ -2,7 +2,7 @@ import { PropsWithChildren } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logoVision from "@/assets/logo-vision.jpg";
+import { Logo } from "@/components/Logo";
 
 import { UserMenu } from "@/components/UserMenu";
 import { AppSidebar } from "@/components/AppSidebar";
