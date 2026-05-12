@@ -1,7 +1,8 @@
 import { PropsWithChildren } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Globe, ArrowLeft, Menu } from "lucide-react";
+import { ArrowLeft, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logoVision from "@/assets/logo-vision.jpg";
 
 import { UserMenu } from "@/components/UserMenu";
 import { AppSidebar } from "@/components/AppSidebar";
