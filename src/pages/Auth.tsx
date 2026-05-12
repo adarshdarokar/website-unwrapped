@@ -116,8 +116,8 @@ const Auth = () => {
           className="flex items-center gap-2 cursor-pointer"
           onClick={() => navigate('/')}
         >
-          <div className="w-9 h-9 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl overflow-hidden flex items-center justify-center p-0 m-0">
-            <img src={logoVision} alt="WebVision logo" className="w-full h-full object-contain scale-110 transition-transform duration-300 hover:scale-125" />
+          <div className="w-9 h-9 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl overflow-hidden flex items-center justify-center p-0 m-0 transition-transform duration-300 hover:scale-110">
+            <Logo size={36} priority className="scale-110" />
           </div>
           <div>
             <span className="text-lg font-display font-bold">WebVision</span>
