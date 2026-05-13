@@ -12,6 +12,8 @@ import {
   ExternalLink,
   LayoutDashboard,
   Monitor,
+  Sparkles,
+  Search,
 } from 'lucide-react';
 import { UrlInput } from '@/components/UrlInput';
 import { CreditsIndicator } from '@/components/CreditsIndicator';
@@ -40,6 +42,8 @@ import { SEOOverview } from '@/components/SEOOverview';
 import { AnalysisSummary } from '@/components/AnalysisSummary';
 import { ResponsivePreview } from '@/components/ResponsivePreview';
 import { ScoreBreakdown } from '@/components/ScoreBreakdown';
+import { AIInsights } from '@/components/AIInsights';
+import { SEOPreview } from '@/components/SEOPreview';
 import { useWebsiteAnalyzer } from '@/hooks/useWebsiteAnalyzer';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useAnalysisStats } from '@/hooks/useAnalysisStats';
@@ -104,11 +108,13 @@ const Index = () => {
 
   const resultTabs = [
     { value: 'overview', icon: LayoutDashboard, label: 'Overview' },
+    { value: 'ai', icon: Sparkles, label: 'AI' },
     { value: 'colors', icon: Palette, label: 'Colors' },
     { value: 'fonts', icon: Type, label: 'Fonts' },
     { value: 'images', icon: Image, label: 'Images' },
     { value: 'icons', icon: Shapes, label: 'Icons' },
     { value: 'animations', icon: Zap, label: 'Motion' },
+    { value: 'seo', icon: Search, label: 'SEO' },
     { value: 'preview', icon: Monitor, label: 'Preview' },
   ];
 
@@ -389,6 +395,21 @@ const Index = () => {
                   <div className="space-y-4">
                     <QualityScore score={result.score} meta={result.meta} />
                     <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* AI Insights Tab */}
+              <TabsContent value="ai" className="mt-0">
+                <AIInsights result={result} />
+              </TabsContent>
+
+              {/* SEO Preview Tab */}
+              <TabsContent value="seo" className="mt-0">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
+                  <SEOPreview url={result.url} meta={result.meta as any} />
+                  <div className="space-y-4">
+                    <SEOOverview url={result.url} meta={result.meta} images={result.images} />
                   </div>
                 </div>
               </TabsContent>
