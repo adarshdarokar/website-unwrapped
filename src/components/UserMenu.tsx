@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { User, LogOut, History, Settings, ChevronDown } from 'lucide-react';
+import { User, LogOut, History, Settings, ChevronDown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -27,9 +27,7 @@ export function UserMenu() {
   };
 
   if (loading) {
-    return (
-      <div className="w-10 h-10 rounded-xl bg-muted/50 animate-pulse" />
-    );
+    return <div className="w-10 h-10 rounded-xl bg-muted/50 animate-pulse" />;
   }
 
   if (!user) {
@@ -55,47 +53,71 @@ export function UserMenu() {
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="flex items-center gap-2 px-3 py-2 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
+          className="group flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-xl bg-gradient-to-br from-background/80 to-muted/50 backdrop-blur-md border border-border/40 hover:border-primary/30 hover:shadow-[0_0_0_3px_hsl(var(--primary)/0.08)] transition-all duration-300"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-primary-foreground text-sm font-medium">
+          <span className="relative w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground text-[11px] font-semibold tracking-wide shadow-[inset_0_1px_0_hsl(0_0%_100%/0.25)]">
             {initials}
-          </div>
-          <span className="text-sm font-medium hidden sm:block max-w-[100px] truncate">
+            <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-success ring-2 ring-background" />
+          </span>
+          <span className="text-[13px] font-medium hidden sm:block max-w-[110px] truncate text-foreground/90">
             {displayName}
           </span>
-          <ChevronDown className="w-4 h-4 text-muted-foreground" />
+          <ChevronDown className="w-3.5 h-3.5 text-muted-foreground transition-transform duration-300 group-data-[state=open]:rotate-180" />
         </motion.button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        align="end" 
-        className="w-56 bg-card border-border rounded-xl p-2 z-50"
-        sideOffset={8}
+
+      <DropdownMenuContent
+        align="end"
+        sideOffset={10}
+        className="w-64 p-2 rounded-2xl border border-border/40 bg-popover/85 backdrop-blur-xl shadow-[0_20px_60px_-20px_hsla(245,40%,30%,0.35)] z-50"
       >
-        <div className="px-3 py-2 mb-2">
-          <p className="text-sm font-medium truncate">{displayName}</p>
-          <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+        {/* Header */}
+        <div className="relative overflow-hidden rounded-xl px-3 py-3 mb-1 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/10">
+          <div className="flex items-center gap-3">
+            <span className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground text-sm font-semibold shadow-[inset_0_1px_0_hsl(0_0%_100%/0.25)]">
+              {initials}
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-[13px] font-semibold leading-tight truncate">{displayName}</p>
+              <p className="text-[11px] text-muted-foreground leading-tight truncate mt-0.5">{user.email}</p>
+            </div>
+          </div>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -top-8 -right-8 w-24 h-24 rounded-full"
+            style={{ background: 'radial-gradient(circle, hsl(var(--primary)/0.18), transparent 70%)' }}
+          />
         </div>
-        <DropdownMenuSeparator className="bg-border/50" />
-        <DropdownMenuItem 
+
+        <DropdownMenuItem
           onClick={() => navigate('/history')}
-          className="rounded-lg cursor-pointer"
+          className="rounded-lg cursor-pointer h-9 px-2.5 text-[13px] gap-2.5 focus:bg-primary/10 focus:text-foreground transition-colors"
         >
-          <History className="w-4 h-4 mr-2" />
+          <History className="w-4 h-4 text-muted-foreground" />
           My Analyses
         </DropdownMenuItem>
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={() => navigate('/settings')}
-          className="rounded-lg cursor-pointer"
+          className="rounded-lg cursor-pointer h-9 px-2.5 text-[13px] gap-2.5 focus:bg-primary/10 focus:text-foreground transition-colors"
         >
-          <Settings className="w-4 h-4 mr-2" />
+          <Settings className="w-4 h-4 text-muted-foreground" />
           Settings
         </DropdownMenuItem>
-        <DropdownMenuSeparator className="bg-border/50" />
-        <DropdownMenuItem 
-          onClick={handleSignOut}
-          className="rounded-lg cursor-pointer text-destructive focus:text-destructive"
+        <DropdownMenuItem
+          onClick={() => navigate('/pricing')}
+          className="rounded-lg cursor-pointer h-9 px-2.5 text-[13px] gap-2.5 focus:bg-primary/10 focus:text-foreground transition-colors"
         >
-          <LogOut className="w-4 h-4 mr-2" />
+          <Sparkles className="w-4 h-4 text-primary" />
+          <span>Upgrade to Pro</span>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator className="my-1.5 bg-border/40" />
+
+        <DropdownMenuItem
+          onClick={handleSignOut}
+          className="rounded-lg cursor-pointer h-9 px-2.5 text-[13px] gap-2.5 text-destructive focus:text-destructive focus:bg-destructive/10 transition-colors"
+        >
+          <LogOut className="w-4 h-4" />
           Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
