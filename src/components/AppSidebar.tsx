@@ -113,23 +113,37 @@ function RailContent({ expanded }: { expanded: boolean }) {
         ))}
       </div>
 
-      <div className={cn("mt-auto flex flex-col gap-2 pt-3", expanded ? "items-stretch" : "items-center")}>
-        <div className="h-px bg-border/60 mx-2" />
-        <div className={cn("flex", expanded ? "justify-start px-1" : "justify-center")}>
+      <div className={cn("mt-auto flex flex-col gap-2.5 pt-4", expanded ? "items-stretch" : "items-center")}>
+        <div className="h-px bg-gradient-to-r from-transparent via-border/60 to-transparent mx-1" />
+        <div className={cn("flex items-center", expanded ? "justify-between px-0.5" : "flex-col gap-2 justify-center")}>
           <ThemeToggle />
+          {expanded && (
+            <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70 font-medium">
+              {isPaidUser ? "Pro" : "Free"}
+            </span>
+          )}
         </div>
         <button
           onClick={() => setShowPricing(true)}
           aria-label={isPaidUser ? "Pro plan" : "Upgrade to Pro"}
           className={cn(
-            "h-10 flex items-center rounded-xl transition-all duration-200 overflow-hidden bg-primary/10 text-primary hover:bg-primary/15",
-            expanded ? "w-full px-3 gap-3 justify-start" : "w-10 justify-center"
+            "group relative h-10 flex items-center rounded-xl overflow-hidden transition-all duration-300 ease-out",
+            "bg-gradient-to-br from-primary/15 via-primary/10 to-primary/5",
+            "border border-primary/20 hover:border-primary/40",
+            "shadow-[inset_0_1px_0_hsl(0_0%_100%/0.15)] hover:shadow-[0_8px_24px_-8px_hsl(var(--primary)/0.45)]",
+            "text-primary hover:-translate-y-[1px] active:translate-y-0",
+            expanded ? "w-full px-3 gap-2.5 justify-start" : "w-10 justify-center"
           )}
         >
-          <Crown className="w-[18px] h-[18px] shrink-0" />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            style={{ background: 'radial-gradient(120% 80% at 0% 0%, hsl(var(--primary)/0.25), transparent 60%)' }}
+          />
+          <Crown className="w-[16px] h-[16px] shrink-0 relative drop-shadow-[0_0_6px_hsl(var(--primary)/0.45)]" />
           {expanded && (
-            <span className="text-sm font-medium truncate">
-              {isPaidUser ? "Pro" : "Upgrade"}
+            <span className="text-[13px] font-semibold tracking-tight truncate relative">
+              {isPaidUser ? "Pro Active" : "Upgrade Pro"}
             </span>
           )}
         </button>
