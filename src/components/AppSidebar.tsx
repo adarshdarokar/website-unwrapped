@@ -185,7 +185,7 @@ export function AppSidebar() {
       <aside
         style={{ width: railWidth }}
         className={cn(
-          "hidden md:flex fixed top-3 bottom-3 left-3 z-30 flex-col rounded-2xl bg-sidebar/85 backdrop-blur-xl border border-sidebar-border/40 shadow-[0_8px_30px_-10px_hsla(245,40%,40%,0.18)] overflow-hidden transition-[width] duration-300 ease-out",
+          "hidden md:flex fixed top-3 bottom-3 left-3 z-30 flex-col rounded-2xl bg-sidebar/70 backdrop-blur-2xl border border-sidebar-border/50 shadow-[0_20px_60px_-20px_hsla(245,40%,20%,0.35),inset_0_1px_0_hsl(0_0%_100%/0.06)] overflow-hidden transition-[width] duration-300 ease-out",
           collapsed ? "px-2 py-3" : "px-3 py-3"
         )}
       >
