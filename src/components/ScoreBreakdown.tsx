@@ -75,10 +75,10 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
     <div className="space-y-4">
       {/* Overall Score Header */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-        className="glass-card p-4 sm:p-5">
+        className="glass-card hover-lift shimmer p-4 sm:p-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-primary/10 rounded-xl flex-shrink-0">
+          <div className="flex items-center gap-3 group">
+            <div className="p-2.5 bg-primary/10 rounded-xl flex-shrink-0 icon-pop">
               <TrendingUp className="w-5 h-5 text-primary" />
             </div>
             <div>
@@ -86,8 +86,8 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
               <p className="text-xs text-muted-foreground">Transparent breakdown of how we evaluated your website</p>
             </div>
           </div>
-          <div className={`px-3 py-1.5 rounded-full text-xs font-bold ${level.color} ${level.bg} self-start sm:self-auto whitespace-nowrap`}>
-            {score}/100 · {level.label}
+          <div className={`px-3 py-1.5 rounded-full text-xs font-bold ${level.color} ${level.bg} self-start sm:self-auto whitespace-nowrap tabular-nums`}>
+            <AnimatedNumber value={score} duration={1100} />/100 · {level.label}
           </div>
         </div>
       </motion.div>
