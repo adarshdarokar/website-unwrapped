@@ -215,7 +215,7 @@ export function AIInsights({ result }: Props) {
       </Card>
 
       {/* Hero / CTA */}
-      <Card>
+      <Card className="shimmer hover-lift">
         <CardHeader className="pb-2 pt-5 px-5">
           <CardTitle className="flex items-center justify-between text-[13px] font-semibold uppercase tracking-wider text-muted-foreground gap-3">
             <span className="flex items-center gap-2">
