@@ -50,11 +50,11 @@ function RailItem({ label, icon: Icon, active, expanded, onClick }: RailItemProp
       onClick={onClick}
       aria-label={label}
       className={cn(
-        "h-10 flex items-center rounded-xl transition-all duration-200 overflow-hidden",
+        "h-10 flex items-center rounded-xl transition-all duration-300 ease-out overflow-hidden relative group",
         expanded ? "w-full px-3 gap-3 justify-start" : "w-10 justify-center",
         active
-          ? "bg-primary/12 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.15)]"
-          : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
+          ? "bg-gradient-to-br from-primary/20 via-primary/12 to-primary/8 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.22),0_6px_18px_-8px_hsl(var(--primary)/0.45)]"
+          : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06] hover:shadow-[inset_0_0_0_1px_hsl(var(--border)/0.5)]"
       )}
     >
       <Icon className="w-[18px] h-[18px] shrink-0" />
@@ -185,7 +185,7 @@ export function AppSidebar() {
       <aside
         style={{ width: railWidth }}
         className={cn(
-          "hidden md:flex fixed top-3 bottom-3 left-3 z-30 flex-col rounded-2xl bg-sidebar/85 backdrop-blur-xl border border-sidebar-border/40 shadow-[0_8px_30px_-10px_hsla(245,40%,40%,0.18)] overflow-hidden transition-[width] duration-300 ease-out",
+          "hidden md:flex fixed top-3 bottom-3 left-3 z-30 flex-col rounded-2xl bg-sidebar/70 backdrop-blur-2xl border border-sidebar-border/50 shadow-[0_20px_60px_-20px_hsla(245,40%,20%,0.35),inset_0_1px_0_hsl(0_0%_100%/0.06)] overflow-hidden transition-[width] duration-300 ease-out",
           collapsed ? "px-2 py-3" : "px-3 py-3"
         )}
       >

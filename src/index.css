@@ -8,18 +8,18 @@
 
 @layer base {
   :root {
-    --background: 240 25% 94%;
-    --foreground: 240 20% 15%;
+    --background: 240 30% 97%;
+    --foreground: 240 24% 12%;
 
-    --card: 240 25% 94%;
-    --card-foreground: 240 20% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 22% 14%;
 
-    /* Neumorphism shadow tokens (light) */
+    /* Neumorphism shadow tokens (light) — softer, more premium */
     --neu-light: 255 255 255;
-    --neu-dark: 200 200 220;
-    --shadow-neu: 8px 8px 20px rgba(var(--neu-dark) / 0.55), -8px -8px 20px rgba(var(--neu-light) / 0.9);
-    --shadow-neu-sm: 4px 4px 10px rgba(var(--neu-dark) / 0.5), -4px -4px 10px rgba(var(--neu-light) / 0.85);
-    --shadow-neu-inset: inset 4px 4px 10px rgba(var(--neu-dark) / 0.45), inset -4px -4px 10px rgba(var(--neu-light) / 0.85);
+    --neu-dark: 220 220 235;
+    --shadow-neu: 0 1px 0 rgba(255,255,255,0.9) inset, 0 12px 32px -12px rgba(60,60,120,0.18), 0 2px 6px -2px rgba(60,60,120,0.08);
+    --shadow-neu-sm: 0 1px 0 rgba(255,255,255,0.85) inset, 0 6px 16px -8px rgba(60,60,120,0.16), 0 1px 3px -1px rgba(60,60,120,0.08);
+    --shadow-neu-inset: inset 0 2px 6px rgba(60,60,120,0.10), inset 0 -1px 0 rgba(255,255,255,0.6);
 
     --popover: 240 30% 99%;
     --popover-foreground: 240 20% 15%;
@@ -73,43 +73,43 @@
   }
 
   .dark {
-    --background: 230 18% 14%;
-    --foreground: 210 20% 95%;
+    --background: 240 18% 7%;
+    --foreground: 220 20% 96%;
 
-    --card: 230 18% 14%;
-    --card-foreground: 210 20% 95%;
+    --card: 240 16% 11%;
+    --card-foreground: 220 20% 96%;
 
-    --popover: 230 18% 16%;
-    --popover-foreground: 210 20% 95%;
+    --popover: 240 18% 9%;
+    --popover-foreground: 220 20% 96%;
 
-    --primary: 245 70% 65%;
-    --primary-foreground: 230 18% 10%;
+    --primary: 250 85% 70%;
+    --primary-foreground: 240 18% 8%;
 
-    --secondary: 230 15% 20%;
-    --secondary-foreground: 210 20% 90%;
+    --secondary: 240 14% 16%;
+    --secondary-foreground: 220 20% 92%;
 
-    /* Neumorphism shadow tokens (dark) */
-    --neu-light: 60 65 85;
-    --neu-dark: 10 12 20;
-    --shadow-neu: 8px 8px 20px rgba(var(--neu-dark) / 0.7), -8px -8px 20px rgba(var(--neu-light) / 0.4);
-    --shadow-neu-sm: 4px 4px 10px rgba(var(--neu-dark) / 0.65), -4px -4px 10px rgba(var(--neu-light) / 0.35);
-    --shadow-neu-inset: inset 4px 4px 10px rgba(var(--neu-dark) / 0.65), inset -4px -4px 10px rgba(var(--neu-light) / 0.35);
+    /* Neumorphism shadow tokens (dark) — cinematic depth */
+    --neu-light: 80 85 110;
+    --neu-dark: 0 0 0;
+    --shadow-neu: 0 1px 0 hsl(240 20% 30% / 0.18) inset, 0 18px 40px -16px rgba(0,0,0,0.7), 0 2px 8px -2px rgba(0,0,0,0.4);
+    --shadow-neu-sm: 0 1px 0 hsl(240 20% 30% / 0.15) inset, 0 8px 22px -10px rgba(0,0,0,0.6), 0 1px 3px -1px rgba(0,0,0,0.4);
+    --shadow-neu-inset: inset 0 2px 8px rgba(0,0,0,0.5), inset 0 -1px 0 hsl(240 20% 30% / 0.15);
 
-    --muted: 220 20% 15%;
-    --muted-foreground: 220 15% 55%;
+    --muted: 240 14% 14%;
+    --muted-foreground: 220 14% 62%;
 
-    --accent: 180 40% 20%;
-    --accent-foreground: 180 40% 90%;
+    --accent: 250 30% 22%;
+    --accent-foreground: 250 30% 92%;
 
-    --success: 150 60% 40%;
+    --success: 150 60% 45%;
     --success-foreground: 0 0% 100%;
 
-    --destructive: 0 60% 45%;
+    --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 20% 18%;
-    --input: 220 20% 18%;
-    --ring: 200 70% 55%;
+    --border: 240 14% 20%;
+    --input: 240 14% 18%;
+    --ring: 250 85% 70%;
 
     --gradient-calm: linear-gradient(135deg, hsl(220 25% 8%) 0%, hsl(220 30% 12%) 50%, hsl(200 25% 10%) 100%);
     --gradient-primary: linear-gradient(135deg, hsl(200 70% 55%) 0%, hsl(220 65% 50%) 100%);
@@ -119,14 +119,14 @@
     --shadow-elevated: 0 8px 30px -4px hsla(220, 25%, 5%, 0.5);
     --shadow-glow: 0 0 40px -10px hsla(200, 70%, 55%, 0.3);
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 240 18% 9%;
+    --sidebar-foreground: 220 18% 90%;
+    --sidebar-primary: 250 85% 70%;
+    --sidebar-primary-foreground: 240 18% 8%;
+    --sidebar-accent: 240 14% 16%;
+    --sidebar-accent-foreground: 220 18% 95%;
+    --sidebar-border: 240 14% 18%;
+    --sidebar-ring: 250 85% 70%;
   }
 }
 
@@ -145,7 +145,43 @@
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', sans-serif;
     overflow-x: hidden;
+    position: relative;
+    min-height: 100svh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Ambient depth — soft aurora glows pinned behind everything */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(60% 50% at 12% 8%, hsl(var(--primary) / 0.10), transparent 60%),
+      radial-gradient(45% 40% at 92% 18%, hsl(265 80% 65% / 0.09), transparent 65%),
+      radial-gradient(55% 45% at 80% 92%, hsl(220 80% 60% / 0.08), transparent 65%);
+  }
+  .dark body::before,
+  .dark::before {
+    background:
+      radial-gradient(55% 45% at 10% 5%, hsl(250 90% 60% / 0.18), transparent 60%),
+      radial-gradient(40% 35% at 95% 15%, hsl(280 85% 60% / 0.14), transparent 65%),
+      radial-gradient(50% 40% at 85% 95%, hsl(220 90% 55% / 0.13), transparent 65%);
+  }
+  /* Subtle film grain in dark mode for cinematic depth */
+  .dark body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  #root, main, aside, header { position: relative; z-index: 1; }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', sans-serif;
@@ -224,6 +260,34 @@
 
   .animate-pulse-slow {
     animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Premium hover lift — apply to any card */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px -16px hsl(var(--primary) / 0.18), var(--shadow-neu);
+  }
+
+  /* Gradient hairline border */
+  .gradient-border { position: relative; background-clip: padding-box; }
+  .gradient-border::before {
+    content: '';
+    position: absolute; inset: 0; padding: 1px; border-radius: inherit;
+    background: linear-gradient(135deg, hsl(var(--primary)/0.4), hsl(var(--border)/0.3) 40%, hsl(var(--border)/0.1));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 0 1px hsl(var(--primary)/0.18), 0 8px 28px -10px hsl(var(--primary)/0.45);
+  }
+
+  .divider-soft {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--border)/0.7), transparent);
   }
 }
 
