@@ -289,6 +289,41 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, hsl(var(--border)/0.7), transparent);
   }
+
+  /* Shimmer highlight sweep — overlay on cards/buttons */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(115deg, transparent 30%, hsl(var(--primary)/0.10) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 1;
+  }
+  .shimmer:hover::after { transform: translateX(120%); }
+
+  /* Continuous slow shimmer for premium chips */
+  .shimmer-loop::before {
+    content: '';
+    position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(115deg, transparent 35%, hsl(0 0% 100%/0.18) 50%, transparent 65%);
+    transform: translateX(-100%);
+    animation: shimmer-sweep 3.6s ease-in-out infinite;
+  }
+  @keyframes shimmer-sweep {
+    0%, 60%, 100% { transform: translateX(-100%); }
+    80% { transform: translateX(100%); }
+  }
+
+  /* Subtle hover scale for icon chips */
+  .icon-pop { @apply transition-transform duration-300 ease-out; }
+  .group:hover .icon-pop { transform: scale(1.08) rotate(-2deg); }
 }
 
 @keyframes float {
