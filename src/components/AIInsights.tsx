@@ -303,7 +303,7 @@ function ConversionRing({ score }: { score: number }) {
           />
         </svg>
         <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold tabular-nums text-foreground">
-          {pct}
+          <AnimatedNumber value={pct} duration={1100} />
         </span>
       </div>
       <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium normal-case">
