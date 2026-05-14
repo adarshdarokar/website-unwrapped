@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AnimatedNumber } from '@/components/AnimatedNumber';
 import { supabase } from '@/integrations/supabase/client';
 import type { AnalysisResult } from '@/hooks/useWebsiteAnalyzer';
 
