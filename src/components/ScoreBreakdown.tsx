@@ -193,7 +193,7 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
                         </div>
                         <div className="flex items-center gap-2">
                           <span className={`text-xs font-bold tabular-nums ${percentage >= 70 ? 'text-emerald-400' : percentage >= 40 ? 'text-amber-400' : 'text-red-400'}`}>
-                            {points}/{config.maxPoints}
+                            <AnimatedNumber value={points} duration={900} />/{config.maxPoints}
                           </span>
                           <ChevronDown className={`w-3 h-3 text-muted-foreground transition-transform duration-200 ${expandedCategory === key ? 'rotate-180' : ''}`} />
                         </div>
