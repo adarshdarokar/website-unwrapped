@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AnimatedNumber } from '@/components/AnimatedNumber';
 import { supabase } from '@/integrations/supabase/client';
 import type { AnalysisResult } from '@/hooks/useWebsiteAnalyzer';
 
@@ -100,7 +101,7 @@ export function AIInsights({ result }: Props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Design Summary — bullet insight blocks */}
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden shimmer hover-lift">
           <CardHeader className="pb-2 pt-5 px-5">
             <CardTitle className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-wider text-muted-foreground">
               <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/15 flex items-center justify-center">
@@ -138,7 +139,7 @@ export function AIInsights({ result }: Props) {
         </Card>
 
         {/* Roast — quote-style */}
-        <Card className="relative overflow-hidden">
+        <Card className="relative overflow-hidden shimmer hover-lift">
           <span
             aria-hidden
             className="pointer-events-none absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-60"
@@ -175,7 +176,7 @@ export function AIInsights({ result }: Props) {
       </div>
 
       {/* Trends */}
-      <Card>
+      <Card className="shimmer hover-lift">
         <CardHeader className="pb-2 pt-5 px-5">
           <CardTitle className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-wider text-muted-foreground">
             <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-accent/40 to-accent/10 border border-border/40 flex items-center justify-center">
@@ -214,7 +215,7 @@ export function AIInsights({ result }: Props) {
       </Card>
 
       {/* Hero / CTA */}
-      <Card>
+      <Card className="shimmer hover-lift">
         <CardHeader className="pb-2 pt-5 px-5">
           <CardTitle className="flex items-center justify-between text-[13px] font-semibold uppercase tracking-wider text-muted-foreground gap-3">
             <span className="flex items-center gap-2">
@@ -302,7 +303,7 @@ function ConversionRing({ score }: { score: number }) {
           />
         </svg>
         <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold tabular-nums text-foreground">
-          {pct}
+          <AnimatedNumber value={pct} duration={1100} />
         </span>
       </div>
       <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium normal-case">
