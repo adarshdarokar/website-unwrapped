@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, Radar } from 'recharts';
+import { AnimatedNumber } from '@/components/AnimatedNumber';
 
 interface ScoreBreakdownProps {
   score: number;
