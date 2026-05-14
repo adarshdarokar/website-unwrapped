@@ -8,18 +8,18 @@
 
 @layer base {
   :root {
-    --background: 240 25% 94%;
-    --foreground: 240 20% 15%;
+    --background: 240 30% 97%;
+    --foreground: 240 24% 12%;
 
-    --card: 240 25% 94%;
-    --card-foreground: 240 20% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 22% 14%;
 
-    /* Neumorphism shadow tokens (light) */
+    /* Neumorphism shadow tokens (light) — softer, more premium */
     --neu-light: 255 255 255;
-    --neu-dark: 200 200 220;
-    --shadow-neu: 8px 8px 20px rgba(var(--neu-dark) / 0.55), -8px -8px 20px rgba(var(--neu-light) / 0.9);
-    --shadow-neu-sm: 4px 4px 10px rgba(var(--neu-dark) / 0.5), -4px -4px 10px rgba(var(--neu-light) / 0.85);
-    --shadow-neu-inset: inset 4px 4px 10px rgba(var(--neu-dark) / 0.45), inset -4px -4px 10px rgba(var(--neu-light) / 0.85);
+    --neu-dark: 220 220 235;
+    --shadow-neu: 0 1px 0 rgba(255,255,255,0.9) inset, 0 12px 32px -12px rgba(60,60,120,0.18), 0 2px 6px -2px rgba(60,60,120,0.08);
+    --shadow-neu-sm: 0 1px 0 rgba(255,255,255,0.85) inset, 0 6px 16px -8px rgba(60,60,120,0.16), 0 1px 3px -1px rgba(60,60,120,0.08);
+    --shadow-neu-inset: inset 0 2px 6px rgba(60,60,120,0.10), inset 0 -1px 0 rgba(255,255,255,0.6);
 
     --popover: 240 30% 99%;
     --popover-foreground: 240 20% 15%;
