@@ -73,27 +73,27 @@
   }
 
   .dark {
-    --background: 230 18% 14%;
-    --foreground: 210 20% 95%;
+    --background: 240 18% 7%;
+    --foreground: 220 20% 96%;
 
-    --card: 230 18% 14%;
-    --card-foreground: 210 20% 95%;
+    --card: 240 16% 11%;
+    --card-foreground: 220 20% 96%;
 
-    --popover: 230 18% 16%;
-    --popover-foreground: 210 20% 95%;
+    --popover: 240 18% 9%;
+    --popover-foreground: 220 20% 96%;
 
-    --primary: 245 70% 65%;
-    --primary-foreground: 230 18% 10%;
+    --primary: 250 85% 70%;
+    --primary-foreground: 240 18% 8%;
 
-    --secondary: 230 15% 20%;
-    --secondary-foreground: 210 20% 90%;
+    --secondary: 240 14% 16%;
+    --secondary-foreground: 220 20% 92%;
 
-    /* Neumorphism shadow tokens (dark) */
-    --neu-light: 60 65 85;
-    --neu-dark: 10 12 20;
-    --shadow-neu: 8px 8px 20px rgba(var(--neu-dark) / 0.7), -8px -8px 20px rgba(var(--neu-light) / 0.4);
-    --shadow-neu-sm: 4px 4px 10px rgba(var(--neu-dark) / 0.65), -4px -4px 10px rgba(var(--neu-light) / 0.35);
-    --shadow-neu-inset: inset 4px 4px 10px rgba(var(--neu-dark) / 0.65), inset -4px -4px 10px rgba(var(--neu-light) / 0.35);
+    /* Neumorphism shadow tokens (dark) — cinematic depth */
+    --neu-light: 80 85 110;
+    --neu-dark: 0 0 0;
+    --shadow-neu: 0 1px 0 hsl(240 20% 30% / 0.18) inset, 0 18px 40px -16px rgba(0,0,0,0.7), 0 2px 8px -2px rgba(0,0,0,0.4);
+    --shadow-neu-sm: 0 1px 0 hsl(240 20% 30% / 0.15) inset, 0 8px 22px -10px rgba(0,0,0,0.6), 0 1px 3px -1px rgba(0,0,0,0.4);
+    --shadow-neu-inset: inset 0 2px 8px rgba(0,0,0,0.5), inset 0 -1px 0 hsl(240 20% 30% / 0.15);
 
     --muted: 220 20% 15%;
     --muted-foreground: 220 15% 55%;
