@@ -50,11 +50,11 @@ function RailItem({ label, icon: Icon, active, expanded, onClick }: RailItemProp
       onClick={onClick}
       aria-label={label}
       className={cn(
-        "h-10 flex items-center rounded-xl transition-all duration-200 overflow-hidden",
+        "h-10 flex items-center rounded-xl transition-all duration-300 ease-out overflow-hidden relative group",
         expanded ? "w-full px-3 gap-3 justify-start" : "w-10 justify-center",
         active
-          ? "bg-primary/12 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.15)]"
-          : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
+          ? "bg-gradient-to-br from-primary/20 via-primary/12 to-primary/8 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.22),0_6px_18px_-8px_hsl(var(--primary)/0.45)]"
+          : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06] hover:shadow-[inset_0_0_0_1px_hsl(var(--border)/0.5)]"
       )}
     >
       <Icon className="w-[18px] h-[18px] shrink-0" />
