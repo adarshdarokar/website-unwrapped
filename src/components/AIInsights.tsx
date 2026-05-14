@@ -176,7 +176,7 @@ export function AIInsights({ result }: Props) {
       </div>
 
       {/* Trends */}
-      <Card>
+      <Card className="shimmer hover-lift">
         <CardHeader className="pb-2 pt-5 px-5">
           <CardTitle className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-wider text-muted-foreground">
             <span className="w-7 h-7 rounded-lg bg-gradient-to-br from-accent/40 to-accent/10 border border-border/40 flex items-center justify-center">
