@@ -139,7 +139,7 @@ export function AIInsights({ result }: Props) {
         </Card>
 
         {/* Roast — quote-style */}
-        <Card className="relative overflow-hidden">
+        <Card className="relative overflow-hidden shimmer hover-lift">
           <span
             aria-hidden
             className="pointer-events-none absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-60"
