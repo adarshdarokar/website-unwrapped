@@ -217,6 +217,82 @@ function extractAllImages(html: string, baseUrl: string): { src: string; alt: st
   return images;
 }
 
+function extractAllVideos(html: string, baseUrl: string): { src: string; poster: string; type: string; title: string }[] {
+  const videos: { src: string; poster: string; type: string; title: string }[] = [];
+  const seen = new Set<string>();
+  let match;
+
+  // <video src="..."> and <video poster="...">
+  const videoTagRegex = /<video\b([^>]*)>([\s\S]*?)<\/video>/gi;
+  while ((match = videoTagRegex.exec(html)) !== null) {
+    const attrs = match[1];
+    const inner = match[2];
+    const posterMatch = attrs.match(/poster=["']([^"']+)["']/i);
+    const poster = posterMatch ? normalizeUrl(posterMatch[1], baseUrl) : '';
+    const titleMatch = attrs.match(/(?:title|aria-label)=["']([^"']+)["']/i);
+    const title = titleMatch ? titleMatch[1] : '';
+
+    const srcMatch = attrs.match(/\ssrc=["']([^"']+)["']/i);
+    if (srcMatch) {
+      const src = normalizeUrl(srcMatch[1], baseUrl);
+      if (src && !seen.has(src)) {
+        seen.add(src);
+        videos.push({ src, poster, type: 'video', title });
+      }
+    }
+
+    // <source> children
+    const sourceRegex = /<source[^>]+src=["']([^"']+)["'][^>]*>/gi;
+    let sm;
+    while ((sm = sourceRegex.exec(inner)) !== null) {
+      const src = normalizeUrl(sm[1], baseUrl);
+      if (src && !seen.has(src)) {
+        seen.add(src);
+        videos.push({ src, poster, type: 'source', title });
+      }
+    }
+  }
+
+  // Direct video file URLs anywhere in HTML
+  const fileRegex = /https?:\/\/[^\s"'<>()]+\.(?:mp4|webm|ogv|ogg|mov|m3u8)(?:\?[^\s"'<>()]*)?/gi;
+  while ((match = fileRegex.exec(html)) !== null) {
+    const src = match[0];
+    if (!seen.has(src)) {
+      seen.add(src);
+      videos.push({ src, poster: '', type: 'file', title: '' });
+    }
+  }
+
+  // YouTube iframes / links
+  const ytRegex = /(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/embed\/|youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{6,})/gi;
+  while ((match = ytRegex.exec(html)) !== null) {
+    const id = match[1];
+    const embed = `https://www.youtube.com/embed/${id}`;
+    if (!seen.has(embed)) {
+      seen.add(embed);
+      videos.push({
+        src: embed,
+        poster: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
+        type: 'youtube',
+        title: 'YouTube video',
+      });
+    }
+  }
+
+  // Vimeo iframes / links
+  const vimeoRegex = /(?:https?:)?\/\/(?:www\.)?(?:player\.)?vimeo\.com\/(?:video\/)?(\d{5,})/gi;
+  while ((match = vimeoRegex.exec(html)) !== null) {
+    const id = match[1];
+    const embed = `https://player.vimeo.com/video/${id}`;
+    if (!seen.has(embed)) {
+      seen.add(embed);
+      videos.push({ src: embed, poster: '', type: 'vimeo', title: 'Vimeo video' });
+    }
+  }
+
+  return videos;
+}
+
 function normalizeUrl(src: string, baseUrl: string): string {
   if (!src) return '';
   
