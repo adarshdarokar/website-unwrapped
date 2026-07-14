@@ -157,7 +157,7 @@ export function IconDisplay({ icons }: IconDisplayProps) {
             Inline SVGs ({icons.svgCount} total)
           </p>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-            {icons.svgs.slice(0, 12).map((svg, index) => (
+            {icons.svgs.map((svg, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.5 }}
@@ -203,11 +203,6 @@ export function IconDisplay({ icons }: IconDisplayProps) {
               </motion.div>
             ))}
           </div>
-          {icons.svgCount > 12 && (
-            <p className="text-center text-xs text-muted-foreground mt-3">
-              +{icons.svgCount - 12} more SVGs
-            </p>
-          )}
         </div>
       )}
     </motion.div>

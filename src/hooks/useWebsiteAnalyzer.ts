@@ -5,6 +5,7 @@ export interface AnalysisResult {
   url: string;
   score: number;
   images: { src: string; alt: string }[];
+  videos: { src: string; poster: string; type: string; title: string }[];
   fonts: {
     detected: string[];
     googleFonts: string[];

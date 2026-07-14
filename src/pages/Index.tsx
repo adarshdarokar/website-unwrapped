@@ -14,6 +14,8 @@ import {
   Monitor,
   Sparkles,
   Search,
+  Video,
+
 } from 'lucide-react';
 import { UrlInput } from '@/components/UrlInput';
 import { CreditsIndicator } from '@/components/CreditsIndicator';
@@ -23,6 +25,7 @@ import { FontDisplay } from '@/components/FontDisplay';
 import { ColorPalette } from '@/components/ColorPalette';
 import { IconDisplay } from '@/components/IconDisplay';
 import { AnimationDisplay } from '@/components/AnimationDisplay';
+import { VideoGallery } from '@/components/VideoGallery';
 import { LoadingState } from '@/components/LoadingState';
 import { TechStack } from '@/components/TechStack';
 import { CompareWebsites } from '@/components/CompareWebsites';
@@ -112,6 +115,7 @@ const Index = () => {
     { value: 'colors', icon: Palette, label: 'Colors' },
     { value: 'fonts', icon: Type, label: 'Fonts' },
     { value: 'images', icon: Image, label: 'Images' },
+    { value: 'videos', icon: Video, label: 'Videos' },
     { value: 'icons', icon: Shapes, label: 'Icons' },
     { value: 'animations', icon: Zap, label: 'Motion' },
     { value: 'seo', icon: Search, label: 'SEO' },
@@ -376,6 +380,18 @@ const Index = () => {
                   </div>
                 </div>
               </TabsContent>
+
+              {/* Videos Tab */}
+              <TabsContent value="videos" className="mt-0">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
+                  <VideoGallery videos={(result as any).videos || []} />
+                  <div className="space-y-4">
+                    <QualityScore score={result.score} meta={result.meta} />
+                    <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
+                  </div>
+                </div>
+              </TabsContent>
+
 
               {/* Icons Tab */}
               <TabsContent value="icons" className="mt-0">

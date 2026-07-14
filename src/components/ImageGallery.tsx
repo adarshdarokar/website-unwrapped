@@ -44,12 +44,12 @@ export function ImageGallery({ images }: ImageGalleryProps) {
   };
 
   const downloadAllImages = () => {
-    validImages.slice(0, 10).forEach((img, index) => {
+    validImages.forEach((img, index) => {
       setTimeout(() => {
         downloadImage(img.src, img.alt || `image-${index + 1}`);
       }, index * 200);
     });
-    toast.success(`Downloading ${Math.min(validImages.length, 10)} images`);
+    toast.success(`Downloading ${validImages.length} images`);
   };
 
   const validImages = images.filter(img => !failedImages.has(img.src));
@@ -129,7 +129,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               exit={{ opacity: 0 }}
               className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
             >
-              {validImages.slice(0, 12).map((image, index) => (
+              {validImages.map((image, index) => (
                 <motion.div
                   key={image.src}
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -166,7 +166,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               exit={{ opacity: 0 }}
               className="space-y-1.5"
             >
-              {validImages.slice(0, 8).map((image, index) => (
+              {validImages.map((image, index) => (
                 <motion.div
                   key={image.src}
                   initial={{ opacity: 0, x: -10 }}
@@ -204,11 +204,6 @@ export function ImageGallery({ images }: ImageGalleryProps) {
           )}
         </AnimatePresence>
 
-        {validImages.length > 12 && viewMode === 'grid' && (
-          <p className="text-center text-xs text-muted-foreground mt-4">
-            +{validImages.length - 12} more images
-          </p>
-        )}
       </motion.div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>

@@ -217,6 +217,82 @@ function extractAllImages(html: string, baseUrl: string): { src: string; alt: st
   return images;
 }
 
+function extractAllVideos(html: string, baseUrl: string): { src: string; poster: string; type: string; title: string }[] {
+  const videos: { src: string; poster: string; type: string; title: string }[] = [];
+  const seen = new Set<string>();
+  let match;
+
+  // <video src="..."> and <video poster="...">
+  const videoTagRegex = /<video\b([^>]*)>([\s\S]*?)<\/video>/gi;
+  while ((match = videoTagRegex.exec(html)) !== null) {
+    const attrs = match[1];
+    const inner = match[2];
+    const posterMatch = attrs.match(/poster=["']([^"']+)["']/i);
+    const poster = posterMatch ? normalizeUrl(posterMatch[1], baseUrl) : '';
+    const titleMatch = attrs.match(/(?:title|aria-label)=["']([^"']+)["']/i);
+    const title = titleMatch ? titleMatch[1] : '';
+
+    const srcMatch = attrs.match(/\ssrc=["']([^"']+)["']/i);
+    if (srcMatch) {
+      const src = normalizeUrl(srcMatch[1], baseUrl);
+      if (src && !seen.has(src)) {
+        seen.add(src);
+        videos.push({ src, poster, type: 'video', title });
+      }
+    }
+
+    // <source> children
+    const sourceRegex = /<source[^>]+src=["']([^"']+)["'][^>]*>/gi;
+    let sm;
+    while ((sm = sourceRegex.exec(inner)) !== null) {
+      const src = normalizeUrl(sm[1], baseUrl);
+      if (src && !seen.has(src)) {
+        seen.add(src);
+        videos.push({ src, poster, type: 'source', title });
+      }
+    }
+  }
+
+  // Direct video file URLs anywhere in HTML
+  const fileRegex = /https?:\/\/[^\s"'<>()]+\.(?:mp4|webm|ogv|ogg|mov|m3u8)(?:\?[^\s"'<>()]*)?/gi;
+  while ((match = fileRegex.exec(html)) !== null) {
+    const src = match[0];
+    if (!seen.has(src)) {
+      seen.add(src);
+      videos.push({ src, poster: '', type: 'file', title: '' });
+    }
+  }
+
+  // YouTube iframes / links
+  const ytRegex = /(?:https?:)?\/\/(?:www\.)?(?:youtube\.com\/embed\/|youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{6,})/gi;
+  while ((match = ytRegex.exec(html)) !== null) {
+    const id = match[1];
+    const embed = `https://www.youtube.com/embed/${id}`;
+    if (!seen.has(embed)) {
+      seen.add(embed);
+      videos.push({
+        src: embed,
+        poster: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
+        type: 'youtube',
+        title: 'YouTube video',
+      });
+    }
+  }
+
+  // Vimeo iframes / links
+  const vimeoRegex = /(?:https?:)?\/\/(?:www\.)?(?:player\.)?vimeo\.com\/(?:video\/)?(\d{5,})/gi;
+  while ((match = vimeoRegex.exec(html)) !== null) {
+    const id = match[1];
+    const embed = `https://player.vimeo.com/video/${id}`;
+    if (!seen.has(embed)) {
+      seen.add(embed);
+      videos.push({ src: embed, poster: '', type: 'vimeo', title: 'Vimeo video' });
+    }
+  }
+
+  return videos;
+}
+
 function normalizeUrl(src: string, baseUrl: string): string {
   if (!src) return '';
   
@@ -330,16 +406,14 @@ function extractIcons(html: string): { svgCount: number; svgs: string[]; librari
   const svgRegex = /<svg[^>]*>[\s\S]*?<\/svg>/gi;
   const svgs: string[] = [];
   let match;
-  
+
   while ((match = svgRegex.exec(html)) !== null) {
-    if (svgs.length < 30) {
-      svgs.push(match[0]);
-    }
+    svgs.push(match[0]);
   }
-  
+
   const libraries: string[] = [];
   const iconFonts: string[] = [];
-  
+
   // Icon libraries detection
   if (html.includes('font-awesome') || html.includes('fontawesome') || html.includes('fa-')) libraries.push('Font Awesome');
   if (html.includes('material-icons') || html.includes('material-symbols')) libraries.push('Material Icons');
@@ -351,15 +425,15 @@ function extractIcons(html: string): { svgCount: number; svgs: string[]; librari
   if (html.includes('ionicons') || html.includes('ion-')) libraries.push('Ionicons');
   if (html.includes('bootstrap-icons') || html.includes('bi-')) libraries.push('Bootstrap Icons');
   if (html.includes('remixicon') || html.includes('ri-')) libraries.push('Remix Icons');
-  
+
   // Icon fonts
   if (html.includes('icomoon')) iconFonts.push('IcoMoon');
   if (html.includes('glyphicons')) iconFonts.push('Glyphicons');
   if (html.includes('flaticon')) iconFonts.push('Flaticon');
-  
+
   return {
     svgCount: svgs.length,
-    svgs: svgs.slice(0, 15),
+    svgs,
     libraries: [...new Set(libraries)],
     iconFonts
   };
@@ -727,6 +801,7 @@ Deno.serve(async (req) => {
 
     // Extract all data
     const images = extractAllImages(html, baseUrl);
+    const videos = extractAllVideos(html, baseUrl);
     const fonts = extractFonts(html);
     const colors = extractColors(html);
     const icons = extractIcons(html);
@@ -753,7 +828,8 @@ Deno.serve(async (req) => {
       scoreBreakdown: breakdown,
       scoreReasons: reasons,
       suggestions,
-      images: images.slice(0, 50),
+      images,
+      videos,
       fonts,
       colors: [...colors.hex, ...colors.rgb.slice(0, 10), ...colors.hsl.slice(0, 10)],
       colorDetails: colors,
