@@ -166,7 +166,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               exit={{ opacity: 0 }}
               className="space-y-1.5"
             >
-              {validImages.slice(0, 8).map((image, index) => (
+              {validImages.map((image, index) => (
                 <motion.div
                   key={image.src}
                   initial={{ opacity: 0, x: -10 }}
