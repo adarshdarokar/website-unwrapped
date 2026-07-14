@@ -381,6 +381,18 @@ const Index = () => {
                 </div>
               </TabsContent>
 
+              {/* Videos Tab */}
+              <TabsContent value="videos" className="mt-0">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
+                  <VideoGallery videos={(result as any).videos || []} />
+                  <div className="space-y-4">
+                    <QualityScore score={result.score} meta={result.meta} />
+                    <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
+                  </div>
+                </div>
+              </TabsContent>
+
+
               {/* Icons Tab */}
               <TabsContent value="icons" className="mt-0">
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
