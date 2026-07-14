@@ -44,12 +44,12 @@ export function ImageGallery({ images }: ImageGalleryProps) {
   };
 
   const downloadAllImages = () => {
-    validImages.slice(0, 10).forEach((img, index) => {
+    validImages.forEach((img, index) => {
       setTimeout(() => {
         downloadImage(img.src, img.alt || `image-${index + 1}`);
       }, index * 200);
     });
-    toast.success(`Downloading ${Math.min(validImages.length, 10)} images`);
+    toast.success(`Downloading ${validImages.length} images`);
   };
 
   const validImages = images.filter(img => !failedImages.has(img.src));
