@@ -25,6 +25,7 @@ import { FontDisplay } from '@/components/FontDisplay';
 import { ColorPalette } from '@/components/ColorPalette';
 import { IconDisplay } from '@/components/IconDisplay';
 import { AnimationDisplay } from '@/components/AnimationDisplay';
+import { VideoGallery } from '@/components/VideoGallery';
 import { LoadingState } from '@/components/LoadingState';
 import { TechStack } from '@/components/TechStack';
 import { CompareWebsites } from '@/components/CompareWebsites';
@@ -114,6 +115,7 @@ const Index = () => {
     { value: 'colors', icon: Palette, label: 'Colors' },
     { value: 'fonts', icon: Type, label: 'Fonts' },
     { value: 'images', icon: Image, label: 'Images' },
+    { value: 'videos', icon: Video, label: 'Videos' },
     { value: 'icons', icon: Shapes, label: 'Icons' },
     { value: 'animations', icon: Zap, label: 'Motion' },
     { value: 'seo', icon: Search, label: 'SEO' },
