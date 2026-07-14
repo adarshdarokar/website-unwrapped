@@ -14,6 +14,8 @@ import {
   Monitor,
   Sparkles,
   Search,
+  Video,
+
 } from 'lucide-react';
 import { UrlInput } from '@/components/UrlInput';
 import { CreditsIndicator } from '@/components/CreditsIndicator';
