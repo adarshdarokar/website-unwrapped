@@ -203,11 +203,6 @@ export function IconDisplay({ icons }: IconDisplayProps) {
               </motion.div>
             ))}
           </div>
-          {icons.svgCount > 12 && (
-            <p className="text-center text-xs text-muted-foreground mt-3">
-              +{icons.svgCount - 12} more SVGs
-            </p>
-          )}
         </div>
       )}
     </motion.div>
