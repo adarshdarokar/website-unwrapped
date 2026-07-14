@@ -406,16 +406,14 @@ function extractIcons(html: string): { svgCount: number; svgs: string[]; librari
   const svgRegex = /<svg[^>]*>[\s\S]*?<\/svg>/gi;
   const svgs: string[] = [];
   let match;
-  
+
   while ((match = svgRegex.exec(html)) !== null) {
-    if (svgs.length < 30) {
-      svgs.push(match[0]);
-    }
+    svgs.push(match[0]);
   }
-  
+
   const libraries: string[] = [];
   const iconFonts: string[] = [];
-  
+
   // Icon libraries detection
   if (html.includes('font-awesome') || html.includes('fontawesome') || html.includes('fa-')) libraries.push('Font Awesome');
   if (html.includes('material-icons') || html.includes('material-symbols')) libraries.push('Material Icons');
@@ -427,15 +425,15 @@ function extractIcons(html: string): { svgCount: number; svgs: string[]; librari
   if (html.includes('ionicons') || html.includes('ion-')) libraries.push('Ionicons');
   if (html.includes('bootstrap-icons') || html.includes('bi-')) libraries.push('Bootstrap Icons');
   if (html.includes('remixicon') || html.includes('ri-')) libraries.push('Remix Icons');
-  
+
   // Icon fonts
   if (html.includes('icomoon')) iconFonts.push('IcoMoon');
   if (html.includes('glyphicons')) iconFonts.push('Glyphicons');
   if (html.includes('flaticon')) iconFonts.push('Flaticon');
-  
+
   return {
     svgCount: svgs.length,
-    svgs: svgs.slice(0, 15),
+    svgs,
     libraries: [...new Set(libraries)],
     iconFonts
   };
