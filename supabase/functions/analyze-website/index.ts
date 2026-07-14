@@ -801,6 +801,7 @@ Deno.serve(async (req) => {
 
     // Extract all data
     const images = extractAllImages(html, baseUrl);
+    const videos = extractAllVideos(html, baseUrl);
     const fonts = extractFonts(html);
     const colors = extractColors(html);
     const icons = extractIcons(html);
