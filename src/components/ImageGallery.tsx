@@ -204,11 +204,6 @@ export function ImageGallery({ images }: ImageGalleryProps) {
           )}
         </AnimatePresence>
 
-        {validImages.length > 12 && viewMode === 'grid' && (
-          <p className="text-center text-xs text-muted-foreground mt-4">
-            +{validImages.length - 12} more images
-          </p>
-        )}
       </motion.div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
