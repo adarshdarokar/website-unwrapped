@@ -54,6 +54,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
   };
 
   const validImages = images.filter(img => !failedImages.has(img.src));
+  const { visible: visibleImages, hasMore, sentinelRef, loadMore, total } = useLazyList(validImages, 24, 24);
 
   if (validImages.length === 0) {
     return (
