@@ -36,6 +36,8 @@ const typeColor: Record<string, string> = {
 
 export function VideoGallery({ videos }: VideoGalleryProps) {
   const [selected, setSelected] = useState<VideoItem | null>(null);
+  const { visible: visibleVideos, hasMore, sentinelRef, loadMore, total } = useLazyList(videos || [], 12, 12);
+
 
   const isEmbed = (v: VideoItem) => v.type === 'youtube' || v.type === 'vimeo';
 
