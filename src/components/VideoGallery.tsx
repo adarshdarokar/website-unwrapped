@@ -146,6 +146,18 @@ export function VideoGallery({ videos }: VideoGalleryProps) {
             </motion.div>
           ))}
         </div>
+
+        {hasMore && (
+          <div ref={sentinelRef} className="mt-4 flex justify-center">
+            <button
+              onClick={loadMore}
+              className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+            >
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              Loading more ({total - visibleVideos.length} left)
+            </button>
+          </div>
+        )}
       </motion.div>
 
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
