@@ -1,12 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 /**
- * Progressive rendering hook. Renders `initial` items, then loads
- * `step` more each time the returned sentinel scrolls into view.
+ * Manual pagination hook. Renders `initial` items, then loads `step` more
+ * only when the user clicks the "Show more" button (no auto/IO loading).
  */
-export function useLazyList<T>(items: T[], initial = 24, step = 24) {
+export function useLazyList<T>(items: T[], initial = 30, step = 30) {
   const [count, setCount] = useState(initial);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   // Reset when the underlying list changes
   useEffect(() => {
@@ -15,24 +14,12 @@ export function useLazyList<T>(items: T[], initial = 24, step = 24) {
 
   const visible = useMemo(() => items.slice(0, count), [items, count]);
   const hasMore = count < items.length;
-
-  useEffect(() => {
-    if (!hasMore) return;
-    const el = sentinelRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setCount((c) => Math.min(c + step, items.length));
-        }
-      },
-      { rootMargin: '400px 0px' }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [hasMore, step, items.length]);
+  const remaining = Math.max(items.length - count, 0);
+  const nextChunk = Math.min(step, remaining);
 
   const loadMore = () => setCount((c) => Math.min(c + step, items.length));
+  // sentinelRef kept for backward compat but unused
+  const sentinelRef = { current: null } as { current: HTMLDivElement | null };
 
-  return { visible, count, hasMore, sentinelRef, loadMore, total: items.length };
+  return { visible, count, hasMore, sentinelRef, loadMore, total: items.length, remaining, nextChunk };
 }
