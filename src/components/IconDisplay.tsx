@@ -165,7 +165,7 @@ export function IconDisplay({ icons }: IconDisplayProps) {
                 key={index}
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05, type: 'spring' }}
+                transition={{ delay: Math.min(index, 20) * 0.02, type: 'spring' }}
                 className="relative aspect-square bg-muted/30 rounded-lg flex items-center justify-center group hover:bg-muted/50 transition-colors"
               >
                 <div 
