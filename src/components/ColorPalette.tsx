@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Copy, Check, Download, Droplets } from 'lucide-react';
+import { Copy, Check, Download, Droplets, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { useLazyList } from '@/hooks/useLazyList';
 
 interface ColorPaletteProps {
   colors: string[];
@@ -42,7 +43,10 @@ export function ColorPalette({ colors }: ColorPaletteProps) {
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
-  const uniqueColors = [...new Set(colors)].slice(0, 24);
+  const uniqueColors = [...new Set(colors)];
+  const { visible: visibleColors, hasMore, loadMore, nextChunk, remaining, total } = useLazyList(uniqueColors, 30, 30);
+
+
 
   const copyToClipboard = (color: string) => {
     navigator.clipboard.writeText(color);
