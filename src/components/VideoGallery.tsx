@@ -98,12 +98,12 @@ export function VideoGallery({ videos }: VideoGalleryProps) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {videos.map((video, index) => (
+          {visibleVideos.map((video, index) => (
             <motion.div
               key={video.src}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.03, type: 'spring', stiffness: 200 }}
+              transition={{ delay: Math.min(index % 12, 8) * 0.03, type: 'spring', stiffness: 200 }}
               className="group relative aspect-video rounded-xl overflow-hidden bg-muted/30 border border-border/40 hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:shadow-md"
               onClick={() => setSelected(video)}
             >
