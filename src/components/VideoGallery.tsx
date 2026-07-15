@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Video as VideoIcon, ExternalLink, Play, Download, Film } from 'lucide-react';
+import { Video as VideoIcon, ExternalLink, Play, Download, Film, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useLazyList } from '@/hooks/useLazyList';
 
 interface VideoItem {
   src: string;
