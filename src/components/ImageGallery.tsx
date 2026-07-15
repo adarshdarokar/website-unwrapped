@@ -208,6 +208,17 @@ export function ImageGallery({ images }: ImageGalleryProps) {
           )}
         </AnimatePresence>
 
+        {hasMore && (
+          <div ref={sentinelRef} className="mt-4 flex justify-center">
+            <button
+              onClick={loadMore}
+              className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+            >
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              Loading more ({total - visibleImages.length} left)
+            </button>
+          </div>
+        )}
       </motion.div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
