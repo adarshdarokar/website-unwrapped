@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image as ImageIcon, ExternalLink, Download, ZoomIn, Grid, List, X, Loader2 } from 'lucide-react';
+import { Image as ImageIcon, ExternalLink, Download, ZoomIn, Grid, List, X, ChevronDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
