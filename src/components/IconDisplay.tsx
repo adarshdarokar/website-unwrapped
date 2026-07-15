@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Shapes, Package, Code, Layers, Download, Copy, Check, ExternalLink, Loader2 } from 'lucide-react';
+import { Shapes, Package, Code, Layers, Download, Copy, Check, ExternalLink, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLazyList } from '@/hooks/useLazyList';
 
@@ -22,7 +22,7 @@ const libraryInfo: Record<string, { color: string; description: string; url: str
 
 export function IconDisplay({ icons }: IconDisplayProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const { visible: visibleSvgs, hasMore, sentinelRef, loadMore, total } = useLazyList(icons.svgs, 36, 36);
+  const { visible: visibleSvgs, hasMore, loadMore, total, nextChunk } = useLazyList(icons.svgs, 30, 30);
 
 
   const copySvgCode = (svg: string, index: number) => {
@@ -207,13 +207,13 @@ export function IconDisplay({ icons }: IconDisplayProps) {
             ))}
           </div>
           {hasMore && (
-            <div ref={sentinelRef} className="mt-4 flex justify-center">
+            <div className="mt-5 flex justify-center">
               <button
                 onClick={loadMore}
-                className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
               >
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                Loading more ({total - visibleSvgs.length} left)
+                <ChevronDown className="w-4 h-4" />
+                Show {nextChunk} more ({total - visibleSvgs.length} left)
               </button>
             </div>
           )}
