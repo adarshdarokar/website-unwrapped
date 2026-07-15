@@ -92,7 +92,7 @@ export function VideoGallery({ videos }: VideoGalleryProps) {
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-semibold">Videos</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">{videos.length} found</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">Showing {visibleVideos.length} of {total}</p>
             </div>
           </div>
         </div>
