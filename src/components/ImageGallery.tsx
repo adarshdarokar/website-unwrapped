@@ -138,7 +138,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                   key={image.src}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.03, type: 'spring', stiffness: 200 }}
+                  transition={{ delay: Math.min(index % 24, 12) * 0.02, type: 'spring', stiffness: 200 }}
                   className="aspect-[4/3] rounded-xl overflow-hidden bg-card cursor-pointer group relative border border-border/30 hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-md image-preserve"
                   onClick={() => setSelectedImage(image)}
                 >
