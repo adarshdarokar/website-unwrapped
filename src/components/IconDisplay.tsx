@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Shapes, Package, Code, Layers, Download, Copy, Check, ExternalLink } from 'lucide-react';
+import { Shapes, Package, Code, Layers, Download, Copy, Check, ExternalLink, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLazyList } from '@/hooks/useLazyList';
 
 interface IconDisplayProps {
   icons: {
