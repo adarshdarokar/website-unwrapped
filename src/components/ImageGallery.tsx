@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image as ImageIcon, ExternalLink, Download, ZoomIn, Grid, List, X } from 'lucide-react';
+import { Image as ImageIcon, ExternalLink, Download, ZoomIn, Grid, List, X, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { toast } from 'sonner';
+import { useLazyList } from '@/hooks/useLazyList';
 
 interface ImageGalleryProps {
   images: { src: string; alt: string }[];
