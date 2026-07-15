@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Shapes, Package, Code, Layers, Download, Copy, Check, ExternalLink } from 'lucide-react';
+import { Shapes, Package, Code, Layers, Download, Copy, Check, ExternalLink, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLazyList } from '@/hooks/useLazyList';
 
 interface IconDisplayProps {
   icons: {
@@ -21,6 +22,8 @@ const libraryInfo: Record<string, { color: string; description: string; url: str
 
 export function IconDisplay({ icons }: IconDisplayProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const { visible: visibleSvgs, hasMore, sentinelRef, loadMore, total } = useLazyList(icons.svgs, 36, 36);
+
 
   const copySvgCode = (svg: string, index: number) => {
     navigator.clipboard.writeText(svg);
@@ -154,15 +157,15 @@ export function IconDisplay({ icons }: IconDisplayProps) {
         <div>
           <p className="text-sm font-medium mb-3 flex items-center gap-2">
             <Code className="w-4 h-4" />
-            Inline SVGs ({icons.svgCount} total)
+            Inline SVGs (showing {visibleSvgs.length} of {total})
           </p>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-            {icons.svgs.map((svg, index) => (
+            {visibleSvgs.map((svg, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05, type: 'spring' }}
+                transition={{ delay: Math.min(index, 20) * 0.02, type: 'spring' }}
                 className="relative aspect-square bg-muted/30 rounded-lg flex items-center justify-center group hover:bg-muted/50 transition-colors"
               >
                 <div 
@@ -203,6 +206,17 @@ export function IconDisplay({ icons }: IconDisplayProps) {
               </motion.div>
             ))}
           </div>
+          {hasMore && (
+            <div ref={sentinelRef} className="mt-4 flex justify-center">
+              <button
+                onClick={loadMore}
+                className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+              >
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                Loading more ({total - visibleSvgs.length} left)
+              </button>
+            </div>
+          )}
         </div>
       )}
     </motion.div>

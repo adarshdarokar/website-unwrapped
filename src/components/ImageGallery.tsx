@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image as ImageIcon, ExternalLink, Download, ZoomIn, Grid, List, X } from 'lucide-react';
+import { Image as ImageIcon, ExternalLink, Download, ZoomIn, Grid, List, X, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { toast } from 'sonner';
+import { useLazyList } from '@/hooks/useLazyList';
 
 interface ImageGalleryProps {
   images: { src: string; alt: string }[];
@@ -53,6 +54,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
   };
 
   const validImages = images.filter(img => !failedImages.has(img.src));
+  const { visible: visibleImages, hasMore, sentinelRef, loadMore, total } = useLazyList(validImages, 24, 24);
 
   if (validImages.length === 0) {
     return (
@@ -89,7 +91,9 @@ export function ImageGallery({ images }: ImageGalleryProps) {
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-semibold">Images</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">{validImages.length} found</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Showing {visibleImages.length} of {total}
+              </p>
             </div>
           </div>
           
@@ -129,12 +133,12 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               exit={{ opacity: 0 }}
               className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
             >
-              {validImages.map((image, index) => (
+              {visibleImages.map((image, index) => (
                 <motion.div
                   key={image.src}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.03, type: 'spring', stiffness: 200 }}
+                  transition={{ delay: Math.min(index % 24, 12) * 0.02, type: 'spring', stiffness: 200 }}
                   className="aspect-[4/3] rounded-xl overflow-hidden bg-card cursor-pointer group relative border border-border/30 hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-md image-preserve"
                   onClick={() => setSelectedImage(image)}
                 >
@@ -166,7 +170,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               exit={{ opacity: 0 }}
               className="space-y-1.5"
             >
-              {validImages.map((image, index) => (
+              {visibleImages.map((image, index) => (
                 <motion.div
                   key={image.src}
                   initial={{ opacity: 0, x: -10 }}
@@ -204,6 +208,17 @@ export function ImageGallery({ images }: ImageGalleryProps) {
           )}
         </AnimatePresence>
 
+        {hasMore && (
+          <div ref={sentinelRef} className="mt-4 flex justify-center">
+            <button
+              onClick={loadMore}
+              className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+            >
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              Loading more ({total - visibleImages.length} left)
+            </button>
+          </div>
+        )}
       </motion.div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>

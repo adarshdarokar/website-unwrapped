@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Video as VideoIcon, ExternalLink, Play, Download, Film } from 'lucide-react';
+import { Video as VideoIcon, ExternalLink, Play, Download, Film, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useLazyList } from '@/hooks/useLazyList';
 
 interface VideoItem {
   src: string;
@@ -35,6 +36,8 @@ const typeColor: Record<string, string> = {
 
 export function VideoGallery({ videos }: VideoGalleryProps) {
   const [selected, setSelected] = useState<VideoItem | null>(null);
+  const { visible: visibleVideos, hasMore, sentinelRef, loadMore, total } = useLazyList(videos || [], 12, 12);
+
 
   const isEmbed = (v: VideoItem) => v.type === 'youtube' || v.type === 'vimeo';
 
@@ -89,18 +92,18 @@ export function VideoGallery({ videos }: VideoGalleryProps) {
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-semibold">Videos</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">{videos.length} found</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">Showing {visibleVideos.length} of {total}</p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {videos.map((video, index) => (
+          {visibleVideos.map((video, index) => (
             <motion.div
               key={video.src}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.03, type: 'spring', stiffness: 200 }}
+              transition={{ delay: Math.min(index % 12, 8) * 0.03, type: 'spring', stiffness: 200 }}
               className="group relative aspect-video rounded-xl overflow-hidden bg-muted/30 border border-border/40 hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:shadow-md"
               onClick={() => setSelected(video)}
             >
@@ -143,6 +146,18 @@ export function VideoGallery({ videos }: VideoGalleryProps) {
             </motion.div>
           ))}
         </div>
+
+        {hasMore && (
+          <div ref={sentinelRef} className="mt-4 flex justify-center">
+            <button
+              onClick={loadMore}
+              className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+            >
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              Loading more ({total - visibleVideos.length} left)
+            </button>
+          </div>
+        )}
       </motion.div>
 
       <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
