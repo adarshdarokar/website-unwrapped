@@ -91,7 +91,9 @@ export function ImageGallery({ images }: ImageGalleryProps) {
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-semibold">Images</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">{validImages.length} found</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Showing {visibleImages.length} of {total}
+              </p>
             </div>
           </div>
           
