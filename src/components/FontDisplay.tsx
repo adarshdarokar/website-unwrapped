@@ -1,7 +1,8 @@
 import { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Type, ExternalLink, Download, Check, Copy } from 'lucide-react';
+import { Type, ExternalLink, Download, Check, Copy, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLazyList } from '@/hooks/useLazyList';
 
 interface FontDisplayProps {
   fonts: {
@@ -164,6 +165,10 @@ export function FontDisplay({ fonts }: FontDisplayProps) {
   }
 
   const total = customDetectedFonts.length + uniqueGoogleFonts.length;
+  const gf = useLazyList(uniqueGoogleFonts, 30, 30);
+  const cf = useLazyList(customDetectedFonts, 30, 30);
+
+
 
   return (
     <div className="bg-card border border-border rounded-xl p-5">
@@ -182,17 +187,17 @@ export function FontDisplay({ fonts }: FontDisplayProps) {
       {/* Google Fonts */}
       {uniqueGoogleFonts.length > 0 && (
         <div className="space-y-3 mb-5">
-          {uniqueGoogleFonts.map((font, index) => (
+          {gf.visible.map((font, index) => (
             <motion.div
               key={font}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
+              transition={{ delay: Math.min(index, 10) * 0.03 }}
               className="p-4 bg-muted/30 rounded-lg border border-border/60"
             >
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">{font}</span>
-                <div className="flex items-center gap-1">
+              <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
+                <span className="text-sm font-medium break-all">{font}</span>
+                <div className="flex items-center gap-1 flex-shrink-0">
                   <button
                     onClick={() => copyFontName(font)}
                     className="p-1.5 hover:bg-muted rounded-md transition-colors"
@@ -227,31 +232,55 @@ export function FontDisplay({ fonts }: FontDisplayProps) {
                     : 'inherit',
                 }}
               >
-                <p className="text-lg font-medium">The quick brown fox</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-base sm:text-lg font-medium">The quick brown fox</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Jumps over the lazy dog • 0123456789
                 </p>
               </div>
             </motion.div>
           ))}
+          {gf.hasMore && (
+            <div className="flex justify-center pt-1">
+              <button
+                onClick={gf.loadMore}
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+              >
+                <ChevronDown className="w-4 h-4" />
+                Show {gf.nextChunk} more ({gf.remaining} left)
+              </button>
+            </div>
+          )}
         </div>
       )}
 
       {/* Custom CSS Fonts */}
       {customDetectedFonts.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {customDetectedFonts.slice(0, 10).map((font, index) => (
-            <motion.button
-              key={font}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 + index * 0.03 }}
-              onClick={() => copyFontName(font)}
-              className="px-3 py-1.5 bg-muted/50 rounded-full text-xs font-medium hover:bg-muted transition-colors border border-border/60"
-            >
-              {font}
-            </motion.button>
-          ))}
+        <div>
+          <div className="flex flex-wrap gap-2">
+            {cf.visible.map((font, index) => (
+              <motion.button
+                key={font}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: Math.min(index, 10) * 0.02 }}
+                onClick={() => copyFontName(font)}
+                className="px-3 py-1.5 bg-muted/50 rounded-full text-xs font-medium hover:bg-muted transition-colors border border-border/60 break-all"
+              >
+                {font}
+              </motion.button>
+            ))}
+          </div>
+          {cf.hasMore && (
+            <div className="flex justify-center mt-3">
+              <button
+                onClick={cf.loadMore}
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+              >
+                <ChevronDown className="w-4 h-4" />
+                Show {cf.nextChunk} more ({cf.remaining} left)
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

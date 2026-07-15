@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Video as VideoIcon, ExternalLink, Play, Download, Film, Loader2 } from 'lucide-react';
+import { Video as VideoIcon, ExternalLink, Play, Download, Film, ChevronDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { Button } from '@/components/ui/button';
@@ -36,7 +36,7 @@ const typeColor: Record<string, string> = {
 
 export function VideoGallery({ videos }: VideoGalleryProps) {
   const [selected, setSelected] = useState<VideoItem | null>(null);
-  const { visible: visibleVideos, hasMore, sentinelRef, loadMore, total } = useLazyList(videos || [], 12, 12);
+  const { visible: visibleVideos, hasMore, loadMore, total, nextChunk } = useLazyList(videos || [], 30, 30);
 
 
   const isEmbed = (v: VideoItem) => v.type === 'youtube' || v.type === 'vimeo';
@@ -148,13 +148,13 @@ export function VideoGallery({ videos }: VideoGalleryProps) {
         </div>
 
         {hasMore && (
-          <div ref={sentinelRef} className="mt-4 flex justify-center">
+          <div className="mt-5 flex justify-center">
             <button
               onClick={loadMore}
-              className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
             >
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              Loading more ({total - visibleVideos.length} left)
+              <ChevronDown className="w-4 h-4" />
+              Show {nextChunk} more ({total - visibleVideos.length} left)
             </button>
           </div>
         )}

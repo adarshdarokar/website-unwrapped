@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Copy, Check, Download, Droplets } from 'lucide-react';
+import { Copy, Check, Download, Droplets, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { useLazyList } from '@/hooks/useLazyList';
 
 interface ColorPaletteProps {
   colors: string[];
@@ -42,7 +43,10 @@ export function ColorPalette({ colors }: ColorPaletteProps) {
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
-  const uniqueColors = [...new Set(colors)].slice(0, 24);
+  const uniqueColors = [...new Set(colors)];
+  const { visible: visibleColors, hasMore, loadMore, nextChunk, remaining, total } = useLazyList(uniqueColors, 30, 30);
+
+
 
   const copyToClipboard = (color: string) => {
     navigator.clipboard.writeText(color);
@@ -80,7 +84,7 @@ ${uniqueColors.map((color, i) => `  --color-${i + 1}: ${color};`).join('\n')}
       <div className="flex items-center justify-between mb-5">
         <div>
           <h3 className="text-sm font-medium">Colors</h3>
-          <p className="text-xs text-muted-foreground">{uniqueColors.length} found</p>
+          <p className="text-xs text-muted-foreground">Showing {visibleColors.length} of {total}</p>
         </div>
         
         <Button
@@ -95,13 +99,13 @@ ${uniqueColors.map((color, i) => `  --color-${i + 1}: ${color};`).join('\n')}
       </div>
 
       {/* Color Grid */}
-      <div className="grid grid-cols-6 sm:grid-cols-8 gap-2 mb-4">
-        {uniqueColors.map((color, index) => (
+      <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2 mb-4">
+        {visibleColors.map((color, index) => (
           <motion.button
             key={`${color}-${index}`}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.02 }}
+            transition={{ delay: Math.min(index % 30, 12) * 0.02 }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => copyToClipboard(color)}
@@ -122,6 +126,18 @@ ${uniqueColors.map((color, i) => `  --color-${i + 1}: ${color};`).join('\n')}
           </motion.button>
         ))}
       </div>
+
+      {hasMore && (
+        <div className="mb-4 flex justify-center">
+          <button
+            onClick={loadMore}
+            className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+          >
+            <ChevronDown className="w-4 h-4" />
+            Show {nextChunk} more ({remaining} left)
+          </button>
+        </div>
+      )}
 
       {/* Color Details */}
       {selectedColor && (
@@ -157,18 +173,13 @@ ${uniqueColors.map((color, i) => `  --color-${i + 1}: ${color};`).join('\n')}
             onClick={() => copyToClipboard(color)}
             className="flex items-center gap-1.5 px-2 py-1 bg-muted/50 rounded-md text-xs font-mono hover:bg-muted transition-colors"
           >
-            <div 
-              className="w-2.5 h-2.5 rounded-full ring-1 ring-border/30" 
-              style={{ backgroundColor: color }} 
+            <div
+              className="w-2.5 h-2.5 rounded-full ring-1 ring-border/30"
+              style={{ backgroundColor: color }}
             />
             <span className="text-muted-foreground">{color}</span>
           </button>
         ))}
-        {uniqueColors.length > 6 && (
-          <span className="px-2 py-1 text-xs text-muted-foreground">
-            +{uniqueColors.length - 6} more
-          </span>
-        )}
       </div>
     </div>
   );

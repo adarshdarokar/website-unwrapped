@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image as ImageIcon, ExternalLink, Download, ZoomIn, Grid, List, X, Loader2 } from 'lucide-react';
+import { Image as ImageIcon, ExternalLink, Download, ZoomIn, Grid, List, X, ChevronDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
@@ -54,7 +54,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
   };
 
   const validImages = images.filter(img => !failedImages.has(img.src));
-  const { visible: visibleImages, hasMore, sentinelRef, loadMore, total } = useLazyList(validImages, 24, 24);
+  const { visible: visibleImages, hasMore, loadMore, total, nextChunk } = useLazyList(validImages, 30, 30);
 
   if (validImages.length === 0) {
     return (
@@ -209,13 +209,13 @@ export function ImageGallery({ images }: ImageGalleryProps) {
         </AnimatePresence>
 
         {hasMore && (
-          <div ref={sentinelRef} className="mt-4 flex justify-center">
+          <div className="mt-5 flex justify-center">
             <button
               onClick={loadMore}
-              className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
             >
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              Loading more ({total - visibleImages.length} left)
+              <ChevronDown className="w-4 h-4" />
+              Show {nextChunk} more ({total - visibleImages.length} left)
             </button>
           </div>
         )}
