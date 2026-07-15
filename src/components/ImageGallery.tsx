@@ -133,7 +133,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
               exit={{ opacity: 0 }}
               className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
             >
-              {validImages.map((image, index) => (
+              {visibleImages.map((image, index) => (
                 <motion.div
                   key={image.src}
                   initial={{ opacity: 0, scale: 0.8 }}
