@@ -1,7 +1,8 @@
 import { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Type, ExternalLink, Download, Check, Copy } from 'lucide-react';
+import { Type, ExternalLink, Download, Check, Copy, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLazyList } from '@/hooks/useLazyList';
 
 interface FontDisplayProps {
   fonts: {
@@ -164,6 +165,10 @@ export function FontDisplay({ fonts }: FontDisplayProps) {
   }
 
   const total = customDetectedFonts.length + uniqueGoogleFonts.length;
+  const gf = useLazyList(uniqueGoogleFonts, 30, 30);
+  const cf = useLazyList(customDetectedFonts, 30, 30);
+
+
 
   return (
     <div className="bg-card border border-border rounded-xl p-5">
