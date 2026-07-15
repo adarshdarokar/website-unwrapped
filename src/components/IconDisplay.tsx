@@ -157,7 +157,7 @@ export function IconDisplay({ icons }: IconDisplayProps) {
         <div>
           <p className="text-sm font-medium mb-3 flex items-center gap-2">
             <Code className="w-4 h-4" />
-            Inline SVGs ({icons.svgCount} total)
+            Inline SVGs (showing {visibleSvgs.length} of {total})
           </p>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
             {visibleSvgs.map((svg, index) => (
