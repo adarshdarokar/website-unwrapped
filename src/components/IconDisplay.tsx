@@ -22,6 +22,8 @@ const libraryInfo: Record<string, { color: string; description: string; url: str
 
 export function IconDisplay({ icons }: IconDisplayProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const { visible: visibleSvgs, hasMore, sentinelRef, loadMore, total } = useLazyList(icons.svgs, 36, 36);
+
 
   const copySvgCode = (svg: string, index: number) => {
     navigator.clipboard.writeText(svg);
