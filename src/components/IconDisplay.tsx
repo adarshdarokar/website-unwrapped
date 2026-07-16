@@ -120,18 +120,20 @@ export function IconDisplay({ icons }: IconDisplayProps) {
           </p>
           <div className="grid gap-2">
             {icons.libraries.map((library, index) => {
-              const info = libraryInfo[library] || { color: 'from-gray-500 to-gray-600', description: 'Icon library', url: '#' };
+              const info = libraryInfo[library] || { color: 'from-gray-500 to-gray-600', description: 'Icon library', url: '' };
+              const hasUrl = !!info.url && info.url !== '#';
               return (
                 <motion.a
                   key={library}
-                  href={info.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={hasUrl ? info.url : undefined}
+                  target={hasUrl ? '_blank' : undefined}
+                  rel={hasUrl ? 'noopener noreferrer' : undefined}
+                  onClick={(e) => { if (!hasUrl) e.preventDefault(); }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ x: 4 }}
-                  className="p-3 rounded-lg bg-muted/30 border border-border/50 hover:border-primary/30 transition-all group"
+                  whileHover={{ x: hasUrl ? 4 : 0 }}
+                  className={`p-3 rounded-lg bg-muted/30 border border-border/50 transition-all group ${hasUrl ? 'hover:border-primary/30 cursor-pointer' : 'cursor-default'}`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -143,7 +145,7 @@ export function IconDisplay({ icons }: IconDisplayProps) {
                         <p className="text-xs text-muted-foreground">{info.description}</p>
                       </div>
                     </div>
-                    <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                    {hasUrl && <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />}
                   </div>
                 </motion.a>
               );
