@@ -12,13 +12,52 @@ interface IconDisplayProps {
   };
 }
 
-const libraryInfo: Record<string, { color: string; description: string; url: string }> = {
+type LibraryInfo = { color: string; description: string; url: string };
+
+const libraryInfo: Record<string, LibraryInfo> = {
   'Font Awesome': { color: 'from-blue-500 to-blue-600', description: 'Popular icon library', url: 'https://fontawesome.com' },
   'Material Icons': { color: 'from-green-500 to-green-600', description: 'Google Material icons', url: 'https://fonts.google.com/icons' },
   'Feather Icons': { color: 'from-purple-500 to-purple-600', description: 'Open source icons', url: 'https://feathericons.com' },
   'Heroicons': { color: 'from-indigo-500 to-indigo-600', description: 'By Tailwind CSS', url: 'https://heroicons.com' },
   'Lucide': { color: 'from-orange-500 to-orange-600', description: 'Beautiful icons', url: 'https://lucide.dev' },
+  'Phosphor Icons': { color: 'from-cyan-500 to-cyan-600', description: 'Flexible icon family', url: 'https://phosphoricons.com' },
+  'Tabler Icons': { color: 'from-sky-500 to-sky-600', description: 'Open source SVG icons', url: 'https://tabler.io/icons' },
+  'Ionicons': { color: 'from-blue-500 to-cyan-600', description: 'Ionic framework icons', url: 'https://ionic.io/ionicons' },
+  'Bootstrap Icons': { color: 'from-violet-500 to-violet-600', description: 'Official Bootstrap icons', url: 'https://icons.getbootstrap.com' },
+  'Remix Icons': { color: 'from-teal-500 to-teal-600', description: 'Neutral style icons', url: 'https://remixicon.com' },
 };
+
+const libraryAliases: Array<{ pattern: RegExp; key: keyof typeof libraryInfo }> = [
+  { pattern: /font\s*awesome|fontawesome|\bfa\b/i, key: 'Font Awesome' },
+  { pattern: /material\s*(icons|symbols)/i, key: 'Material Icons' },
+  { pattern: /feather/i, key: 'Feather Icons' },
+  { pattern: /heroicons?|hero\s*icons?/i, key: 'Heroicons' },
+  { pattern: /lucide/i, key: 'Lucide' },
+  { pattern: /phosphor/i, key: 'Phosphor Icons' },
+  { pattern: /tabler/i, key: 'Tabler Icons' },
+  { pattern: /ionicons?/i, key: 'Ionicons' },
+  { pattern: /bootstrap/i, key: 'Bootstrap Icons' },
+  { pattern: /remix/i, key: 'Remix Icons' },
+];
+
+function getLibraryInfo(library: string): LibraryInfo {
+  const exactInfo = libraryInfo[library];
+  if (exactInfo) return exactInfo;
+
+  const alias = libraryAliases.find(({ pattern }) => pattern.test(library));
+  if (alias) return libraryInfo[alias.key];
+
+  return { color: 'from-gray-500 to-gray-600', description: 'Icon library', url: '' };
+}
+
+function getSafeExternalUrl(url: string): string | undefined {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:' ? parsed.toString() : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 export function IconDisplay({ icons }: IconDisplayProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -120,20 +159,30 @@ export function IconDisplay({ icons }: IconDisplayProps) {
           </p>
           <div className="grid gap-2">
             {icons.libraries.map((library, index) => {
-              const info = libraryInfo[library] || { color: 'from-gray-500 to-gray-600', description: 'Icon library', url: '' };
-              const hasUrl = !!info.url && info.url !== '#';
+              const info = getLibraryInfo(library);
+              const safeUrl = getSafeExternalUrl(info.url);
               return (
                 <motion.a
                   key={library}
-                  href={hasUrl ? info.url : undefined}
-                  target={hasUrl ? '_blank' : undefined}
-                  rel={hasUrl ? 'noopener noreferrer' : undefined}
-                  onClick={(e) => { if (!hasUrl) e.preventDefault(); }}
+                  href={safeUrl}
+                  target={safeUrl ? '_blank' : undefined}
+                  rel={safeUrl ? 'noopener noreferrer' : undefined}
+                  onClick={(e) => {
+                    if (!safeUrl) {
+                      e.preventDefault();
+                      return;
+                    }
+
+                    const href = e.currentTarget.getAttribute('href') || '';
+                    if (!getSafeExternalUrl(href)) {
+                      e.preventDefault();
+                    }
+                  }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ x: hasUrl ? 4 : 0 }}
-                  className={`p-3 rounded-lg bg-muted/30 border border-border/50 transition-all group ${hasUrl ? 'hover:border-primary/30 cursor-pointer' : 'cursor-default'}`}
+                  whileHover={{ x: safeUrl ? 4 : 0 }}
+                  className={`p-3 rounded-lg bg-muted/30 border border-border/50 transition-all group ${safeUrl ? 'hover:border-primary/30 cursor-pointer' : 'cursor-default'}`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -145,7 +194,7 @@ export function IconDisplay({ icons }: IconDisplayProps) {
                         <p className="text-xs text-muted-foreground">{info.description}</p>
                       </div>
                     </div>
-                    {hasUrl && <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />}
+                    {safeUrl && <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />}
                   </div>
                 </motion.a>
               );
