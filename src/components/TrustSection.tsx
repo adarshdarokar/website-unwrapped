@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 import { Shield, Zap, Globe, Users } from 'lucide-react';
 
 const stats = [
-  { value: '50K+', label: 'Sites Analyzed', icon: Globe },
-  { value: '12K+', label: 'Active Users', icon: Users },
+  { value: '500+', label: 'Sites Analyzed', icon: Globe },
+  { value: '100+', label: 'Active Users', icon: Users },
   { value: '<3s', label: 'Avg. Speed', icon: Zap },
   { value: '99.9%', label: 'Uptime', icon: Shield },
 ];
