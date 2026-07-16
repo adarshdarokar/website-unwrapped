@@ -7,10 +7,11 @@ import { useEffect, useMemo, useState } from 'react';
 export function useLazyList<T>(items: T[], initial = 30, step = 30) {
   const [count, setCount] = useState(initial);
 
-  // Reset when the underlying list changes
+  // Reset when the underlying list length changes (avoid resetting when the
+  // parent passes a new array reference on every render).
   useEffect(() => {
     setCount(initial);
-  }, [items, initial]);
+  }, [items.length, initial]);
 
   const visible = useMemo(() => items.slice(0, count), [items, count]);
   const hasMore = count < items.length;
