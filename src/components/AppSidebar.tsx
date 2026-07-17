@@ -82,7 +82,7 @@ function RailContent({ expanded }: { expanded: boolean }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { isPaidUser } = useUsageLimits();
-  const [showPricing, setShowPricing] = useState(false);
+  
 
   return (
     <>
