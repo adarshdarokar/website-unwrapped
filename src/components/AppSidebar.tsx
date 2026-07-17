@@ -15,7 +15,7 @@ import {
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
-import { PricingModal } from "@/components/PricingModal";
+
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
@@ -82,7 +82,7 @@ function RailContent({ expanded }: { expanded: boolean }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { isPaidUser } = useUsageLimits();
-  const [showPricing, setShowPricing] = useState(false);
+  
 
   return (
     <>
@@ -124,7 +124,7 @@ function RailContent({ expanded }: { expanded: boolean }) {
           )}
         </div>
         <button
-          onClick={() => setShowPricing(true)}
+          onClick={() => navigate('/pricing')}
           aria-label={isPaidUser ? "Pro plan" : "Upgrade to Pro"}
           className={cn(
             "group relative h-10 flex items-center rounded-xl overflow-hidden transition-all duration-300 ease-out",
@@ -149,7 +149,7 @@ function RailContent({ expanded }: { expanded: boolean }) {
         </button>
       </div>
 
-      <PricingModal open={showPricing} onOpenChange={setShowPricing} />
+      
     </>
   );
 }
