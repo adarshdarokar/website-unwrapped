@@ -149,7 +149,7 @@ function RailContent({ expanded }: { expanded: boolean }) {
         </button>
       </div>
 
-      <PricingModal open={showPricing} onOpenChange={setShowPricing} />
+      
     </>
   );
 }
