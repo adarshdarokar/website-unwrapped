@@ -188,7 +188,11 @@ const Index = () => {
           {!result && !isLoading && <FeatureRow />}
 
           {/* Demo Analytics - sample charts */}
-          {!result && !isLoading && <DemoAnalytics />}
+          {!result && !isLoading && (
+            <Suspense fallback={<CardFallback h={280} />}>
+              <DemoAnalytics />
+            </Suspense>
+          )}
 
           {/* Trust Section */}
           {!result && !isLoading && <TrustSection />}
