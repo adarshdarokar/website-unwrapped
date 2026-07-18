@@ -292,6 +292,7 @@ const Index = () => {
 
               {/* Overview Tab */}
               <TabsContent value="overview" className="mt-0">
+                <Suspense fallback={<CardFallback h={500} />}>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_280px] xl:grid-cols-[1fr_320px] gap-4">
                   <div className="space-y-4">
                     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.05 }}>
@@ -357,10 +358,12 @@ const Index = () => {
                     </motion.div>
                   </div>
                 </div>
+                </Suspense>
               </TabsContent>
 
               {/* Colors Tab */}
               <TabsContent value="colors" className="mt-0">
+                <Suspense fallback={<CardFallback h={400} />}>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <ColorPalette colors={result.colors} />
                   <div className="space-y-4">
@@ -368,10 +371,12 @@ const Index = () => {
                     <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
                   </div>
                 </div>
+                </Suspense>
               </TabsContent>
 
               {/* Fonts Tab */}
               <TabsContent value="fonts" className="mt-0">
+                <Suspense fallback={<CardFallback h={400} />}>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <FontDisplay fonts={result.fonts} />
                   <div className="space-y-4">
@@ -379,10 +384,12 @@ const Index = () => {
                     <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
                   </div>
                 </div>
+                </Suspense>
               </TabsContent>
 
               {/* Images Tab */}
               <TabsContent value="images" className="mt-0">
+                <Suspense fallback={<CardFallback h={400} />}>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <ImageGallery images={result.images} />
                   <div className="space-y-4">
@@ -390,10 +397,12 @@ const Index = () => {
                     <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
                   </div>
                 </div>
+                </Suspense>
               </TabsContent>
 
               {/* Videos Tab */}
               <TabsContent value="videos" className="mt-0">
+                <Suspense fallback={<CardFallback h={400} />}>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <VideoGallery videos={(result as any).videos || []} />
                   <div className="space-y-4">
@@ -401,11 +410,13 @@ const Index = () => {
                     <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
                   </div>
                 </div>
+                </Suspense>
               </TabsContent>
 
 
               {/* Icons Tab */}
               <TabsContent value="icons" className="mt-0">
+                <Suspense fallback={<CardFallback h={400} />}>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <IconDisplay icons={result.icons} />
                   <div className="space-y-4">
@@ -413,10 +424,12 @@ const Index = () => {
                     <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
                   </div>
                 </div>
+                </Suspense>
               </TabsContent>
 
               {/* Animations Tab */}
               <TabsContent value="animations" className="mt-0">
+                <Suspense fallback={<CardFallback h={400} />}>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <AnimationDisplay animations={result.animations} />
                   <div className="space-y-4">
@@ -424,31 +437,39 @@ const Index = () => {
                     <TechStack meta={result.meta} fonts={result.fonts} icons={result.icons} />
                   </div>
                 </div>
+                </Suspense>
               </TabsContent>
 
               {/* AI Insights Tab */}
               <TabsContent value="ai" className="mt-0">
-                <AIInsights result={result} />
+                <Suspense fallback={<CardFallback h={500} />}>
+                  <AIInsights result={result} />
+                </Suspense>
               </TabsContent>
 
               {/* SEO Preview Tab */}
               <TabsContent value="seo" className="mt-0">
+                <Suspense fallback={<CardFallback h={400} />}>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] xl:grid-cols-[1fr_300px] gap-4">
                   <SEOPreview url={result.url} meta={result.meta as any} />
                   <div className="space-y-4">
                     <SEOOverview url={result.url} meta={result.meta} images={result.images} />
                   </div>
                 </div>
+                </Suspense>
               </TabsContent>
 
               {/* Preview Tab */}
               <TabsContent value="preview" className="mt-0">
-                <ResponsivePreview url={result.url} />
+                <Suspense fallback={<CardFallback h={600} />}>
+                  <ResponsivePreview url={result.url} />
+                </Suspense>
               </TabsContent>
             </Tabs>
           </motion.section>
         )}
       </AnimatePresence>
+
 
       {/* Footer */}
       {!result && !isLoading && (
