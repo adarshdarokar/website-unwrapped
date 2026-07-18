@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -19,34 +19,15 @@ import {
 } from 'lucide-react';
 import { UrlInput } from '@/components/UrlInput';
 import { CreditsIndicator } from '@/components/CreditsIndicator';
-import { QualityScore } from '@/components/QualityScore';
-import { ImageGallery } from '@/components/ImageGallery';
-import { FontDisplay } from '@/components/FontDisplay';
-import { ColorPalette } from '@/components/ColorPalette';
-import { IconDisplay } from '@/components/IconDisplay';
-import { AnimationDisplay } from '@/components/AnimationDisplay';
-import { VideoGallery } from '@/components/VideoGallery';
 import { LoadingState } from '@/components/LoadingState';
-import { TechStack } from '@/components/TechStack';
-import { CompareWebsites } from '@/components/CompareWebsites';
-import { ExportAnalysis } from '@/components/ExportAnalysis';
 import { QuickActions } from '@/components/QuickActions';
 import { RecentAnalyses } from '@/components/RecentAnalyses';
 import { CommandPalette } from '@/components/CommandPalette';
 import { KeyboardShortcutsHelp } from '@/components/KeyboardShortcutsHelp';
 import { HeroPreviewCard } from '@/components/HeroPreviewCard';
-import { DemoAnalytics } from '@/components/DemoAnalytics';
 import { TrustSection } from '@/components/TrustSection';
 import { FeatureRow } from '@/components/FeatureRow';
-import { PerformanceInsights } from '@/components/PerformanceInsights';
-import { AccessibilityScore } from '@/components/AccessibilityScore';
-import { DesignInsights } from '@/components/DesignInsights';
-import { SEOOverview } from '@/components/SEOOverview';
 import { AnalysisSummary } from '@/components/AnalysisSummary';
-import { ResponsivePreview } from '@/components/ResponsivePreview';
-import { ScoreBreakdown } from '@/components/ScoreBreakdown';
-import { AIInsights } from '@/components/AIInsights';
-import { SEOPreview } from '@/components/SEOPreview';
 import { useWebsiteAnalyzer } from '@/hooks/useWebsiteAnalyzer';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useAnalysisStats } from '@/hooks/useAnalysisStats';
@@ -54,6 +35,32 @@ import { useUsageLimits } from '@/hooks/useUsageLimits';
 import { UsageLimitBanner } from '@/components/UsageLimitBanner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+
+// Lazy-load heavy chart/preview/gallery/AI panels so mobile stays fast.
+const QualityScore = lazy(() => import('@/components/QualityScore').then(m => ({ default: m.QualityScore })));
+const ImageGallery = lazy(() => import('@/components/ImageGallery').then(m => ({ default: m.ImageGallery })));
+const FontDisplay = lazy(() => import('@/components/FontDisplay').then(m => ({ default: m.FontDisplay })));
+const ColorPalette = lazy(() => import('@/components/ColorPalette').then(m => ({ default: m.ColorPalette })));
+const IconDisplay = lazy(() => import('@/components/IconDisplay').then(m => ({ default: m.IconDisplay })));
+const AnimationDisplay = lazy(() => import('@/components/AnimationDisplay').then(m => ({ default: m.AnimationDisplay })));
+const VideoGallery = lazy(() => import('@/components/VideoGallery').then(m => ({ default: m.VideoGallery })));
+const TechStack = lazy(() => import('@/components/TechStack').then(m => ({ default: m.TechStack })));
+const CompareWebsites = lazy(() => import('@/components/CompareWebsites').then(m => ({ default: m.CompareWebsites })));
+const ExportAnalysis = lazy(() => import('@/components/ExportAnalysis').then(m => ({ default: m.ExportAnalysis })));
+const DemoAnalytics = lazy(() => import('@/components/DemoAnalytics').then(m => ({ default: m.DemoAnalytics })));
+const PerformanceInsights = lazy(() => import('@/components/PerformanceInsights').then(m => ({ default: m.PerformanceInsights })));
+const AccessibilityScore = lazy(() => import('@/components/AccessibilityScore').then(m => ({ default: m.AccessibilityScore })));
+const DesignInsights = lazy(() => import('@/components/DesignInsights').then(m => ({ default: m.DesignInsights })));
+const SEOOverview = lazy(() => import('@/components/SEOOverview').then(m => ({ default: m.SEOOverview })));
+const ResponsivePreview = lazy(() => import('@/components/ResponsivePreview').then(m => ({ default: m.ResponsivePreview })));
+const ScoreBreakdown = lazy(() => import('@/components/ScoreBreakdown').then(m => ({ default: m.ScoreBreakdown })));
+const AIInsights = lazy(() => import('@/components/AIInsights').then(m => ({ default: m.AIInsights })));
+const SEOPreview = lazy(() => import('@/components/SEOPreview').then(m => ({ default: m.SEOPreview })));
+
+const CardFallback = ({ h = 200 }: { h?: number }) => (
+  <Skeleton className="w-full rounded-xl" style={{ height: h }} />
+);
 
 const Index = () => {
   const { analyzeWebsite, isLoading, error, result } = useWebsiteAnalyzer();
