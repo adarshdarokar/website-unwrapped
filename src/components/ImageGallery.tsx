@@ -187,6 +187,11 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                       alt={image.alt}
                       className="w-full h-full object-cover"
                       onError={() => handleImageError(image.src)}
+                      loading="lazy"
+                      decoding="async"
+                      width={48}
+                      height={48}
+                      sizes="48px"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
