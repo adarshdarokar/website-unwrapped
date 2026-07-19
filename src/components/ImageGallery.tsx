@@ -152,6 +152,8 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                     onError={() => handleImageError(image.src)}
                     onLoad={() => handleImageLoad(image.src)}
                     loading="lazy"
+                    decoding="async"
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 240px"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3">
                     <div className="flex items-center gap-1 text-white text-xs font-medium">
@@ -185,6 +187,11 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                       alt={image.alt}
                       className="w-full h-full object-cover"
                       onError={() => handleImageError(image.src)}
+                      loading="lazy"
+                      decoding="async"
+                      width={48}
+                      height={48}
+                      sizes="48px"
                     />
                   </div>
                   <div className="flex-1 min-w-0">

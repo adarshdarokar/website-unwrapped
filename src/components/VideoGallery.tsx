@@ -113,6 +113,8 @@ export function VideoGallery({ videos }: VideoGalleryProps) {
                   alt={video.title || 'Video thumbnail'}
                   className="w-full h-full object-cover"
                   loading="lazy"
+                  decoding="async"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')}
                 />
               ) : (
