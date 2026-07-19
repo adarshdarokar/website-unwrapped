@@ -1,30 +1,211 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, User, Loader2, Sparkles, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, User, Loader2, Eye, EyeOff, Github, ArrowRight, BarChart3, TrendingUp } from 'lucide-react';
 import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { cn } from '@/lib/utils';
+
+/* --------------------------- Dashboard preview --------------------------- */
+
+const categoryScores = [
+  { name: 'Typography', value: 62, color: 'hsl(245 70% 62%)' },
+  { name: 'Colors', value: 85, color: 'hsl(255 75% 65%)' },
+  { name: 'Icons', value: 92, color: 'hsl(165 65% 48%)' },
+  { name: 'Motion', value: 74, color: 'hsl(200 85% 60%)' },
+  { name: 'SEO', value: 88, color: 'hsl(220 80% 60%)' },
+  { name: 'Performance', value: 46, color: 'hsl(32 90% 58%)' },
+];
+
+const radarAxes = ['Typography', 'Colors', 'Images', 'Motion', 'SEO', 'Performance', 'Accessibility', 'Icons'];
+const radarValues = [0.7, 0.85, 0.6, 0.72, 0.65, 0.55, 0.68, 0.82];
+
+const donut = [
+  { name: 'Colors', value: 35, color: 'hsl(250 75% 62%)' },
+  { name: 'Fonts', value: 20, color: 'hsl(215 85% 60%)' },
+  { name: 'Animations', value: 17, color: 'hsl(160 65% 50%)' },
+  { name: 'Images', value: 28, color: 'hsl(345 80% 62%)' },
+];
+
+const evaluation = [
+  { label: 'HTTPS Security', value: '+15', tone: 'pos', dot: 'hsl(150 60% 45%)' },
+  { label: 'Mobile Viewport', value: '+10', tone: 'pos', dot: 'hsl(215 85% 60%)' },
+  { label: 'Image Alt Text', value: '-5', tone: 'neg', dot: 'hsl(345 80% 62%)' },
+  { label: 'Font Loading', value: '+10', tone: 'pos', dot: 'hsl(32 90% 58%)' },
+  { label: 'Color Contrast', value: '+8', tone: 'pos', dot: 'hsl(150 60% 45%)' },
+  { label: 'Preconnect Hints', value: '-3', tone: 'neg', dot: 'hsl(345 80% 62%)' },
+];
+
+function PreviewCard({ title, icon: Icon, children, className }: { title: string; icon: React.ComponentType<{ className?: string }>; children: React.ReactNode; className?: string }) {
+  return (
+    <div className={cn(
+      "rounded-2xl bg-card p-5 border border-border/40",
+      "shadow-[0_1px_0_hsl(0_0%_100%/0.6)_inset,0_20px_40px_-24px_hsl(245_40%_30%/0.18),0_2px_6px_-2px_hsl(245_20%_40%/0.06)]",
+      className
+    )}>
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <Icon className="w-4 h-4 text-primary" />
+        </div>
+        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function CategoryScoresCard() {
+  return (
+    <PreviewCard title="Category Scores" icon={BarChart3}>
+      <p className="text-[11px] text-muted-foreground -mt-3 mb-3 ml-[42px]">Points earned per area</p>
+      <div className="space-y-2.5">
+        {categoryScores.map((c) => (
+          <div key={c.name} className="grid grid-cols-[80px_1fr_28px] items-center gap-3">
+            <span className="text-xs text-foreground/80">{c.name}</span>
+            <div className="h-1.5 rounded-full bg-muted/70 overflow-hidden">
+              <div className="h-full rounded-full" style={{ width: `${c.value}%`, background: c.color }} />
+            </div>
+            <span className="text-xs font-semibold text-foreground text-right">{c.value}</span>
+          </div>
+        ))}
+        <div className="grid grid-cols-5 pt-1 text-[10px] text-muted-foreground/70">
+          {[0, 25, 50, 75, 100].map((n) => <span key={n} className="text-center">{n}</span>)}
+        </div>
+      </div>
+    </PreviewCard>
+  );
+}
+
+function StrengthMapCard() {
+  const cx = 110, cy = 100, r = 70;
+  const points = radarValues.map((v, i) => {
+    const angle = (Math.PI * 2 * i) / radarValues.length - Math.PI / 2;
+    return [cx + Math.cos(angle) * r * v, cy + Math.sin(angle) * r * v];
+  });
+  const polygon = points.map((p) => p.join(',')).join(' ');
+  return (
+    <PreviewCard title="Strength Map" icon={() => <Logo size={16} className="scale-110" />}>
+      <div className="flex justify-center">
+        <svg viewBox="0 0 220 200" className="w-full max-w-[220px] h-[180px]">
+          {[0.33, 0.66, 1].map((s) => (
+            <polygon
+              key={s}
+              points={radarAxes.map((_, i) => {
+                const a = (Math.PI * 2 * i) / radarAxes.length - Math.PI / 2;
+                return `${cx + Math.cos(a) * r * s},${cy + Math.sin(a) * r * s}`;
+              }).join(' ')}
+              fill="none"
+              stroke="hsl(240 20% 88%)"
+              strokeWidth="0.8"
+            />
+          ))}
+          {radarAxes.map((_, i) => {
+            const a = (Math.PI * 2 * i) / radarAxes.length - Math.PI / 2;
+            return <line key={i} x1={cx} y1={cy} x2={cx + Math.cos(a) * r} y2={cy + Math.sin(a) * r} stroke="hsl(240 20% 88%)" strokeWidth="0.8" />;
+          })}
+          <polygon points={polygon} fill="hsl(245 70% 62% / 0.18)" stroke="hsl(245 70% 62%)" strokeWidth="1.5" />
+          {points.map(([x, y], i) => (
+            <circle key={i} cx={x} cy={y} r="2.5" fill="hsl(245 70% 62%)" />
+          ))}
+          {radarAxes.map((label, i) => {
+            const a = (Math.PI * 2 * i) / radarAxes.length - Math.PI / 2;
+            const lx = cx + Math.cos(a) * (r + 14);
+            const ly = cy + Math.sin(a) * (r + 14);
+            return (
+              <text key={label} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle" fontSize="7.5" fill="hsl(240 15% 40%)">
+                {label}
+              </text>
+            );
+          })}
+        </svg>
+      </div>
+    </PreviewCard>
+  );
+}
+
+function AssetDistributionCard() {
+  const total = donut.reduce((s, d) => s + d.value, 0);
+  let offset = 0;
+  const C = 2 * Math.PI * 32;
+  return (
+    <PreviewCard title="Asset Distribution" icon={TrendingUp}>
+      <div className="flex items-center gap-5">
+        <svg viewBox="0 0 80 80" className="w-24 h-24 shrink-0 -rotate-90">
+          {donut.map((d) => {
+            const frac = d.value / total;
+            const dash = frac * C;
+            const el = (
+              <circle
+                key={d.name}
+                cx="40"
+                cy="40"
+                r="32"
+                fill="none"
+                stroke={d.color}
+                strokeWidth="14"
+                strokeDasharray={`${dash} ${C - dash}`}
+                strokeDashoffset={-offset}
+              />
+            );
+            offset += dash;
+            return el;
+          })}
+        </svg>
+        <div className="flex-1 space-y-2">
+          {donut.map((d) => (
+            <div key={d.name} className="flex items-center gap-2.5 text-xs">
+              <span className="w-2 h-2 rounded-full" style={{ background: d.color }} />
+              <span className="flex-1 text-foreground/80">{d.name}</span>
+              <span className="font-semibold text-foreground">{d.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PreviewCard>
+  );
+}
+
+function EvaluationCard() {
+  return (
+    <PreviewCard title="Evaluation Details" icon={TrendingUp}>
+      <div className="space-y-2.5">
+        {evaluation.map((e) => (
+          <div key={e.label} className="flex items-center gap-3 text-xs">
+            <span className="w-2 h-2 rounded-full shrink-0" style={{ background: e.dot }} />
+            <span className="flex-1 text-foreground/80">{e.label}</span>
+            <span className={cn("font-semibold text-xs", e.tone === 'pos' ? 'text-primary' : 'text-destructive')}>
+              {e.value}
+            </span>
+          </div>
+        ))}
+      </div>
+    </PreviewCard>
+  );
+}
+
+/* -------------------------------- Auth page -------------------------------- */
 
 const Auth = () => {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const [remember, setRemember] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isGithubLoading, setIsGithubLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Redirect to home if already authenticated
   useEffect(() => {
     if (!loading && user) {
       const from = (location.state as any)?.from?.pathname || '/';
@@ -35,12 +216,11 @@ const Auth = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
       if (mode === 'signup') {
         const { error } = await signUp(email, password, displayName);
         if (error) throw error;
-        toast.success('Account created successfully! Welcome to WebVision!');
+        toast.success('Account created successfully!');
       } else {
         const { error } = await signIn(email, password);
         if (error) throw error;
@@ -53,27 +233,19 @@ const Auth = () => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    setIsGoogleLoading(true);
+  const oauth = async (provider: 'google' | 'github') => {
+    const setter = provider === 'google' ? setIsGoogleLoading : setIsGithubLoading;
+    setter(true);
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        },
+        provider,
+        options: { redirectTo: `${window.location.origin}/` },
       });
       if (error) throw error;
     } catch (error: any) {
-      toast.error(error.message || 'Google sign-in failed');
-      setIsGoogleLoading(false);
+      toast.error(error.message || `${provider} sign-in failed`);
+      setter(false);
     }
-  };
-
-  const toggleMode = () => {
-    setMode(mode === 'signin' ? 'signup' : 'signin');
-    setEmail('');
-    setPassword('');
-    setDisplayName('');
   };
 
   if (loading) {
@@ -85,108 +257,224 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Animated background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <motion.div 
-          className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-primary/10 via-accent/5 to-transparent rounded-full blur-3xl"
-          animate={{ 
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-            scale: [1, 1.1, 1]
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div 
-          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-gradient-to-tr from-accent/10 via-secondary/5 to-transparent rounded-full blur-3xl"
-          animate={{ 
-            x: [0, -40, 0],
-            y: [0, -50, 0],
-            scale: [1, 1.2, 1]
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        />
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="fixed top-4 right-4 z-30">
+        <ThemeToggle />
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 p-4 md:p-6 flex items-center justify-between">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-2 cursor-pointer"
-          onClick={() => navigate('/')}
-        >
-          <div className="w-9 h-9 bg-gradient-to-br from-primary/20 to-accent/20 rounded-xl overflow-hidden flex items-center justify-center p-0 m-0 transition-transform duration-300 hover:scale-110">
-            <Logo size={36} priority className="scale-110" />
-          </div>
-          <div>
-            <span className="text-lg font-display font-bold">WebVision</span>
-            <span className="text-[10px] text-muted-foreground block">Design Analyzer</span>
-          </div>
-        </motion.div>
-        <ThemeToggle />
-      </header>
+      <div className="min-h-screen grid lg:grid-cols-[1.15fr_1px_0.85fr]">
+        {/* -------------------- LEFT: hero + dashboard preview -------------------- */}
+        <section className="relative px-6 sm:px-10 lg:px-16 py-8 lg:py-12 flex flex-col">
+          {/* Logo */}
+          <motion.button
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2.5 self-start group"
+          >
+            <div className="w-9 h-9 rounded-xl bg-primary/10 overflow-hidden flex items-center justify-center transition-transform group-hover:scale-105">
+              <Logo size={36} priority className="scale-110" />
+            </div>
+            <span className="font-display font-bold text-lg tracking-tight">
+              web<span className="text-primary">-vision</span>
+            </span>
+          </motion.button>
 
-      {/* Main content */}
-      <div className="flex-1 flex items-center justify-center p-4 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="w-full max-w-md"
-        >
-          <div className="glass-card-elevated p-8 md:p-10">
-            {/* Header */}
-            <div className="text-center mb-8">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
-                className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/25 overflow-hidden p-0 m-0"
-              >
-                <Logo size={64} priority className="scale-110" />
-              </motion.div>
-              
-              <motion.h1 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-2xl md:text-3xl font-display font-bold"
-              >
-                {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
-              </motion.h1>
-              
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="text-muted-foreground mt-2"
-              >
-                {mode === 'signin' 
-                  ? 'Sign in to access all features' 
-                  : 'Join WebVision to unlock powerful analysis tools'}
-              </motion.p>
+          {/* Headline */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mt-10 lg:mt-14 max-w-xl"
+          >
+            <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-[3.25rem] leading-[1.05] tracking-tight">
+              Discover the design DNA of{' '}
+              <span className="text-primary">any website</span>
+            </h1>
+            <p className="mt-5 text-muted-foreground text-base max-w-md leading-relaxed">
+              Extract colors, fonts, images, animations, videos and everything that makes a website exceptional.
+            </p>
+          </motion.div>
+
+          {/* Dashboard preview */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="mt-10 lg:mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-5 max-w-3xl"
+          >
+            <CategoryScoresCard />
+            <StrengthMapCard />
+            <AssetDistributionCard />
+            <EvaluationCard />
+          </motion.div>
+
+          <div className="flex-1" />
+        </section>
+
+        {/* -------------------- Divider -------------------- */}
+        <div className="hidden lg:block bg-border/60" />
+
+        {/* -------------------- RIGHT: auth card -------------------- */}
+        <section className="px-6 sm:px-10 lg:px-14 py-10 lg:py-16 flex items-start lg:items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="w-full max-w-md rounded-3xl bg-card p-8 sm:p-10 border border-border/40 shadow-[0_1px_0_hsl(0_0%_100%/0.6)_inset,0_30px_60px_-30px_hsl(245_40%_25%/0.28),0_2px_8px_-2px_hsl(245_20%_40%/0.08)]"
+          >
+            {/* Brand */}
+            <div className="flex items-center gap-2.5 mb-7">
+              <div className="w-11 h-11 rounded-xl bg-primary/10 overflow-hidden flex items-center justify-center">
+                <Logo size={44} priority className="scale-110" />
+              </div>
+              <span className="font-display font-bold text-xl tracking-tight">
+                web<span className="text-primary">-vision</span>
+              </span>
             </div>
 
-            {/* Google OAuth Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 }}
-              className="mb-6"
-            >
+            <h2 className="font-display font-bold text-3xl tracking-tight">
+              {mode === 'signin' ? 'Welcome back' : 'Create account'}
+            </h2>
+            <p className="text-muted-foreground text-sm mt-1.5">
+              {mode === 'signin'
+                ? 'Sign in to continue analyzing beautiful websites.'
+                : 'Join WebVision to unlock powerful analysis tools.'}
+            </p>
+
+            {/* Tabs */}
+            <div className="mt-7 grid grid-cols-2 border-b border-border/60">
+              {(['signin', 'signup'] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setMode(m)}
+                  className={cn(
+                    'relative pb-3 text-sm font-semibold transition-colors',
+                    mode === m ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  {m === 'signin' ? 'Login' : 'Register'}
+                  {mode === m && (
+                    <motion.span
+                      layoutId="auth-tab"
+                      className="absolute -bottom-px left-0 right-0 h-0.5 bg-primary rounded-full"
+                    />
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              <AnimatePresence mode="wait">
+                {mode === 'signup' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="space-y-1.5"
+                  >
+                    <Label htmlFor="displayName" className="sr-only">Name</Label>
+                    <div className="relative">
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="displayName"
+                        type="text"
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        placeholder="Your name"
+                        className="pl-11 h-12 rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email address"
+                  required
+                  className="pl-11 h-12 rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
+                />
+              </div>
+
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  required
+                  minLength={6}
+                  className="pl-11 pr-11 h-12 rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between pt-1">
+                <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
+                  <Checkbox
+                    checked={remember}
+                    onCheckedChange={(v) => setRemember(!!v)}
+                    className="rounded-[5px] data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  />
+                  Remember me
+                </label>
+                <button type="button" className="text-sm text-primary font-medium hover:underline">
+                  Forgot password?
+                </button>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-[15px] shadow-[0_10px_24px_-10px_hsl(var(--primary)/0.6)] transition-all"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <span className="flex items-center gap-2">
+                    {mode === 'signin' ? 'Sign in' : 'Create account'}
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
+                )}
+              </Button>
+
+              <div className="relative py-2">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full h-px bg-border/60" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-card px-3 text-xs text-muted-foreground">or</span>
+                </div>
+              </div>
+
               <Button
                 type="button"
                 variant="outline"
-                onClick={handleGoogleSignIn}
+                onClick={() => oauth('google')}
                 disabled={isGoogleLoading}
-                className="w-full h-12 rounded-xl bg-white hover:bg-gray-50 text-gray-800 border-gray-200 font-medium"
+                className="w-full h-12 rounded-xl border-border/70 bg-background hover:bg-muted/50 font-medium"
               >
                 {isGoogleLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
-                    <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                       <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                       <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -196,164 +484,33 @@ const Auth = () => {
                   </>
                 )}
               </Button>
-            </motion.div>
 
-            {/* Divider */}
-            <div className="relative mb-6">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or continue with email</span>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <AnimatePresence mode="wait">
-                {mode === 'signup' && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="space-y-2"
-                  >
-                    <Label htmlFor="displayName" className="text-sm font-medium">
-                      Display Name
-                    </Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="displayName"
-                        type="text"
-                        value={displayName}
-                        onChange={(e) => setDisplayName(e.target.value)}
-                        placeholder="Your name"
-                        className="pl-10 h-12 bg-muted/50 border-border/50 focus:border-primary/50 rounded-xl transition-all"
-                      />
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">
-                  Email Address
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    required
-                    className="pl-10 h-12 bg-muted/50 border-border/50 focus:border-primary/50 rounded-xl transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium">
-                  Password
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
-                    minLength={6}
-                    className="pl-10 pr-10 h-12 bg-muted/50 border-border/50 focus:border-primary/50 rounded-xl transition-all"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-                {mode === 'signup' && (
-                  <p className="text-xs text-muted-foreground">
-                    Password must be at least 6 characters
-                  </p>
-                )}
-              </div>
-
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="pt-2"
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => oauth('github')}
+                disabled={isGithubLoading}
+                className="w-full h-12 rounded-xl border-border/70 bg-background hover:bg-muted/50 font-medium"
               >
-                <Button 
-                  type="submit" 
-                  disabled={isLoading}
-                  className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground rounded-xl font-medium text-base shadow-lg shadow-primary/25 transition-all"
-                >
-                  {isLoading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      {mode === 'signin' ? 'Sign In' : 'Create Account'}
-                      <ArrowRight className="w-4 h-4" />
-                    </span>
-                  )}
-                </Button>
-              </motion.div>
+                {isGithubLoading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <Github className="w-5 h-5 mr-2" />
+                    Continue with GitHub
+                  </>
+                )}
+              </Button>
 
-              <div className="text-center pt-4">
-                <button
-                  type="button"
-                  onClick={toggleMode}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {mode === 'signin' ? (
-                    <>Don't have an account? <span className="text-primary font-medium">Sign up</span></>
-                  ) : (
-                    <>Already have an account? <span className="text-primary font-medium">Sign in</span></>
-                  )}
-                </button>
-              </div>
+              <p className="text-center text-xs text-muted-foreground pt-3">
+                By continuing, you agree to our{' '}
+                <a className="text-primary hover:underline" href="#">Terms of Service</a>{' '}and{' '}
+                <a className="text-primary hover:underline" href="#">Privacy Policy</a>.
+              </p>
             </form>
-          </div>
-
-          {/* Features preview */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mt-8 grid grid-cols-3 gap-4 text-center"
-          >
-            {[
-              { label: 'Color Analysis', icon: '🎨' },
-              { label: 'Font Detection', icon: '🔤' },
-              { label: 'Image Export', icon: '📷' },
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.label}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                className="p-3 rounded-xl bg-muted/30 backdrop-blur-sm"
-              >
-                <span className="text-2xl mb-1 block">{feature.icon}</span>
-                <span className="text-xs text-muted-foreground">{feature.label}</span>
-              </motion.div>
-            ))}
           </motion.div>
-        </motion.div>
+        </section>
       </div>
-
-      {/* Footer */}
-      <footer className="relative z-10 p-4 text-center">
-        <p className="text-xs text-muted-foreground">
-          By signing in, you agree to our Terms of Service and Privacy Policy
-        </p>
-      </footer>
     </div>
   );
 };
