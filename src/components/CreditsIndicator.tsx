@@ -1,6 +1,6 @@
+import { useSafeNavigate } from '@/hooks/useSafeNavigate';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 interface CreditsIndicatorProps {
   remaining: number;
@@ -10,7 +10,7 @@ interface CreditsIndicatorProps {
 }
 
 export function CreditsIndicator({ remaining, limit, isPaidUser, hasReachedLimit }: CreditsIndicatorProps) {
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
 
   if (isPaidUser) {
     return (

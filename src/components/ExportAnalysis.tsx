@@ -1,3 +1,4 @@
+import { useSafeNavigate } from '@/hooks/useSafeNavigate';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Download, Share2, Link, FileText, Copy, Check, Loader2 } from 'lucide-react';

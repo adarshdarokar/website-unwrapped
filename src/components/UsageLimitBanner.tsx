@@ -1,11 +1,11 @@
+import { useSafeNavigate } from '@/hooks/useSafeNavigate';
 import { motion } from 'framer-motion';
 import { AlertTriangle, ArrowRight, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
 import { useUsageLimits } from '@/hooks/useUsageLimits';
 
 export function UsageLimitBanner() {
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
   const { hasReachedLimit, remaining, limit, isLoggedIn, isPaidUser } = useUsageLimits();
 
   if (isPaidUser) return null;

@@ -13,6 +13,7 @@ export function useSafeNavigate(): NavigateFunction {
   const inRouter = useInRouterContext();
   // Hooks must be called unconditionally; useNavigate is safe to call only in-router,
   // so we guard by branching on the returned function below.
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const routerNavigate = inRouter ? useNavigate() : undefined;
 
   const fallback = useCallback((to: unknown, options?: { replace?: boolean }) => {

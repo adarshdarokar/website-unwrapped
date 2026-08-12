@@ -1,3 +1,4 @@
+import { useSafeNavigate } from '@/hooks/useSafeNavigate';
 import { motion } from 'framer-motion';
 import { User, LogOut, History, Settings, ChevronDown, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,12 +10,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export function UserMenu() {
   const { user, loading, signOut } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
 
   const handleSignOut = async () => {
     const { error } = await signOut();

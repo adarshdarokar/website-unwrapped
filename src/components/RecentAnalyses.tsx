@@ -1,10 +1,10 @@
+import { useSafeNavigate } from '@/hooks/useSafeNavigate';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Globe, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 
 interface RecentAnalysis {
@@ -19,7 +19,7 @@ export function RecentAnalyses() {
   const [analyses, setAnalyses] = useState<RecentAnalysis[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
 
   useEffect(() => {
     if (user) {
