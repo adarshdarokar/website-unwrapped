@@ -1,3 +1,4 @@
+import { useSafeNavigate } from '@/hooks/useSafeNavigate';
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Zap, Crown, ArrowRight, Sparkles } from "lucide-react";
@@ -7,7 +8,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { RazorpayCheckout } from "@/components/RazorpayCheckout";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 
 interface PricingModalProps {
   open: boolean;
@@ -18,7 +18,7 @@ export function PricingModal({ open, onOpenChange }: PricingModalProps) {
   const { user } = useAuth();
   const { usageCount, limit, remaining, isPaidUser } = useUsageLimits();
   const [showCheckout, setShowCheckout] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
 
   const handleUpgrade = () => {
     if (!user) {

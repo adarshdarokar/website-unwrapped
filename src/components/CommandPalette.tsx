@@ -1,5 +1,5 @@
+import { useSafeNavigate } from '@/hooks/useSafeNavigate';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   CommandDialog,
@@ -49,7 +49,7 @@ export function CommandPalette({
   onAnalyze,
   hasResult,
 }: CommandPaletteProps) {
-  const navigate = useNavigate();
+  const navigate = useSafeNavigate();
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
