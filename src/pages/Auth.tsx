@@ -65,8 +65,8 @@ function PreviewCard({ title, icon: Icon, children, className }: { title: string
 function CategoryScoresCard() {
   return (
     <PreviewCard title="Category Scores" icon={BarChart3}>
-      <p className="text-[11px] text-muted-foreground -mt-3 mb-3 ml-[42px]">Points earned per area</p>
-      <div className="space-y-2.5">
+      <p className="text-[11px] text-muted-foreground -mt-2 mb-2 ml-[38px]">Points earned per area</p>
+      <div className="space-y-[clamp(0.3rem,0.85vh,0.6rem)]">
         {categoryScores.map((c) => (
           <div key={c.name} className="grid grid-cols-[80px_1fr_28px] items-center gap-3">
             <span className="text-xs text-foreground/80">{c.name}</span>
@@ -94,7 +94,7 @@ function StrengthMapCard() {
   return (
     <PreviewCard title="Strength Map" icon={() => <Logo size={16} className="scale-110" />}>
       <div className="flex justify-center">
-        <svg viewBox="0 0 220 200" className="w-full max-w-[220px] h-[180px]">
+        <svg viewBox="0 0 220 200" className="w-full max-w-[220px] h-[clamp(120px,17vh,180px)]">
           {[0.33, 0.66, 1].map((s) => (
             <polygon
               key={s}
@@ -138,7 +138,7 @@ function AssetDistributionCard() {
   return (
     <PreviewCard title="Asset Distribution" icon={TrendingUp}>
       <div className="flex items-center gap-5">
-        <svg viewBox="0 0 80 80" className="w-24 h-24 shrink-0 -rotate-90">
+        <svg viewBox="0 0 80 80" className="w-[clamp(4rem,8vh,6rem)] h-[clamp(4rem,8vh,6rem)] shrink-0 -rotate-90">
           {donut.map((d) => {
             const frac = d.value / total;
             const dash = frac * C;
@@ -159,7 +159,7 @@ function AssetDistributionCard() {
             return el;
           })}
         </svg>
-        <div className="flex-1 space-y-2">
+        <div className="flex-1 space-y-[clamp(0.25rem,0.7vh,0.5rem)]">
           {donut.map((d) => (
             <div key={d.name} className="flex items-center gap-2.5 text-xs">
               <span className="w-2 h-2 rounded-full" style={{ background: d.color }} />
@@ -176,7 +176,7 @@ function AssetDistributionCard() {
 function EvaluationCard() {
   return (
     <PreviewCard title="Evaluation Details" icon={TrendingUp}>
-      <div className="space-y-2.5">
+      <div className="space-y-[clamp(0.3rem,0.85vh,0.6rem)]">
         {evaluation.map((e) => (
           <div key={e.label} className="flex items-center gap-3 text-xs">
             <span className="w-2 h-2 rounded-full shrink-0" style={{ background: e.dot }} />
@@ -258,14 +258,14 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-[100dvh] lg:h-[100dvh] lg:overflow-hidden bg-background text-foreground">
       <div className="fixed top-4 right-4 z-30">
         <ThemeToggle />
       </div>
 
-      <div className="min-h-screen grid lg:grid-cols-[1.15fr_1px_0.85fr]">
+      <div className="min-h-[100dvh] lg:h-full grid lg:grid-cols-[1.45fr_1px_1fr]">
         {/* -------------------- LEFT: hero + dashboard preview -------------------- */}
-        <section className="relative px-6 sm:px-10 lg:px-16 py-8 lg:py-12 flex flex-col">
+        <section className="relative px-6 sm:px-10 lg:px-[clamp(1.5rem,3vw,4rem)] py-8 lg:py-[clamp(1rem,3vh,3rem)] flex flex-col lg:justify-center lg:overflow-hidden">
           {/* Logo */}
           <motion.button
             initial={{ opacity: 0, y: -8 }}
@@ -286,13 +286,13 @@ const Auth = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mt-10 lg:mt-14 max-w-xl"
+            className="mt-8 lg:mt-[clamp(1rem,3vh,3rem)] max-w-xl"
           >
-            <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-[3.25rem] leading-[1.05] tracking-tight">
+            <h1 className="font-display font-bold text-4xl sm:text-5xl lg:text-[clamp(2rem,3.6vh+0.8rem,3.25rem)] leading-[1.06] tracking-tight">
               Discover the design DNA of{' '}
               <span className="text-primary">any website</span>
             </h1>
-            <p className="mt-5 text-muted-foreground text-base max-w-md leading-relaxed">
+            <p className="mt-[clamp(0.6rem,1.6vh,1.25rem)] text-muted-foreground text-[clamp(0.85rem,1.5vh,1rem)] max-w-md leading-relaxed">
               Extract colors, fonts, images, animations, videos and everything that makes a website exceptional.
             </p>
           </motion.div>
@@ -302,7 +302,7 @@ const Auth = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="mt-10 lg:mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-5 max-w-3xl"
+            className="mt-[clamp(1rem,2.5vh,3rem)] grid grid-cols-1 sm:grid-cols-2 gap-[clamp(0.6rem,1.5vh,1.25rem)] max-w-3xl"
           >
             <CategoryScoresCard />
             <StrengthMapCard />
@@ -310,23 +310,22 @@ const Auth = () => {
             <EvaluationCard />
           </motion.div>
 
-          <div className="flex-1" />
         </section>
 
         {/* -------------------- Divider -------------------- */}
         <div className="hidden lg:block bg-border/60" />
 
         {/* -------------------- RIGHT: auth card -------------------- */}
-        <section className="px-6 sm:px-10 lg:px-14 py-10 lg:py-16 flex items-start lg:items-center justify-center">
+        <section className="px-6 sm:px-10 lg:px-[clamp(1.25rem,2.5vw,3.5rem)] py-10 lg:py-[clamp(1rem,2vh,2rem)] flex items-start lg:items-center justify-center lg:overflow-hidden">
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="w-full max-w-md rounded-3xl bg-card p-8 sm:p-10 border border-border/40 shadow-[0_1px_0_hsl(0_0%_100%/0.6)_inset,0_30px_60px_-30px_hsl(245_40%_25%/0.28),0_2px_8px_-2px_hsl(245_20%_40%/0.08)]"
+            className="w-full max-w-md rounded-3xl bg-card p-6 sm:p-8 lg:p-[clamp(1.25rem,2.6vh,2.25rem)] border border-border/40 shadow-[0_1px_0_hsl(0_0%_100%/0.6)_inset,0_30px_60px_-30px_hsl(245_40%_25%/0.28),0_2px_8px_-2px_hsl(245_20%_40%/0.08)]"
           >
             {/* Brand */}
-            <div className="flex items-center gap-2.5 mb-7">
-              <div className="w-11 h-11 rounded-xl bg-primary/10 overflow-hidden flex items-center justify-center">
+            <div className="flex items-center gap-2.5 mb-[clamp(0.75rem,2vh,1.75rem)]">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 overflow-hidden flex items-center justify-center">
                 <Logo size={44} priority className="scale-110" />
               </div>
               <span className="font-display font-bold text-xl tracking-tight">
@@ -334,7 +333,7 @@ const Auth = () => {
               </span>
             </div>
 
-            <h2 className="font-display font-bold text-3xl tracking-tight">
+            <h2 className="font-display font-bold text-[clamp(1.5rem,3vh,1.875rem)] tracking-tight">
               {mode === 'signin' ? 'Welcome back' : 'Create account'}
             </h2>
             <p className="text-muted-foreground text-sm mt-1.5">
@@ -344,7 +343,7 @@ const Auth = () => {
             </p>
 
             {/* Tabs */}
-            <div className="mt-7 grid grid-cols-2 border-b border-border/60">
+            <div className="mt-[clamp(0.75rem,2vh,1.75rem)] grid grid-cols-2 border-b border-border/60">
               {(['signin', 'signup'] as const).map((m) => (
                 <button
                   key={m}
@@ -366,7 +365,7 @@ const Auth = () => {
               ))}
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <form onSubmit={handleSubmit} className="mt-[clamp(0.75rem,1.8vh,1.5rem)] space-y-[clamp(0.5rem,1.4vh,1rem)]">
               <AnimatePresence mode="wait">
                 {mode === 'signup' && (
                   <motion.div
@@ -384,7 +383,7 @@ const Auth = () => {
                         value={displayName}
                         onChange={(e) => setDisplayName(e.target.value)}
                         placeholder="Your name"
-                        className="pl-11 h-12 rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
+                        className="pl-11 h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
                       />
                     </div>
                   </motion.div>
@@ -400,7 +399,7 @@ const Auth = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email address"
                   required
-                  className="pl-11 h-12 rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
+                  className="pl-11 h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
                 />
               </div>
 
@@ -414,7 +413,7 @@ const Auth = () => {
                   placeholder="Password"
                   required
                   minLength={6}
-                  className="pl-11 pr-11 h-12 rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
+                  className="pl-11 pr-11 h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
                 />
                 <button
                   type="button"
@@ -443,7 +442,7 @@ const Auth = () => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-[15px] shadow-[0_10px_24px_-10px_hsl(var(--primary)/0.6)] transition-all"
+                className="w-full h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-[15px] shadow-[0_10px_24px_-10px_hsl(var(--primary)/0.6)] transition-all"
               >
                 {isLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -455,7 +454,7 @@ const Auth = () => {
                 )}
               </Button>
 
-              <div className="relative py-2">
+              <div className="relative py-[clamp(0.15rem,0.6vh,0.5rem)]">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full h-px bg-border/60" />
                 </div>
@@ -469,7 +468,7 @@ const Auth = () => {
                 variant="outline"
                 onClick={() => oauth('google')}
                 disabled={isGoogleLoading}
-                className="w-full h-12 rounded-xl border-border/70 bg-background hover:bg-muted/50 font-medium"
+                className="w-full h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl border-border/70 bg-background hover:bg-muted/50 font-medium"
               >
                 {isGoogleLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -491,7 +490,7 @@ const Auth = () => {
                 variant="outline"
                 onClick={() => oauth('github')}
                 disabled={isGithubLoading}
-                className="w-full h-12 rounded-xl border-border/70 bg-background hover:bg-muted/50 font-medium"
+                className="w-full h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl border-border/70 bg-background hover:bg-muted/50 font-medium"
               >
                 {isGithubLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -503,7 +502,7 @@ const Auth = () => {
                 )}
               </Button>
 
-              <p className="text-center text-xs text-muted-foreground pt-3">
+              <p className="text-center text-[11px] text-muted-foreground pt-[clamp(0.25rem,1vh,0.75rem)]">
                 By continuing, you agree to our{' '}
                 <a className="text-primary hover:underline" href="#">Terms of Service</a>{' '}and{' '}
                 <a className="text-primary hover:underline" href="#">Privacy Policy</a>.
