@@ -69,9 +69,10 @@ function AnimatedRoutes() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
       <BrowserRouter>
+        {/* Everything that may use router hooks lives inside <BrowserRouter> */}
+        <Toaster />
+        <Sonner />
         <AnimatedRoutes />
       </BrowserRouter>
     </TooltipProvider>
