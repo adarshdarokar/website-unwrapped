@@ -46,12 +46,12 @@ const evaluation = [
 function PreviewCard({ title, icon: Icon, children, className }: { title: string; icon: React.ComponentType<{ className?: string }>; children: React.ReactNode; className?: string }) {
   return (
     <div className={cn(
-      "rounded-2xl bg-card p-5 border border-border/40",
+      "rounded-2xl bg-card border border-border/40 p-[clamp(0.75rem,1.6vh,1.25rem)]",
       "shadow-[0_1px_0_hsl(0_0%_100%/0.6)_inset,0_20px_40px_-24px_hsl(245_40%_30%/0.18),0_2px_6px_-2px_hsl(245_20%_40%/0.06)]",
       className
     )}>
-      <div className="flex items-center gap-2.5 mb-4">
-        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+      <div className="flex items-center gap-2.5 mb-[clamp(0.5rem,1.2vh,1rem)]">
+        <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
           <Icon className="w-4 h-4 text-primary" />
         </div>
         <h3 className="text-sm font-semibold text-foreground">{title}</h3>
@@ -60,6 +60,7 @@ function PreviewCard({ title, icon: Icon, children, className }: { title: string
     </div>
   );
 }
+
 
 function CategoryScoresCard() {
   return (
