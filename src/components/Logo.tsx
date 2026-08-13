@@ -35,7 +35,7 @@ export function Logo({ size = 32, className, alt = "WebVision logo", priority = 
         // @ts-expect-error fetchpriority is a valid HTML attribute
         fetchpriority={priority ? "high" : "auto"}
         draggable={false}
-        className={cn("w-full h-full object-contain select-none", className)}
+        className={cn("w-full h-full object-cover select-none", className)}
         style={{ imageRendering: "auto" }}
       />
     </picture>
