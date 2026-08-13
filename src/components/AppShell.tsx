@@ -53,7 +53,7 @@ export function AppShell({ children }: PropsWithChildren) {
 
               <div className="flex items-center gap-2.5">
                 <div className="w-7 h-7 bg-primary/10 rounded-lg overflow-hidden flex items-center justify-center p-0 m-0 transition-transform duration-300 hover:scale-110">
-                  <Logo size={28} priority className="scale-110" />
+                  <Logo size={28} priority />
                 </div>
                 <span className="font-display font-semibold text-sm sm:text-base hidden xs:inline">
                   WebVision
