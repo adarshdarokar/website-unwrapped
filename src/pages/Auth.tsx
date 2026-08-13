@@ -92,7 +92,7 @@ function StrengthMapCard() {
   });
   const polygon = points.map((p) => p.join(',')).join(' ');
   return (
-    <PreviewCard title="Strength Map" icon={() => <Logo size={16} className="scale-110" />}>
+    <PreviewCard title="Strength Map" icon={() => <Logo size={16} />}>
       <div className="flex justify-center">
         <svg viewBox="0 0 220 200" className="w-full max-w-[220px] h-[clamp(120px,17vh,180px)]">
           {[0.33, 0.66, 1].map((s) => (
@@ -274,7 +274,7 @@ const Auth = () => {
             className="flex items-center gap-2.5 self-start group"
           >
             <div className="w-9 h-9 rounded-xl bg-primary/10 overflow-hidden flex items-center justify-center transition-transform group-hover:scale-105">
-              <Logo size={36} priority className="scale-110" />
+              <Logo size={36} priority />
             </div>
             <span className="font-display font-bold text-lg tracking-tight">
               web<span className="text-primary">-vision</span>
@@ -326,7 +326,7 @@ const Auth = () => {
             {/* Brand */}
             <div className="flex items-center gap-2.5 mb-[clamp(0.75rem,2vh,1.75rem)]">
               <div className="w-10 h-10 rounded-xl bg-primary/10 overflow-hidden flex items-center justify-center">
-                <Logo size={44} priority className="scale-110" />
+                <Logo size={44} priority />
               </div>
               <span className="font-display font-bold text-xl tracking-tight">
                 web<span className="text-primary">-vision</span>
