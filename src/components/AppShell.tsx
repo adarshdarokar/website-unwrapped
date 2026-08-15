@@ -53,9 +53,9 @@ export function AppShell({ children }: PropsWithChildren) {
 
               <div className="flex items-center">
                 <Logo
-                  height={24}
+                  height={26}
                   priority
-                  className="h-[22px] sm:h-[26px] transition-transform duration-300 hover:scale-105"
+                  className="transition-transform duration-300 hover:scale-105"
                 />
               </div>
 
