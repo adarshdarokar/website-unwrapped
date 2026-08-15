@@ -1,14 +1,14 @@
-import logoWordmark from "@/assets/logo-webvision-wordmark.png";
-import logoWordmark2x from "@/assets/logo-webvision-wordmark@2x.png";
+import logoFull from "@/assets/logo-webvision-full@1x.png";
+import logoFull2x from "@/assets/logo-webvision-full.png";
 import { cn } from "@/lib/utils";
 
-/** Intrinsic aspect ratio of the full web-vision lockup (icon + wordmark). */
-const LOGO_ASPECT = 167 / 40;
+/** Intrinsic aspect ratio of the original, uncropped logo artwork (1010 x 636). */
+const LOGO_ASPECT = 1010 / 636;
 
 interface LogoProps {
   /**
-   * Rendered height in CSS pixels. Width is derived from the logo's intrinsic
-   * aspect ratio so the full lockup is never cropped, stretched or squashed.
+   * Rendered height in CSS pixels. Width is derived from the artwork's intrinsic
+   * aspect ratio so the whole image is always visible — never cropped or zoomed.
    */
   height?: number;
   /** Backwards-compatible alias for `height`. */
@@ -21,9 +21,9 @@ interface LogoProps {
 }
 
 /**
- * The complete WebVision logo lockup: purple circular mark + "web-vision" text.
- * Always rendered whole (object-contain), retina-aware via srcSet, and sized by
- * height so it stays readable and undistorted at every breakpoint and DPR.
+ * The complete, original WebVision logo artwork. Rendered edge-to-edge with
+ * `object-contain` and its native aspect ratio: nothing is cropped, zoomed or
+ * redrawn. The container adapts to the image, not the other way around.
  */
 export function Logo({
   height,
@@ -38,14 +38,14 @@ export function Logo({
 
   return (
     <img
-      src={logoWordmark}
-      srcSet={`${logoWordmark} 1x, ${logoWordmark2x} 3x`}
+      src={logoFull}
+      srcSet={`${logoFull} 1x, ${logoFull2x} 2x`}
       width={w}
       height={h}
       style={
         fitWidth
-          ? { width: "100%", height: "auto", maxHeight: h, aspectRatio: `${LOGO_ASPECT}` }
-          : { height: h, width: "auto", maxWidth: "100%", aspectRatio: `${LOGO_ASPECT}` }
+          ? { width: "100%", height: "auto", aspectRatio: `${LOGO_ASPECT}` }
+          : { height: h, width: w, maxWidth: "100%", aspectRatio: `${LOGO_ASPECT}` }
       }
       alt={alt}
       decoding="async"
