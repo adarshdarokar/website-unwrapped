@@ -271,14 +271,9 @@ const Auth = () => {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={() => navigate('/')}
-            className="flex items-center gap-2.5 self-start group"
+            className="flex items-center self-start group"
           >
-            <div className="w-9 h-9 rounded-xl bg-primary/10 overflow-hidden flex items-center justify-center transition-transform group-hover:scale-105">
-              <Logo size={36} priority />
-            </div>
-            <span className="font-display font-bold text-lg tracking-tight">
-              web<span className="text-primary">-vision</span>
-            </span>
+            <Logo height={34} priority className="transition-transform group-hover:scale-105" />
           </motion.button>
 
           {/* Headline */}
