@@ -86,6 +86,17 @@ function RailContent({ expanded }: { expanded: boolean }) {
 
   return (
     <>
+      <button
+        onClick={() => navigate("/")}
+        aria-label="web-vision home"
+        className={cn(
+          "flex items-center mb-3 min-w-0",
+          expanded ? "px-1 justify-start" : "px-0.5 justify-center"
+        )}
+      >
+        <Logo height={expanded ? 26 : 18} fitWidth={!expanded} priority />
+      </button>
+
       <div className={cn("flex flex-col gap-1", expanded ? "items-stretch" : "items-center")}>
         {navItems.map((item) => (
           <RailItem
