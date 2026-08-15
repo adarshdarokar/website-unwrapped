@@ -51,13 +51,12 @@ export function AppShell({ children }: PropsWithChildren) {
                 </Button>
               )}
 
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 bg-primary/10 rounded-lg overflow-hidden flex items-center justify-center p-0 m-0 transition-transform duration-300 hover:scale-110">
-                  <Logo size={28} priority />
-                </div>
-                <span className="font-display font-semibold text-sm sm:text-base hidden xs:inline">
-                  WebVision
-                </span>
+              <div className="flex items-center">
+                <Logo
+                  height={26}
+                  priority
+                  className="transition-transform duration-300 hover:scale-105"
+                />
               </div>
 
               <div className="hidden md:flex items-center">

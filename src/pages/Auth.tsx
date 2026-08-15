@@ -271,14 +271,9 @@ const Auth = () => {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={() => navigate('/')}
-            className="flex items-center gap-2.5 self-start group"
+            className="flex items-center self-start group"
           >
-            <div className="w-9 h-9 rounded-xl bg-primary/10 overflow-hidden flex items-center justify-center transition-transform group-hover:scale-105">
-              <Logo size={36} priority />
-            </div>
-            <span className="font-display font-bold text-lg tracking-tight">
-              web<span className="text-primary">-vision</span>
-            </span>
+            <Logo height={34} priority className="transition-transform group-hover:scale-105" />
           </motion.button>
 
           {/* Headline */}
@@ -324,13 +319,8 @@ const Auth = () => {
             className="w-full max-w-md rounded-3xl bg-card p-6 sm:p-8 lg:p-[clamp(1.25rem,2.6vh,2.25rem)] border border-border/40 shadow-[0_1px_0_hsl(0_0%_100%/0.6)_inset,0_30px_60px_-30px_hsl(245_40%_25%/0.28),0_2px_8px_-2px_hsl(245_20%_40%/0.08)]"
           >
             {/* Brand */}
-            <div className="flex items-center gap-2.5 mb-[clamp(0.75rem,2vh,1.75rem)]">
-              <div className="w-10 h-10 rounded-xl bg-primary/10 overflow-hidden flex items-center justify-center">
-                <Logo size={44} priority />
-              </div>
-              <span className="font-display font-bold text-xl tracking-tight">
-                web<span className="text-primary">-vision</span>
-              </span>
+            <div className="flex items-center mb-[clamp(0.75rem,2vh,1.75rem)]">
+              <Logo height={30} priority />
             </div>
 
             <h2 className="font-display font-bold text-[clamp(1.5rem,3vh,1.875rem)] tracking-tight">
