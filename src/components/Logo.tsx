@@ -13,6 +13,8 @@ interface LogoProps {
   height?: number;
   /** Backwards-compatible alias for `height`. */
   size?: number;
+  /** Fill the available width instead of locking to a fixed height (auto height). */
+  fitWidth?: boolean;
   className?: string;
   alt?: string;
   priority?: boolean;
@@ -26,6 +28,7 @@ interface LogoProps {
 export function Logo({
   height,
   size,
+  fitWidth = false,
   className,
   alt = "web-vision",
   priority = false,
@@ -39,7 +42,11 @@ export function Logo({
       srcSet={`${logoWordmark} 1x, ${logoWordmark2x} 3x`}
       width={w}
       height={h}
-      style={{ height: h, width: "auto", maxWidth: "100%", aspectRatio: `${LOGO_ASPECT}` }}
+      style={
+        fitWidth
+          ? { width: "100%", height: "auto", maxHeight: h, aspectRatio: `${LOGO_ASPECT}` }
+          : { height: h, width: "auto", maxWidth: "100%", aspectRatio: `${LOGO_ASPECT}` }
+      }
       alt={alt}
       decoding="async"
       loading={priority ? "eager" : "lazy"}
