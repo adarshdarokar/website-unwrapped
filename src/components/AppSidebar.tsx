@@ -231,10 +231,10 @@ export function AppSidebar() {
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent
           side="left"
-          className="w-[80px] p-3 bg-sidebar/95 backdrop-blur-xl border-sidebar-border/40 [&>button]:hidden overflow-hidden"
+          className="w-[248px] p-4 bg-sidebar/95 backdrop-blur-xl border-sidebar-border/40 [&>button]:hidden overflow-hidden"
         >
           <div className="flex h-full flex-col items-stretch min-w-0 overflow-hidden">
-            <RailContent expanded={false} />
+            <RailContent expanded />
           </div>
         </SheetContent>
       </Sheet>
