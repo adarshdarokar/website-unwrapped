@@ -40,7 +40,7 @@ export function QuickActions({ onAnalyze, isLoading }: QuickActionsProps) {
               size="sm"
               onClick={() => onAnalyze(site.url)}
               disabled={isLoading}
-              className="rounded-full px-4 h-9 text-xs font-medium border-border/50 bg-card/50 hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-all gap-1.5 group"
+              className="rounded-full px-4 h-11 sm:h-10 text-[13px] sm:text-xs font-medium border-border/50 bg-card/50 hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-all gap-1.5 group"
             >
               <span>{site.emoji}</span>
               <span>{site.name}</span>

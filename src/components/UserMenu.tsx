@@ -53,9 +53,9 @@ export function UserMenu() {
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="group flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-xl bg-gradient-to-br from-background/80 to-muted/50 backdrop-blur-md border border-border/40 hover:border-primary/30 hover:shadow-[0_0_0_3px_hsl(var(--primary)/0.08)] transition-all duration-300"
+          className="group flex items-center gap-2 pl-2 pr-3 py-2 min-h-[44px] sm:min-h-0 sm:py-1.5 rounded-xl bg-gradient-to-br from-background/80 to-muted/50 backdrop-blur-md border border-border/40 hover:border-primary/30 hover:shadow-[0_0_0_3px_hsl(var(--primary)/0.08)] transition-all duration-300"
         >
-          <span className="relative w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground text-[11px] font-semibold tracking-wide shadow-[inset_0_1px_0_hsl(0_0%_100%/0.25)]">
+          <span className="relative w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-primary-foreground text-[11px] font-semibold tracking-wide shadow-[inset_0_1px_0_hsl(0_0%_100%/0.25)]">
             {initials}
             <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-success ring-2 ring-background" />
           </span>
@@ -91,21 +91,21 @@ export function UserMenu() {
 
         <DropdownMenuItem
           onClick={() => navigate('/history')}
-          className="rounded-lg cursor-pointer h-9 px-2.5 text-[13px] gap-2.5 focus:bg-primary/10 focus:text-foreground transition-colors"
+          className="rounded-xl cursor-pointer h-11 sm:h-10 px-3 text-[13px] gap-2.5 focus:bg-primary/10 focus:text-foreground transition-colors"
         >
           <History className="w-4 h-4 text-muted-foreground" />
           My Analyses
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => navigate('/settings')}
-          className="rounded-lg cursor-pointer h-9 px-2.5 text-[13px] gap-2.5 focus:bg-primary/10 focus:text-foreground transition-colors"
+          className="rounded-xl cursor-pointer h-11 sm:h-10 px-3 text-[13px] gap-2.5 focus:bg-primary/10 focus:text-foreground transition-colors"
         >
           <Settings className="w-4 h-4 text-muted-foreground" />
           Settings
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => navigate('/pricing')}
-          className="rounded-lg cursor-pointer h-9 px-2.5 text-[13px] gap-2.5 focus:bg-primary/10 focus:text-foreground transition-colors"
+          className="rounded-xl cursor-pointer h-11 sm:h-10 px-3 text-[13px] gap-2.5 focus:bg-primary/10 focus:text-foreground transition-colors"
         >
           <Sparkles className="w-4 h-4 text-primary" />
           <span>Upgrade to Pro</span>
@@ -115,7 +115,7 @@ export function UserMenu() {
 
         <DropdownMenuItem
           onClick={handleSignOut}
-          className="rounded-lg cursor-pointer h-9 px-2.5 text-[13px] gap-2.5 text-destructive focus:text-destructive focus:bg-destructive/10 transition-colors"
+          className="rounded-xl cursor-pointer h-11 sm:h-10 px-3 text-[13px] gap-2.5 text-destructive focus:text-destructive focus:bg-destructive/10 transition-colors"
         >
           <LogOut className="w-4 h-4" />
           Sign Out

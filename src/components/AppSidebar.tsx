@@ -51,14 +51,18 @@ function RailItem({ label, icon: Icon, active, expanded, onClick }: RailItemProp
       onClick={onClick}
       aria-label={label}
       className={cn(
-        "h-10 flex items-center rounded-xl transition-all duration-300 ease-out overflow-hidden relative group",
-        expanded ? "w-full px-3 gap-3 justify-start" : "w-10 justify-center",
+        "h-11 flex items-center rounded-xl transition-all duration-300 ease-out overflow-hidden relative group",
+        "active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar",
+        expanded ? "w-full px-3 gap-3 justify-start" : "w-11 justify-center",
         active
           ? "bg-gradient-to-br from-primary/20 via-primary/12 to-primary/8 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.22),0_6px_18px_-8px_hsl(var(--primary)/0.45)]"
           : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06] hover:shadow-[inset_0_0_0_1px_hsl(var(--border)/0.5)]"
       )}
     >
-      <Icon className="w-[18px] h-[18px] shrink-0" />
+      {active && !expanded && (
+        <span aria-hidden className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-r-full bg-primary" />
+      )}
+      <Icon className="w-[19px] h-[19px] shrink-0" />
       {expanded && (
         <span className="text-sm font-medium truncate">{label}</span>
       )}
@@ -79,26 +83,35 @@ function RailItem({ label, icon: Icon, active, expanded, onClick }: RailItemProp
   );
 }
 
-function RailContent({ expanded }: { expanded: boolean }) {
+function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () => void }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { isPaidUser } = useUsageLimits();
-  
+
+  const go = (path: string) => {
+    navigate(path);
+    onAction?.();
+  };
 
   return (
     <>
       <button
-        onClick={() => navigate("/")}
+        onClick={() => go("/")}
         aria-label="web-vision home"
         className={cn(
-          "flex items-center mb-3 min-w-0",
+          "flex items-center mb-4 min-w-0 rounded-xl transition-transform duration-300 hover:scale-[1.03] active:scale-[0.98]",
           expanded ? "px-1 justify-start" : "px-0.5 justify-center"
         )}
       >
         <Logo height={expanded ? 26 : 18} fitWidth={!expanded} priority />
       </button>
 
-      <div className={cn("flex flex-col gap-1", expanded ? "items-stretch" : "items-center")}>
+      {expanded && (
+        <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
+          Menu
+        </p>
+      )}
+      <div className={cn("flex flex-col gap-1.5", expanded ? "items-stretch" : "items-center")}>
         {navItems.map((item) => (
           <RailItem
             key={item.title}
@@ -106,21 +119,29 @@ function RailContent({ expanded }: { expanded: boolean }) {
             icon={item.icon}
             expanded={expanded}
             active={location.pathname === item.url}
-            onClick={() => navigate(item.url)}
+            onClick={() => go(item.url)}
           />
         ))}
       </div>
 
-      <div className="my-3 h-px bg-border/60 mx-2" />
+      <div className="my-4 h-px bg-gradient-to-r from-transparent via-border/70 to-transparent mx-1" />
 
-      <div className={cn("flex flex-col gap-1", expanded ? "items-stretch" : "items-center")}>
+      {expanded && (
+        <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
+          Actions
+        </p>
+      )}
+      <div className={cn("flex flex-col gap-1.5", expanded ? "items-stretch" : "items-center")}>
         {actionItems.map((item) => (
           <RailItem
             key={item.title}
             label={item.title}
             icon={item.icon}
             expanded={expanded}
-            onClick={() => dispatchAppEvent(item.event)}
+            onClick={() => {
+              dispatchAppEvent(item.event);
+              onAction?.();
+            }}
           />
         ))}
       </div>
@@ -136,15 +157,15 @@ function RailContent({ expanded }: { expanded: boolean }) {
           )}
         </div>
         <button
-          onClick={() => navigate('/pricing')}
+          onClick={() => go('/pricing')}
           aria-label={isPaidUser ? "Pro plan" : "Upgrade to Pro"}
           className={cn(
-            "group relative h-10 flex items-center rounded-xl overflow-hidden transition-all duration-300 ease-out",
+            "group relative h-11 flex items-center rounded-xl overflow-hidden transition-all duration-300 ease-out",
             "bg-gradient-to-br from-primary/15 via-primary/10 to-primary/5",
             "border border-primary/20 hover:border-primary/40",
             "shadow-[inset_0_1px_0_hsl(0_0%_100%/0.15)] hover:shadow-[0_8px_24px_-8px_hsl(var(--primary)/0.45)]",
             "text-primary hover:-translate-y-[1px] active:translate-y-0",
-            expanded ? "w-full px-3 gap-2.5 justify-start" : "w-10 justify-center"
+            expanded ? "w-full px-3 gap-2.5 justify-start" : "w-11 justify-center"
           )}
         >
           <span
@@ -189,7 +210,7 @@ export function AppSidebar() {
     localStorage.setItem("webvision_sidebar_collapsed", collapsed ? "1" : "0");
   }, [collapsed]);
 
-  const railWidth = collapsed ? 56 : 220;
+  const railWidth = collapsed ? 64 : 232;
 
   return (
     <>
@@ -210,10 +231,10 @@ export function AppSidebar() {
       <button
         onClick={() => setCollapsed((c) => !c)}
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        style={{ left: railWidth + 6 }}
-        className="hidden md:flex fixed top-6 z-40 w-6 h-6 items-center justify-center rounded-full bg-card border border-border/60 shadow-md text-muted-foreground hover:text-foreground hover:bg-card/95 transition-[left] duration-300 ease-out"
+        style={{ left: railWidth - 2 }}
+        className="hidden md:flex fixed top-[22px] z-40 w-8 h-8 items-center justify-center rounded-full bg-card border border-border/60 shadow-[0_6px_18px_-8px_hsla(245,40%,20%,0.45)] text-muted-foreground hover:text-primary hover:border-primary/40 hover:scale-105 active:scale-95 transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+        {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>
 
       {/* Spacer to reserve layout width on desktop */}
@@ -227,10 +248,10 @@ export function AppSidebar() {
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent
           side="left"
-          className="w-[80px] p-3 bg-sidebar/95 backdrop-blur-xl border-sidebar-border/40 [&>button]:hidden overflow-hidden"
+          className="w-[248px] p-4 bg-sidebar/95 backdrop-blur-xl border-sidebar-border/40 [&>button]:hidden overflow-hidden"
         >
           <div className="flex h-full flex-col items-stretch min-w-0 overflow-hidden">
-            <RailContent expanded={false} />
+            <RailContent expanded onAction={() => setMobileOpen(false)} />
           </div>
         </SheetContent>
       </Sheet>

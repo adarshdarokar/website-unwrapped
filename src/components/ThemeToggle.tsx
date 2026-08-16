@@ -27,7 +27,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       onClick={toggleTheme}
       aria-label="Toggle theme"
       className={cn(
-        'group relative w-10 h-10 rounded-xl flex items-center justify-center',
+        'group relative w-11 h-11 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0',
         'bg-gradient-to-br from-background/80 to-muted/40 backdrop-blur-md',
         'border border-border/40 hover:border-primary/30',
         'shadow-[var(--shadow-neu-sm)] hover:shadow-[0_0_0_3px_hsl(var(--primary)/0.08),var(--shadow-neu-sm)]',

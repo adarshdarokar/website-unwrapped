@@ -55,14 +55,14 @@ export function UrlInput({ onAnalyze, isLoading, inputRef }: UrlInputProps) {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             placeholder="Enter website URL..."
-            className="flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 text-sm sm:text-base placeholder:text-muted-foreground/50 h-9 sm:h-11 px-1 sm:px-2"
+            className="flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 text-sm sm:text-base placeholder:text-muted-foreground/50 h-11 sm:h-12 px-2"
             disabled={isLoading}
             style={{ boxShadow: 'none' }}
           />
           <Button
             type="submit"
             disabled={isLoading || !url.trim()}
-            className="h-8 sm:h-10 px-3 sm:px-5 rounded-xl bg-gradient-to-br from-primary to-primary/80 hover:from-primary hover:to-primary text-primary-foreground font-medium transition-all disabled:opacity-40 text-xs sm:text-sm shadow-[0_8px_22px_-8px_hsl(var(--primary)/0.55)] hover:shadow-[0_12px_28px_-6px_hsl(var(--primary)/0.6)] hover:-translate-y-[1px]"
+            className="h-11 sm:h-11 px-4 sm:px-5 rounded-xl bg-gradient-to-br from-primary to-primary/80 hover:from-primary hover:to-primary text-primary-foreground font-medium transition-all disabled:opacity-40 text-xs sm:text-sm shadow-[0_8px_22px_-8px_hsl(var(--primary)/0.55)] hover:shadow-[0_12px_28px_-6px_hsl(var(--primary)/0.6)] hover:-translate-y-[1px]"
           >
             {isLoading ? (
               <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
