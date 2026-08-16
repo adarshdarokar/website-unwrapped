@@ -214,10 +214,10 @@ export function AppSidebar() {
       <button
         onClick={() => setCollapsed((c) => !c)}
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        style={{ left: railWidth + 6 }}
-        className="hidden md:flex fixed top-6 z-40 w-6 h-6 items-center justify-center rounded-full bg-card border border-border/60 shadow-md text-muted-foreground hover:text-foreground hover:bg-card/95 transition-[left] duration-300 ease-out"
+        style={{ left: railWidth - 2 }}
+        className="hidden md:flex fixed top-[22px] z-40 w-8 h-8 items-center justify-center rounded-full bg-card border border-border/60 shadow-[0_6px_18px_-8px_hsla(245,40%,20%,0.45)] text-muted-foreground hover:text-primary hover:border-primary/40 hover:scale-105 active:scale-95 transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
+        {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>
 
       {/* Spacer to reserve layout width on desktop */}
