@@ -137,6 +137,37 @@
     -ms-overflow-style: none;
   }
 
+  /* Touch ergonomics: no tap flash, no accidental double-tap zoom on controls */
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button,
+  a,
+  [role="button"],
+  [role="tab"],
+  label,
+  summary,
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
+  }
+
+  /* Comfortable hit areas on touch devices without changing desktop density */
+  @media (pointer: coarse) {
+    button,
+    a[role="button"],
+    [role="tab"] {
+      min-height: 44px;
+    }
+    button:where(.no-min-tap),
+    a[role="button"]:where(.no-min-tap),
+    [role="tab"]:where(.no-min-tap) {
+      min-height: 0;
+    }
+  }
+
   *::-webkit-scrollbar {
     display: none;
   }
