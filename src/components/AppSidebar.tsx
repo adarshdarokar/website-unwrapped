@@ -143,7 +143,7 @@ function RailContent({ expanded }: { expanded: boolean }) {
           onClick={() => navigate('/pricing')}
           aria-label={isPaidUser ? "Pro plan" : "Upgrade to Pro"}
           className={cn(
-            "group relative h-10 flex items-center rounded-xl overflow-hidden transition-all duration-300 ease-out",
+            "group relative h-11 flex items-center rounded-xl overflow-hidden transition-all duration-300 ease-out",
             "bg-gradient-to-br from-primary/15 via-primary/10 to-primary/5",
             "border border-primary/20 hover:border-primary/40",
             "shadow-[inset_0_1px_0_hsl(0_0%_100%/0.15)] hover:shadow-[0_8px_24px_-8px_hsl(var(--primary)/0.45)]",
