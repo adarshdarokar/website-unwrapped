@@ -83,26 +83,35 @@ function RailItem({ label, icon: Icon, active, expanded, onClick }: RailItemProp
   );
 }
 
-function RailContent({ expanded }: { expanded: boolean }) {
+function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () => void }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { isPaidUser } = useUsageLimits();
-  
+
+  const go = (path: string) => {
+    navigate(path);
+    onAction?.();
+  };
 
   return (
     <>
       <button
-        onClick={() => navigate("/")}
+        onClick={() => go("/")}
         aria-label="web-vision home"
         className={cn(
-          "flex items-center mb-3 min-w-0",
+          "flex items-center mb-4 min-w-0 rounded-xl transition-transform duration-300 hover:scale-[1.03] active:scale-[0.98]",
           expanded ? "px-1 justify-start" : "px-0.5 justify-center"
         )}
       >
         <Logo height={expanded ? 26 : 18} fitWidth={!expanded} priority />
       </button>
 
-      <div className={cn("flex flex-col gap-1", expanded ? "items-stretch" : "items-center")}>
+      {expanded && (
+        <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
+          Menu
+        </p>
+      )}
+      <div className={cn("flex flex-col gap-1.5", expanded ? "items-stretch" : "items-center")}>
         {navItems.map((item) => (
           <RailItem
             key={item.title}
@@ -110,7 +119,7 @@ function RailContent({ expanded }: { expanded: boolean }) {
             icon={item.icon}
             expanded={expanded}
             active={location.pathname === item.url}
-            onClick={() => navigate(item.url)}
+            onClick={() => go(item.url)}
           />
         ))}
       </div>
