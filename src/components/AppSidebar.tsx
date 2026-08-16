@@ -148,7 +148,7 @@ function RailContent({ expanded }: { expanded: boolean }) {
             "border border-primary/20 hover:border-primary/40",
             "shadow-[inset_0_1px_0_hsl(0_0%_100%/0.15)] hover:shadow-[0_8px_24px_-8px_hsl(var(--primary)/0.45)]",
             "text-primary hover:-translate-y-[1px] active:translate-y-0",
-            expanded ? "w-full px-3 gap-2.5 justify-start" : "w-10 justify-center"
+            expanded ? "w-full px-3 gap-2.5 justify-start" : "w-11 justify-center"
           )}
         >
           <span
