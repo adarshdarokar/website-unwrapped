@@ -157,7 +157,7 @@ function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () 
           )}
         </div>
         <button
-          onClick={() => navigate('/pricing')}
+          onClick={() => go('/pricing')}
           aria-label={isPaidUser ? "Pro plan" : "Upgrade to Pro"}
           className={cn(
             "group relative h-11 flex items-center rounded-xl overflow-hidden transition-all duration-300 ease-out",
