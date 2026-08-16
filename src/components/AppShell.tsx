@@ -33,11 +33,11 @@ export function AppShell({ children }: PropsWithChildren) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-lg md:hidden"
+                className="h-10 w-10 rounded-xl md:hidden"
                 onClick={() => window.dispatchEvent(new CustomEvent("app:toggleSidebar"))}
                 aria-label="Open menu"
               >
-                <Menu className="w-4 h-4" />
+                <Menu className="w-[18px] h-[18px]" />
               </Button>
 
               {isInnerPage && (
@@ -45,9 +45,10 @@ export function AppShell({ children }: PropsWithChildren) {
                   variant="ghost"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="h-8 w-8 rounded-lg -ml-1"
+                  aria-label="Go back"
+                  className="h-10 w-10 rounded-xl -ml-1"
                 >
-                  <ArrowLeft className="w-4 h-4" />
+                  <ArrowLeft className="w-[18px] h-[18px]" />
                 </Button>
               )}
 
