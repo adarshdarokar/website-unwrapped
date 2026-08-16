@@ -193,7 +193,7 @@ export function AppSidebar() {
     localStorage.setItem("webvision_sidebar_collapsed", collapsed ? "1" : "0");
   }, [collapsed]);
 
-  const railWidth = collapsed ? 56 : 220;
+  const railWidth = collapsed ? 64 : 232;
 
   return (
     <>
