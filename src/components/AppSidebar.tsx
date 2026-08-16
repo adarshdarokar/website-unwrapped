@@ -124,16 +124,24 @@ function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () 
         ))}
       </div>
 
-      <div className="my-3 h-px bg-border/60 mx-2" />
+      <div className="my-4 h-px bg-gradient-to-r from-transparent via-border/70 to-transparent mx-1" />
 
-      <div className={cn("flex flex-col gap-1", expanded ? "items-stretch" : "items-center")}>
+      {expanded && (
+        <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
+          Actions
+        </p>
+      )}
+      <div className={cn("flex flex-col gap-1.5", expanded ? "items-stretch" : "items-center")}>
         {actionItems.map((item) => (
           <RailItem
             key={item.title}
             label={item.title}
             icon={item.icon}
             expanded={expanded}
-            onClick={() => dispatchAppEvent(item.event)}
+            onClick={() => {
+              dispatchAppEvent(item.event);
+              onAction?.();
+            }}
           />
         ))}
       </div>
