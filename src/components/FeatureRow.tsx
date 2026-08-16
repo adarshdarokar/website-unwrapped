@@ -32,13 +32,13 @@ export function FeatureRow() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ delay: 0.6 + index * 0.04 }}
             whileHover={{ y: -3, scale: 1.03 }}
-            className="flex flex-col items-center gap-2 p-3 sm:p-4 bg-card border border-border/50 rounded-xl cursor-default transition-shadow hover:shadow-[var(--shadow-soft)]"
+            className="flex flex-col items-center gap-2 p-4 min-h-[104px] justify-center bg-card border border-border/50 rounded-2xl cursor-default transition-shadow hover:shadow-[var(--shadow-soft)]"
           >
             <div className={`p-2 rounded-lg ${feature.color}`}>
               <feature.icon className="w-4 h-4" />
             </div>
             <span className="text-xs font-semibold">{feature.label}</span>
-            <span className="text-[10px] text-muted-foreground leading-tight text-center">{feature.desc}</span>
+            <span className="text-[11px] text-muted-foreground leading-tight text-center">{feature.desc}</span>
           </motion.div>
         ))}
       </div>
