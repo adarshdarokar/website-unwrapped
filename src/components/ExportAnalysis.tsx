@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Download, Share2, Link, FileText, Copy, Check, Loader2 } from 'lucide-react';
+import { Download, Share2, Link, FileText, Copy, Check, Loader2, FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { AnalysisResult } from '@/hooks/useWebsiteAnalyzer';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { generateAnalysisPDF } from '@/lib/pdfReport';
 import { toast } from 'sonner';
+
 
 interface ExportAnalysisProps {
   isOpen: boolean;
