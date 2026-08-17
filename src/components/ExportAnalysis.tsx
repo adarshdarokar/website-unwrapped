@@ -64,6 +64,17 @@ export function ExportAnalysis({ isOpen, onClose, result }: ExportAnalysisProps)
 
   const downloadAsPDF = () => {
     if (!result) return;
+    try {
+      generateAnalysisPDF(result);
+      toast.success('PDF report downloaded!');
+    } catch (e: any) {
+      toast.error(e?.message || 'Failed to generate PDF');
+    }
+  };
+
+  const downloadAsText = () => {
+
+    if (!result) return;
 
     // Create a simple text-based report
     const report = `
