@@ -83,7 +83,7 @@ const Index = () => {
   // Global keyboard shortcuts
   useKeyboardShortcuts({
     onSearch: () => setShowCommandPalette(true),
-    onHistory: () => window.dispatchEvent(new CustomEvent('app:navigate', { detail: '/history' })),
+    onHistory: () => navigate('/history'),
     onCompare: () => setShowCompare(true),
     onExport: () => result && setShowExport(true),
     onToggleTheme: toggleTheme,
