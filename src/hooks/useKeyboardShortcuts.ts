@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface ShortcutHandlers {
   onAnalyze?: () => void;
@@ -10,69 +10,73 @@ interface ShortcutHandlers {
   onEscape?: () => void;
 }
 
+function isTypingTarget(target: EventTarget | null) {
+  const el = target as HTMLElement | null;
+  if (!el || !el.tagName) return false;
+  return (
+    el.tagName === 'INPUT' ||
+    el.tagName === 'TEXTAREA' ||
+    el.tagName === 'SELECT' ||
+    el.isContentEditable ||
+    !!el.closest?.('[contenteditable="true"]')
+  );
+}
+
 export function useKeyboardShortcuts(handlers: ShortcutHandlers) {
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    // Don't trigger shortcuts when typing in input fields
-    const target = event.target as HTMLElement;
-    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
-      // Only handle Escape in inputs
-      if (event.key === 'Escape' && handlers.onEscape) {
-        handlers.onEscape();
-      }
-      return;
-    }
-
-    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-    const modifier = isMac ? event.metaKey : event.ctrlKey;
-
-    // Ctrl/Cmd + K - Open search/command palette
-    if (modifier && (event.key === 'k' || event.key === 'K')) {
-      event.preventDefault();
-      handlers.onSearch?.();
-      return;
-    }
-
-    // Ctrl/Cmd + Enter - Analyze
-    if (modifier && event.key === 'Enter') {
-      event.preventDefault();
-      handlers.onAnalyze?.();
-      return;
-    }
-
-    // Single key shortcuts (no modifier needed) - handle both upper and lowercase
-    const key = event.key.toLowerCase();
-    switch (key) {
-      case 'h':
-        event.preventDefault();
-        handlers.onHistory?.();
-        break;
-      case 'c':
-        event.preventDefault();
-        handlers.onCompare?.();
-        break;
-      case 'e':
-        event.preventDefault();
-        handlers.onExport?.();
-        break;
-      case 't':
-        event.preventDefault();
-        handlers.onToggleTheme?.();
-        break;
-      case 'k':
-        // Also allow standalone K to open command palette
-        event.preventDefault();
-        handlers.onSearch?.();
-        break;
-      case 'escape':
-        handlers.onEscape?.();
-        break;
-    }
-  }, [handlers]);
+  // Keep handlers in a ref so the listener is attached only once.
+  const ref = useRef(handlers);
+  ref.current = handlers;
 
   useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const h = ref.current;
+
+      if (event.key === 'Escape') {
+        h.onEscape?.();
+        return;
+      }
+
+      // Never hijack typing.
+      if (isTypingTarget(event.target)) return;
+
+      const key = event.key.toLowerCase();
+      const modifier = event.metaKey || event.ctrlKey;
+
+      if (modifier) {
+        // Only claim the two combos we own; leave copy/paste/etc. alone.
+        if (key === 'k' && h.onSearch) {
+          event.preventDefault();
+          h.onSearch();
+        } else if (event.key === 'Enter' && h.onAnalyze) {
+          event.preventDefault();
+          h.onAnalyze();
+        }
+        return;
+      }
+
+      if (event.altKey || event.shiftKey) return;
+
+      // Don't fire single-key shortcuts while a dialog/menu is open.
+      if (document.querySelector('[data-state="open"][role="dialog"], [role="menu"]')) return;
+
+      const single: Record<string, (() => void) | undefined> = {
+        h: h.onHistory,
+        c: h.onCompare,
+        e: h.onExport,
+        t: h.onToggleTheme,
+        k: h.onSearch,
+      };
+
+      const fn = single[key];
+      if (fn) {
+        event.preventDefault();
+        fn();
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+  }, []);
 }
 
 export const shortcuts = [
