@@ -252,14 +252,17 @@
 
 @layer components {
   .glass-card {
-    @apply bg-card border-0 rounded-2xl;
-    box-shadow: var(--shadow-neu);
+    @apply bg-card rounded-2xl;
+    border: 1px solid hsl(var(--border) / 0.55);
+    box-shadow: var(--shadow-neu-sm);
   }
 
   .glass-card-elevated {
-    @apply bg-card border-0 rounded-2xl;
+    @apply bg-card rounded-2xl;
+    border: 1px solid hsl(var(--border) / 0.6);
     box-shadow: var(--shadow-neu);
   }
+
 
   .neu {
     @apply bg-background rounded-2xl border-0;
