@@ -234,12 +234,16 @@ const Index = () => {
             exit={{ opacity: 0, y: -20 }}
             className="max-w-xl mx-auto px-4 sm:px-6 mb-6 sm:mb-8"
           >
-            <div className="p-3 sm:p-4 bg-destructive/5 border border-destructive/20 rounded-xl">
-              <p className="text-destructive font-medium text-xs sm:text-sm mb-1">{error}</p>
-              <p className="text-[10px] sm:text-xs text-muted-foreground">
-                Please check the URL and try again.
-              </p>
+            <div className="flex items-start gap-3 p-3.5 sm:p-4 bg-destructive/[0.04] border border-destructive/20 rounded-xl">
+              <span className="mt-0.5 w-1.5 h-1.5 shrink-0 rounded-full bg-destructive" />
+              <div className="min-w-0">
+                <p className="text-destructive font-medium text-xs sm:text-sm mb-0.5 break-words">{error}</p>
+                <p className="text-[11px] sm:text-xs text-muted-foreground">
+                  Please check the URL and try again.
+                </p>
+              </div>
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>
