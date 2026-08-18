@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Globe,
@@ -135,9 +136,28 @@ const Index = () => {
       return null;
     }
     const res = await analyzeWebsite(url);
-    if (res) incrementUsage();
+    if (res) {
+      incrementUsage();
+      // Persist to history for signed-in users
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { error: saveError } = await supabase.from('saved_analyses').insert([{
+            user_id: user.id,
+            url: res.url,
+            score: res.score,
+            analysis_data: JSON.parse(JSON.stringify(res)),
+            is_public: false,
+          }]);
+          if (saveError) console.error('Failed to save analysis:', saveError);
+        }
+      } catch (e) {
+        console.error('Failed to save analysis:', e);
+      }
+    }
     return res;
   }, [hasReachedLimit, analyzeWebsite, incrementUsage, navigate]);
+
 
   return (
     <div className="min-h-screen bg-background">
