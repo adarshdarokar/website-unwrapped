@@ -273,35 +273,36 @@ const Index = () => {
           >
             {/* Result Header */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-4 sm:mb-6"
+              className="mb-5 sm:mb-6"
             >
-              <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+              <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5">
                 <a 
                   href={result.url} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline font-medium flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm"
+                  className="min-w-0 text-primary hover:underline font-medium flex items-center gap-2 text-xs sm:text-sm"
                 >
-                  <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span className="truncate max-w-[200px] sm:max-w-xs">{result.url}</span>
-                  <ExternalLink className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                  <Globe className="w-4 h-4 shrink-0" />
+                  <span className="truncate max-w-[190px] sm:max-w-sm">{result.url}</span>
+                  <ExternalLink className="w-3 h-3 shrink-0 opacity-70" />
                 </a>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleAnalyze(result.url)}
-                  className="text-muted-foreground hover:text-foreground rounded-xl text-xs h-10 sm:h-9 px-3"
+                  className="text-muted-foreground hover:text-foreground rounded-lg text-xs h-9 px-2.5"
                 >
-                  <RefreshCw className="w-3 h-3 mr-1" />
+                  <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
                   Re-analyze
                 </Button>
               </div>
             </motion.div>
 
             <Tabs value={activeResultTab} onValueChange={setActiveResultTab} className="w-full">
-              <TabsList className="w-full flex flex-wrap justify-center bg-muted/40 backdrop-blur-sm p-1.5 rounded-2xl h-auto mb-5 sm:mb-6 max-w-2xl mx-auto gap-1 border border-border/30">
+              <TabsList className="w-full flex flex-wrap justify-center bg-muted/30 p-1 rounded-2xl h-auto mb-5 sm:mb-6 max-w-2xl mx-auto gap-0.5 border border-border/40">
+
                 {resultTabs.map((tab) => (
                   <TabsTrigger 
                     key={tab.value}
