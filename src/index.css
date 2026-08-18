@@ -14,12 +14,13 @@
     --card: 0 0% 100%;
     --card-foreground: 240 22% 14%;
 
-    /* Neumorphism shadow tokens (light) — softer, more premium */
+    /* Neumorphism shadow tokens (light) — subtle, cleaner */
     --neu-light: 255 255 255;
     --neu-dark: 220 220 235;
-    --shadow-neu: 0 1px 0 rgba(255,255,255,0.9) inset, 0 12px 32px -12px rgba(60,60,120,0.18), 0 2px 6px -2px rgba(60,60,120,0.08);
-    --shadow-neu-sm: 0 1px 0 rgba(255,255,255,0.85) inset, 0 6px 16px -8px rgba(60,60,120,0.16), 0 1px 3px -1px rgba(60,60,120,0.08);
-    --shadow-neu-inset: inset 0 2px 6px rgba(60,60,120,0.10), inset 0 -1px 0 rgba(255,255,255,0.6);
+    --shadow-neu: 0 1px 0 rgba(255,255,255,0.8) inset, 0 6px 18px -10px rgba(60,60,120,0.14), 0 1px 3px -1px rgba(60,60,120,0.06);
+    --shadow-neu-sm: 0 1px 0 rgba(255,255,255,0.75) inset, 0 3px 10px -6px rgba(60,60,120,0.12), 0 1px 2px -1px rgba(60,60,120,0.05);
+    --shadow-neu-inset: inset 0 1px 4px rgba(60,60,120,0.07), inset 0 -1px 0 rgba(255,255,255,0.55);
+
 
     --popover: 240 30% 99%;
     --popover-foreground: 240 20% 15%;
@@ -88,12 +89,13 @@
     --secondary: 240 14% 16%;
     --secondary-foreground: 220 20% 92%;
 
-    /* Neumorphism shadow tokens (dark) — cinematic depth */
+    /* Neumorphism shadow tokens (dark) — restrained depth */
     --neu-light: 80 85 110;
     --neu-dark: 0 0 0;
-    --shadow-neu: 0 1px 0 hsl(240 20% 30% / 0.18) inset, 0 18px 40px -16px rgba(0,0,0,0.7), 0 2px 8px -2px rgba(0,0,0,0.4);
-    --shadow-neu-sm: 0 1px 0 hsl(240 20% 30% / 0.15) inset, 0 8px 22px -10px rgba(0,0,0,0.6), 0 1px 3px -1px rgba(0,0,0,0.4);
-    --shadow-neu-inset: inset 0 2px 8px rgba(0,0,0,0.5), inset 0 -1px 0 hsl(240 20% 30% / 0.15);
+    --shadow-neu: 0 1px 0 hsl(240 20% 30% / 0.16) inset, 0 8px 24px -14px rgba(0,0,0,0.6), 0 1px 3px -1px rgba(0,0,0,0.35);
+    --shadow-neu-sm: 0 1px 0 hsl(240 20% 30% / 0.13) inset, 0 4px 12px -8px rgba(0,0,0,0.5), 0 1px 2px -1px rgba(0,0,0,0.3);
+    --shadow-neu-inset: inset 0 1px 5px rgba(0,0,0,0.4), inset 0 -1px 0 hsl(240 20% 30% / 0.12);
+
 
     --muted: 240 14% 14%;
     --muted-foreground: 220 14% 62%;
@@ -250,14 +252,17 @@
 
 @layer components {
   .glass-card {
-    @apply bg-card border-0 rounded-2xl;
-    box-shadow: var(--shadow-neu);
+    @apply bg-card rounded-2xl;
+    border: 1px solid hsl(var(--border) / 0.55);
+    box-shadow: var(--shadow-neu-sm);
   }
 
   .glass-card-elevated {
-    @apply bg-card border-0 rounded-2xl;
+    @apply bg-card rounded-2xl;
+    border: 1px solid hsl(var(--border) / 0.6);
     box-shadow: var(--shadow-neu);
   }
+
 
   .neu {
     @apply bg-background rounded-2xl border-0;
@@ -315,9 +320,10 @@
     @apply transition-all duration-300 ease-out;
   }
   .hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 40px -16px hsl(var(--primary) / 0.18), var(--shadow-neu);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px -14px hsl(var(--primary) / 0.14), var(--shadow-neu);
   }
+
 
   /* Gradient hairline border */
   .gradient-border { position: relative; background-clip: padding-box; }
