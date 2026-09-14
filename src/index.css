@@ -142,6 +142,7 @@
   /* Touch ergonomics: no tap flash, no accidental double-tap zoom on controls */
   html {
     -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
   }
 
   button,
