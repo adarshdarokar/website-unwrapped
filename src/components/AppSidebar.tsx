@@ -51,20 +51,20 @@ function RailItem({ label, icon: Icon, active, expanded, onClick }: RailItemProp
       onClick={onClick}
       aria-label={label}
       className={cn(
-        "h-11 flex items-center rounded-xl transition-all duration-300 ease-out overflow-hidden relative group",
+        "h-11 flex items-center rounded-lg transition-[color,background-color,box-shadow,transform] duration-200 ease-out overflow-hidden relative group",
         "active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar",
-        expanded ? "w-full px-3 gap-3 justify-start" : "w-11 justify-center",
+        expanded ? "w-full px-2.5 gap-2.5 justify-start" : "w-11 justify-center",
         active
-          ? "bg-gradient-to-br from-primary/20 via-primary/12 to-primary/8 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.22),0_6px_18px_-8px_hsl(var(--primary)/0.45)]"
-          : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.06] hover:shadow-[inset_0_0_0_1px_hsl(var(--border)/0.5)]"
+          ? "bg-primary/10 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.18)]"
+          : "text-muted-foreground hover:text-foreground hover:bg-accent/55 focus-visible:bg-accent/55"
       )}
     >
       {active && !expanded && (
-        <span aria-hidden className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-r-full bg-primary" />
+        <span aria-hidden className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-0.5 rounded-r-full bg-primary" />
       )}
       <Icon className="w-[19px] h-[19px] shrink-0" />
       {expanded && (
-        <span className="text-sm font-medium truncate">{label}</span>
+        <span className="text-[13px] font-medium truncate">{label}</span>
       )}
     </button>
   );
@@ -100,18 +100,18 @@ function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () 
         aria-label="web-vision home"
         className={cn(
           "flex items-center mb-4 min-w-0 rounded-xl transition-transform duration-300 hover:scale-[1.03] active:scale-[0.98]",
-          expanded ? "px-1 justify-start" : "px-0.5 justify-center"
+          expanded ? "px-0.5 justify-start" : "justify-center"
         )}
       >
         <Logo height={expanded ? 26 : 18} fitWidth={!expanded} priority />
       </button>
 
       {expanded && (
-        <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
+        <p className="px-2.5 mt-1 mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
           Menu
         </p>
       )}
-      <div className={cn("flex flex-col gap-1.5", expanded ? "items-stretch" : "items-center")}>
+      <div className={cn("flex flex-col gap-1", expanded ? "items-stretch" : "items-center")}>
         {navItems.map((item) => (
           <RailItem
             key={item.title}
@@ -124,14 +124,14 @@ function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () 
         ))}
       </div>
 
-      <div className="my-4 h-px bg-gradient-to-r from-transparent via-border/70 to-transparent mx-1" />
+      <div className="my-3.5 h-px bg-gradient-to-r from-transparent via-border/70 to-transparent mx-1.5" />
 
       {expanded && (
-        <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
+        <p className="px-2.5 mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
           Actions
         </p>
       )}
-      <div className={cn("flex flex-col gap-1.5", expanded ? "items-stretch" : "items-center")}>
+      <div className={cn("flex flex-col gap-1", expanded ? "items-stretch" : "items-center")}>
         {actionItems.map((item) => (
           <RailItem
             key={item.title}
@@ -146,7 +146,7 @@ function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () 
         ))}
       </div>
 
-      <div className={cn("mt-auto flex flex-col gap-2.5 pt-4", expanded ? "items-stretch" : "items-center")}>
+      <div className={cn("mt-auto flex flex-col gap-2.5 pt-3.5", expanded ? "items-stretch" : "items-center")}>
         <div className="h-px bg-gradient-to-r from-transparent via-border/60 to-transparent mx-1" />
         <div className={cn("flex items-center", expanded ? "justify-between px-0.5" : "flex-col gap-2 justify-center")}>
           <ThemeToggle />
@@ -248,7 +248,7 @@ export function AppSidebar() {
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent
           side="left"
-          className="w-[248px] p-4 bg-sidebar/95 backdrop-blur-xl border-sidebar-border/40 [&>button]:hidden overflow-hidden"
+          className="w-[248px] max-w-[calc(100vw-1rem)] p-3.5 bg-sidebar/95 backdrop-blur-xl border-sidebar-border/40 [&>button]:hidden overflow-hidden"
         >
           <div className="flex h-full flex-col items-stretch min-w-0 overflow-hidden">
             <RailContent expanded onAction={() => setMobileOpen(false)} />
