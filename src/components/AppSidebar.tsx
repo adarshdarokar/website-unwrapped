@@ -114,7 +114,7 @@ function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () 
       </button>
 
       {expanded && (
-        <p className="px-2.5 mt-1 mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
+        <p className="px-3 mt-1 mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
           Menu
         </p>
       )}
@@ -134,7 +134,7 @@ function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () 
       <div className="my-3.5 h-px bg-gradient-to-r from-transparent via-border/70 to-transparent mx-1.5" />
 
       {expanded && (
-        <p className="px-2.5 mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
+        <p className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
           Actions
         </p>
       )}
