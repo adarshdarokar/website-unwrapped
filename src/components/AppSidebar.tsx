@@ -50,21 +50,28 @@ function RailItem({ label, icon: Icon, active, expanded, onClick }: RailItemProp
     <button
       onClick={onClick}
       aria-label={label}
+      aria-current={active ? "page" : undefined}
       className={cn(
         "h-11 flex items-center rounded-lg transition-[color,background-color,box-shadow,transform] duration-200 ease-out overflow-hidden relative group",
         "active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar",
-        expanded ? "w-full px-2.5 gap-2.5 justify-start" : "w-11 justify-center",
+        expanded ? "w-full pl-3 pr-2.5 gap-2.5 justify-start" : "w-11 justify-center",
         active
           ? "bg-primary/10 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.18)]"
           : "text-muted-foreground hover:text-foreground hover:bg-accent/55 focus-visible:bg-accent/55"
       )}
     >
-      {active && !expanded && (
-        <span aria-hidden className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-0.5 rounded-r-full bg-primary" />
+      {active && (
+        <span
+          aria-hidden
+          className={cn(
+            "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 rounded-r-full bg-primary",
+            expanded ? "h-5" : "h-4"
+          )}
+        />
       )}
-      <Icon className="w-[19px] h-[19px] shrink-0" />
+      <Icon className={cn("w-[19px] h-[19px] shrink-0 transition-transform duration-200", !active && "group-hover:scale-105")} />
       {expanded && (
-        <span className="text-[13px] font-medium truncate">{label}</span>
+        <span className={cn("text-[13px] truncate", active ? "font-semibold" : "font-medium")}>{label}</span>
       )}
     </button>
   );
