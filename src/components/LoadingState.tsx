@@ -210,7 +210,7 @@ export function LoadingState() {
                 ))}
               </div>
             </motion.div>
-          />
+          </div>
         </div>
       </motion.div>
     </motion.div>
