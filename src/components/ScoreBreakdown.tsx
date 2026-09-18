@@ -98,7 +98,7 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
           {/* Bar Chart */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
             className="glass-card overflow-hidden hover-lift shimmer">
-            <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
+            <div className="surface-header p-4">
               <div className="flex items-center gap-2.5">
                 <div className="p-1.5 bg-primary/10 rounded-lg">
                   <BarChart3 className="w-4 h-4 text-primary" />
@@ -109,8 +109,8 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
                 </div>
               </div>
             </div>
-            <div className="p-4">
-              <div className="h-[220px]">
+            <div className="p-3 sm:p-4">
+              <div className="h-[230px] chart-well p-2">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={barData} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
                     <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
@@ -130,7 +130,7 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
           {/* Radar Chart */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
             className="glass-card overflow-hidden hover-lift shimmer">
-            <div className="p-4 border-b border-border bg-gradient-to-r from-violet-500/5 to-transparent">
+            <div className="surface-header p-4">
               <div className="flex items-center gap-2.5">
                 <div className="p-1.5 bg-violet-500/10 rounded-lg">
                   <ClipboardList className="w-4 h-4 text-violet-500" />
@@ -141,8 +141,8 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
                 </div>
               </div>
             </div>
-            <div className="p-4">
-              <div className="h-[220px]">
+            <div className="p-3 sm:p-4">
+              <div className="h-[230px] chart-well p-1">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
                     <PolarGrid stroke="hsl(var(--border))" strokeOpacity={0.5} />
@@ -185,7 +185,7 @@ export function ScoreBreakdown({ score, scoreBreakdown, scoreReasons, suggestion
                   <motion.div key={key} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.25 + idx * 0.03 }}
                     className="p-2.5 sm:p-3 rounded-xl bg-muted/20 hover:bg-muted/30 transition-colors">
-                    <button onClick={() => setExpandedCategory(expandedCategory === key ? null : key)} className="w-full text-left">
+                    <button onClick={() => setExpandedCategory(expandedCategory === key ? null : key)} className="w-full text-left active:scale-[0.98] transition-transform">
                       <div className="flex items-center justify-between mb-1.5">
                         <div className="flex items-center gap-2">
                           <config.icon className={`w-3.5 h-3.5 ${config.color}`} />

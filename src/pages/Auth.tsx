@@ -46,8 +46,7 @@ const evaluation = [
 function PreviewCard({ title, icon: Icon, children, className }: { title: string; icon: React.ComponentType<{ className?: string }>; children: React.ReactNode; className?: string }) {
   return (
     <div className={cn(
-      "rounded-2xl bg-card border border-border/40 p-[clamp(0.75rem,1.6vh,1.25rem)]",
-      "shadow-[0_1px_0_hsl(0_0%_100%/0.6)_inset,0_20px_40px_-24px_hsl(245_40%_30%/0.18),0_2px_6px_-2px_hsl(245_20%_40%/0.06)]",
+      "glass-card p-[clamp(0.75rem,1.6vh,1.25rem)]",
       className
     )}>
       <div className="flex items-center gap-2.5 mb-[clamp(0.5rem,1.2vh,1rem)]">
@@ -316,7 +315,7 @@ const Auth = () => {
             initial={{ opacity: 0, y: 20, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="w-full max-w-md rounded-3xl bg-card p-6 sm:p-8 lg:p-[clamp(1.25rem,2.6vh,2.25rem)] border border-border/40 shadow-[0_1px_0_hsl(0_0%_100%/0.6)_inset,0_30px_60px_-30px_hsl(245_40%_25%/0.28),0_2px_8px_-2px_hsl(245_20%_40%/0.08)]"
+             className="w-full max-w-md glass-card-elevated p-6 sm:p-8 lg:p-[clamp(1.25rem,2.6vh,2.25rem)]"
           >
             {/* Brand */}
             <div className="flex items-center mb-[clamp(0.75rem,2vh,1.75rem)]">
@@ -373,7 +372,7 @@ const Auth = () => {
                         value={displayName}
                         onChange={(e) => setDisplayName(e.target.value)}
                         placeholder="Your name"
-                        className="pl-11 h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
+                         className="pl-11 h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-background/55 border-border/45 shadow-[var(--shadow-neu-inset)] focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
                       />
                     </div>
                   </motion.div>
@@ -389,7 +388,7 @@ const Auth = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email address"
                   required
-                  className="pl-11 h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
+                   className="pl-11 h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-background/55 border-border/45 shadow-[var(--shadow-neu-inset)] focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
                 />
               </div>
 
@@ -403,7 +402,7 @@ const Auth = () => {
                   placeholder="Password"
                   required
                   minLength={6}
-                  className="pl-11 pr-11 h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-background border-border/70 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
+                   className="pl-11 pr-11 h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-background/55 border-border/45 shadow-[var(--shadow-neu-inset)] focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary/60"
                 />
                 <button
                   type="button"
@@ -432,7 +431,7 @@ const Auth = () => {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-[15px] shadow-[0_10px_24px_-10px_hsl(var(--primary)/0.6)] transition-all"
+                 className="w-full h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-[15px] shadow-[0_10px_24px_-12px_hsl(var(--primary)/0.55)] transition-all duration-200 active:scale-[0.98]"
               >
                 {isLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -458,7 +457,7 @@ const Auth = () => {
                 variant="outline"
                 onClick={() => oauth('google')}
                 disabled={isGoogleLoading}
-                className="w-full h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl border-border/70 bg-background hover:bg-muted/50 font-medium"
+                 className="w-full h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl border-border/45 bg-background/55 shadow-[var(--shadow-neu-sm)] hover:bg-muted/40 font-medium transition-all duration-200"
               >
                 {isGoogleLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -480,7 +479,7 @@ const Auth = () => {
                 variant="outline"
                 onClick={() => oauth('github')}
                 disabled={isGithubLoading}
-                className="w-full h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl border-border/70 bg-background hover:bg-muted/50 font-medium"
+                 className="w-full h-[clamp(2.5rem,5.2vh,3rem)] rounded-xl border-border/45 bg-background/55 shadow-[var(--shadow-neu-sm)] hover:bg-muted/40 font-medium transition-all duration-200"
               >
                 {isGithubLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />

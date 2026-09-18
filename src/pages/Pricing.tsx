@@ -106,7 +106,7 @@ const Pricing = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="mt-8 inline-flex items-center gap-2.5 px-5 py-3 bg-muted/40 rounded-lg border border-border/40 text-sm"
+             className="mt-8 inline-flex items-center gap-2.5 px-5 py-3 chart-well text-sm"
             >
               <div className={`w-2.5 h-2.5 rounded-sm ${remaining > 0 ? 'bg-green-500' : 'bg-destructive'} animate-pulse`} />
               <span className="text-muted-foreground">
@@ -128,19 +128,19 @@ const Pricing = () => {
               transition={{ delay: 0.1 + i * 0.15 }}
               className="h-full"
             >
-              <div className={`relative h-full flex flex-col rounded-xl border p-6 sm:p-8 transition-all ${
+               <div className={`relative h-full flex flex-col rounded-2xl p-6 sm:p-8 transition-all duration-200 ${
                 plan.highlighted
-                  ? 'border-primary/40 bg-gradient-to-b from-primary/[0.03] to-transparent shadow-lg shadow-primary/5'
-                  : 'border-border/50 bg-card/50'
+                   ? 'glass-card-elevated border-primary/30 -translate-y-1'
+                   : 'glass-card'
               }`}>
                 {plan.highlighted && (
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary/50 rounded-t-xl" />
+                   <div className="absolute top-0 left-6 right-6 h-0.5 bg-primary/70 rounded-b-full" />
                 )}
 
                 {/* Plan Header */}
                 <div className="mb-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className={`p-2.5 rounded-lg ${plan.highlighted ? 'bg-primary/10' : 'bg-muted/60'}`}>
+                     <div className={`p-2.5 rounded-xl chart-well ${plan.highlighted ? 'text-primary' : 'text-muted-foreground'}`}>
                       <plan.icon className={`w-5 h-5 ${plan.highlighted ? 'text-primary' : 'text-muted-foreground'}`} />
                     </div>
                     {plan.highlighted && (

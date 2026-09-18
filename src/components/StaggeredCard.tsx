@@ -14,7 +14,7 @@ export function StaggeredCard({ children, index, className = '' }: StaggeredCard
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{
         duration: 0.4,
-        delay: 0.08 * index,
+        delay: 0.05 * index,
         ease: [0.25, 0.1, 0.25, 1],
       }}
       className={className}

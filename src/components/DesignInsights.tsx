@@ -95,8 +95,8 @@ export function DesignInsights({ colors, fonts, animations, score }: DesignInsig
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-      className="bg-card border border-border rounded-xl overflow-hidden">
-      <div className="p-4 border-b border-border bg-gradient-to-r from-amber-500/5 to-transparent">
+      className="glass-card overflow-hidden">
+      <div className="surface-header p-4">
         <div className="flex items-center gap-3">
           <div className="p-2.5 bg-amber-500/10 rounded-xl">
             <Lightbulb className="w-5 h-5 text-amber-400" />
@@ -111,7 +111,7 @@ export function DesignInsights({ colors, fonts, animations, score }: DesignInsig
       <div className="p-4">
         <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
           {/* Mini composition donut */}
-          <div className="relative w-[100px] h-[100px] flex-shrink-0">
+          <div className="relative w-[108px] h-[108px] flex-shrink-0 chart-well p-1">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={compositionData} cx="50%" cy="50%" innerRadius={30} outerRadius={44}

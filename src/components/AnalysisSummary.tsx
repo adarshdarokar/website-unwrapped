@@ -85,17 +85,17 @@ export function AnalysisSummary({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-card border border-border rounded-xl overflow-hidden"
+      className="glass-card-elevated overflow-hidden"
     >
-      <div className="p-4 sm:p-5 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
+      <div className="surface-header p-4 sm:p-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-xl">
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Analysis Complete</p>
-              <h2 className="text-base sm:text-lg font-semibold font-display">{domain}</h2>
+               <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground font-semibold">Analysis Complete</p>
+               <h2 className="text-lg sm:text-xl tracking-tight font-semibold font-display">{domain}</h2>
             </div>
           </div>
           <div className="flex items-center gap-2 self-start sm:self-auto">
@@ -111,7 +111,7 @@ export function AnalysisSummary({
       <div className="p-4 sm:p-5">
         <div className="flex flex-col sm:flex-row gap-4 items-center mb-4 sm:mb-5">
           {/* Donut Chart */}
-          <div className="relative w-[130px] h-[130px] flex-shrink-0">
+          <div className="relative w-[138px] h-[138px] flex-shrink-0 chart-well p-1.5">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -145,12 +145,12 @@ export function AnalysisSummary({
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.05 }}
-                className="text-center p-3 sm:p-4 bg-muted/20 rounded-xl border border-border/30"
+                className="text-center p-3 sm:p-4 chart-well"
               >
                 <div className={`p-1.5 rounded-lg ${stat.color} w-fit mx-auto mb-2`}>
                   <stat.icon className="w-3.5 h-3.5" />
                 </div>
-                <p className="text-lg sm:text-xl font-bold tabular-nums">{stat.value}</p>
+                 <p className="text-2xl font-display font-bold tabular-nums">{stat.value}</p>
                 <p className="text-[10px] sm:text-xs text-muted-foreground">{stat.label}</p>
               </motion.div>
             ))}

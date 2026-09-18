@@ -70,10 +70,13 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
       className="glass-card p-4 sm:p-5">
-      <h3 className="text-sm font-medium text-muted-foreground mb-4">Design Score</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold font-display">Design Score</h3>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Overall</span>
+      </div>
       
       <div className="flex items-center gap-4 mb-4">
-        <div className="relative w-[80px] h-[80px] neu-inset flex items-center justify-center" style={{ borderRadius: '50%' }}>
+         <div className="relative w-[88px] h-[88px] chart-well rounded-full flex items-center justify-center">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie data={donutData} cx="50%" cy="50%" innerRadius={26} outerRadius={34}
@@ -98,7 +101,7 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
         {metrics.map((metric, index) => (
           <motion.div key={metric.label} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ delay: 0.2 + index * 0.05 }}
-            className={`flex items-center gap-2 p-2.5 rounded-xl transition-all ${
+             className={`flex items-center gap-2 p-2.5 chart-well transition-all ${
               metric.active 
                 ? 'bg-emerald-500/8 text-emerald-500 dark:text-emerald-300' 
                 : 'text-muted-foreground'

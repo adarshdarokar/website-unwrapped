@@ -95,8 +95,8 @@ export function PerformanceInsights({ meta, images, score }: PerformanceInsights
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-      className="bg-card border border-border rounded-xl overflow-hidden h-full">
-      <div className="p-4 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
+      className="glass-card overflow-hidden h-full">
+      <div className="surface-header p-4">
         <div className="flex items-center gap-3">
           <div className="p-2.5 bg-primary/10 rounded-xl">
             <Gauge className="w-5 h-5 text-primary" />
@@ -111,7 +111,7 @@ export function PerformanceInsights({ meta, images, score }: PerformanceInsights
       <div className="p-4">
         {/* Donut chart + score */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="relative w-[90px] h-[90px] flex-shrink-0">
+          <div className="relative w-[98px] h-[98px] flex-shrink-0 chart-well p-1">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={donutData} cx="50%" cy="50%" innerRadius={28} outerRadius={40}
@@ -151,7 +151,7 @@ export function PerformanceInsights({ meta, images, score }: PerformanceInsights
                     transition={{ delay: index * 0.05 }}
                     className={`p-3 rounded-xl border ${getStatusBg(insight.status)} cursor-help transition-all hover:scale-[1.02]`}>
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">{insight.label}</span>
+                       <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground">{insight.label}</span>
                       <StatusIcon className={`w-3.5 h-3.5 ${getStatusColor(insight.status)}`} />
                     </div>
                     <p className={`text-xs font-bold ${getStatusColor(insight.status)}`}>{insight.value}</p>

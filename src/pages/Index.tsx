@@ -301,13 +301,13 @@ const Index = () => {
             </motion.div>
 
             <Tabs value={activeResultTab} onValueChange={setActiveResultTab} className="w-full">
-              <TabsList className="w-full flex flex-wrap justify-center bg-muted/30 p-1 rounded-2xl h-auto mb-5 sm:mb-6 max-w-2xl mx-auto gap-0.5 border border-border/40">
+               <TabsList className="w-full flex flex-wrap justify-center bg-muted/25 p-1.5 rounded-2xl h-auto mb-5 sm:mb-6 max-w-2xl mx-auto gap-1.5 border border-border/40 shadow-[var(--shadow-neu-inset)]">
 
                 {resultTabs.map((tab) => (
                   <TabsTrigger 
                     key={tab.value}
                     value={tab.value} 
-                    className="flex-1 min-w-[52px] sm:min-w-[64px] max-w-[110px] sm:max-w-[130px] min-h-[44px] flex items-center justify-center gap-1.5 data-[state=active]:bg-card data-[state=active]:shadow-[var(--shadow-neu-sm)] data-[state=active]:text-primary rounded-xl py-2.5 text-[11px] sm:text-xs font-medium transition-all duration-200 active:scale-[0.97]"
+                    className="flex-1 min-w-[52px] sm:min-w-[64px] max-w-[110px] sm:max-w-[130px] min-h-[44px] flex items-center justify-center gap-1.5 data-[state=active]:bg-card/90 data-[state=active]:shadow-[var(--shadow-neu-sm)] data-[state=active]:text-primary rounded-lg py-2.5 text-[11px] sm:text-xs font-medium transition-all duration-200 active:scale-[0.97]"
                   >
                     <tab.icon className="w-4 h-4" />
                     <span className="hidden sm:inline">{tab.label}</span>
