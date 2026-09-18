@@ -52,12 +52,12 @@ function RailItem({ label, icon: Icon, active, expanded, onClick }: RailItemProp
       aria-label={label}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "h-11 flex items-center rounded-lg transition-[color,background-color,box-shadow,transform] duration-200 ease-out overflow-hidden relative group",
+        "h-11 flex items-center rounded-xl transition-[color,background-color,box-shadow,transform] duration-200 ease-out overflow-hidden relative group",
         "active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar",
         expanded ? "w-full pl-3 pr-2.5 gap-2.5 justify-start" : "w-11 justify-center",
         active
-          ? "bg-primary/10 text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.18)]"
-          : "text-muted-foreground hover:text-foreground hover:bg-accent/55 focus-visible:bg-accent/55"
+          ? "bg-primary/10 text-primary shadow-[var(--shadow-neu-inset)]"
+          : "text-muted-foreground hover:text-foreground hover:bg-accent/45 hover:shadow-[var(--shadow-neu-sm)] focus-visible:bg-accent/45"
       )}
     >
       {active && (
@@ -71,7 +71,7 @@ function RailItem({ label, icon: Icon, active, expanded, onClick }: RailItemProp
       )}
       <Icon className={cn("w-[19px] h-[19px] shrink-0 transition-transform duration-200", !active && "group-hover:scale-105")} />
       {expanded && (
-        <span className={cn("text-[13px] truncate", active ? "font-semibold" : "font-medium")}>{label}</span>
+         <span className={cn("text-[13px] leading-none truncate", active ? "font-semibold text-foreground" : "font-medium")}>{label}</span>
       )}
     </button>
   );
@@ -114,7 +114,7 @@ function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () 
       </button>
 
       {expanded && (
-        <p className="px-3 mt-1 mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
+         <p className="px-3 mt-1 mb-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/70">
           Menu
         </p>
       )}
@@ -134,7 +134,7 @@ function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () 
       <div className="my-3.5 h-px bg-gradient-to-r from-transparent via-border/70 to-transparent mx-1.5" />
 
       {expanded && (
-        <p className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
+         <p className="px-3 mb-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/70">
           Actions
         </p>
       )}
@@ -225,7 +225,7 @@ export function AppSidebar() {
       <aside
         style={{ width: railWidth }}
         className={cn(
-          "hidden md:flex fixed top-3 bottom-3 left-3 z-30 flex-col rounded-2xl bg-sidebar/70 backdrop-blur-2xl border border-sidebar-border/50 shadow-[0_20px_60px_-20px_hsla(245,40%,20%,0.35),inset_0_1px_0_hsl(0_0%_100%/0.06)] overflow-hidden transition-[width] duration-300 ease-out",
+           "hidden md:flex fixed top-3 bottom-3 left-3 z-30 flex-col rounded-2xl bg-sidebar/80 backdrop-blur-2xl border border-sidebar-border/55 shadow-[var(--shadow-glass-fusion)] overflow-hidden transition-[width] duration-300 ease-out",
           collapsed ? "px-2 py-3" : "px-3 py-3"
         )}
       >
