@@ -459,7 +459,7 @@ function extractFonts(html: string, externalCss = ''): { detected: string[]; goo
   while ((match = fontFileRegex.exec(source)) !== null) {
     const name = decodeURIComponent(match[1]).trim();
     if (/^(font|fonts|assets|static|dist|build|css|webfont|webfonts|media|files)$/i.test(name)) continue;
-    addFont(name);
+    addFont(name, true);
   }
 
 
