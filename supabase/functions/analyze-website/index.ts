@@ -316,7 +316,7 @@ async function fetchExternalCss(html: string, baseUrl: string): Promise<string> 
     if (!/stylesheet/i.test(tag) && !/as=["']?style/i.test(tag)) continue;
     const hrefMatch = tag.match(/href=["']([^"']+)["']/i);
     if (!hrefMatch) continue;
-    const resolved = resolveUrl(hrefMatch[1], baseUrl);
+    const resolved = normalizeUrl(hrefMatch[1], baseUrl);
     if (!resolved) continue;
     // Google/Adobe font CSS is handled separately, but still useful to read.
     if (!hrefs.includes(resolved)) hrefs.push(resolved);
@@ -881,7 +881,7 @@ Deno.serve(async (req) => {
     // Extract all data
     const images = extractAllImages(html, baseUrl);
     const videos = extractAllVideos(html, baseUrl);
-    const fonts = extractFonts(html);
+    const fonts = extractFonts(html, externalCss);
     const colors = extractColors(html);
     const icons = extractIcons(html);
     const animations = extractAnimations(html);
