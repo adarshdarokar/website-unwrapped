@@ -368,18 +368,29 @@ function extractFonts(html: string, externalCss = ''): { detected: string[]; goo
   const source = html + '\n' + externalCss;
 
   const GENERIC = new Set([
-    'inherit', 'initial', 'unset', 'auto', 'revert', 'none',
+    'inherit', 'initial', 'unset', 'auto', 'revert', 'none', 'var', 'normal',
     'sans-serif', 'serif', 'monospace', 'cursive', 'fantasy',
     'system-ui', 'ui-sans-serif', 'ui-serif', 'ui-monospace', 'ui-rounded',
     '-apple-system', 'blinkmacsystemfont', 'emoji', 'math', 'fangsong',
   ]);
 
+  const prettify = (name: string) =>
+    name
+      // "sohne-var" / "Inter-Variable" -> "Sohne" / "Inter"
+      .replace(/[-_](var|variable|vf|subset|latin|web)$/i, '')
+      .replace(/[-_]+/g, ' ')
+      // split CamelCase file names: SourceCodePro -> Source Code Pro
+      .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+      .replace(/\s+/g, ' ')
+      .trim();
+
   const addFont = (raw: string) => {
-    const font = raw.trim().replace(/^["']|["']$/g, '').replace(/\s+/g, ' ');
-    if (!font || font.length > 50) return;
+    let font = raw.trim().replace(/^["']|["']$/g, '').replace(/\s+/g, ' ');
+    if (!font || font.includes('(') || font.includes(')')) return;
+    font = prettify(font);
+    if (!font || font.length > 50 || font.length < 2) return;
     const lower = font.toLowerCase();
     if (GENERIC.has(lower)) return;
-    if (lower.startsWith('var(') || lower.includes('(')) return;
     if (!/[a-z]/i.test(font)) return;
     if (detected.some((f) => f.toLowerCase() === lower)) return;
     detected.push(font);
@@ -391,6 +402,15 @@ function extractFonts(html: string, externalCss = ''): { detected: string[]; goo
   while ((match = fontFamilyRegex.exec(source)) !== null) {
     match[1].split(',').forEach(addFont);
   }
+
+  // CSS custom properties holding font stacks: --font-regular: "Inter Variable", sans-serif
+  const fontVarRegex = /--[\w-]*(?:font|typeface|type)[\w-]*\s*:\s*([^;}{]+)/gi;
+  while ((match = fontVarRegex.exec(source)) !== null) {
+    const value = match[1];
+    if (/^\s*(\d|calc|var|clamp)/i.test(value)) continue;
+    value.split(',').forEach(addFont);
+  }
+
 
   // CSS shorthand: font: 600 16px/1.2 "Some Font", sans-serif
   const fontShorthandRegex = /(?:^|[;{\s])font\s*:\s*[^;}{]*?\d[^;}{]*?\s+((?:"[^"]+"|'[^']+'|[A-Za-z][\w -]*)(?:\s*,\s*(?:"[^"]+"|'[^']+'|[A-Za-z][\w -]*))*)/gi;
