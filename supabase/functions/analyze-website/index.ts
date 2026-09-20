@@ -306,50 +306,177 @@ function normalizeUrl(src: string, baseUrl: string): string {
   }
 }
 
-function extractFonts(html: string): { detected: string[]; googleFonts: string[]; adobeFonts: string[] } {
+// Fetch external stylesheets referenced in the HTML so fonts declared there are visible too.
+async function fetchExternalCss(html: string, baseUrl: string): Promise<string> {
+  const hrefs: string[] = [];
+  const linkRegex = /<link\b[^>]*>/gi;
+  let m;
+  while ((m = linkRegex.exec(html)) !== null) {
+    const tag = m[0];
+    if (!/stylesheet/i.test(tag) && !/as=["']?style/i.test(tag)) continue;
+    const hrefMatch = tag.match(/href=["']([^"']+)["']/i);
+    if (!hrefMatch) continue;
+    const resolved = normalizeUrl(hrefMatch[1], baseUrl);
+    if (!resolved) continue;
+    // Google/Adobe font CSS is handled separately, but still useful to read.
+    if (!hrefs.includes(resolved)) hrefs.push(resolved);
+  }
+
+  const MAX_SHEETS = 18;
+  const MAX_BYTES = 400_000;
+
+  // Prioritise sheets most likely to declare typography.
+  const priority = (u: string) => {
+    const s = u.toLowerCase();
+    if (/font/.test(s)) return 0;
+    if (/(global|theme|typograph|root|variable|token|base|main|index|app|provider|layout|style)/.test(s)) return 1;
+    return 2;
+  };
+  const ordered = [...hrefs].sort((a, b) => priority(a) - priority(b));
+
+  const results = await Promise.all(
+    ordered.slice(0, MAX_SHEETS).map(async (href) => {
+
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 6000);
+        const res = await fetch(href, {
+          signal: ctrl.signal,
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36',
+            'Accept': 'text/css,*/*;q=0.1',
+          },
+        });
+        clearTimeout(timer);
+        if (!res.ok) return '';
+        const text = await res.text();
+        return text.slice(0, MAX_BYTES);
+      } catch {
+        return '';
+      }
+    })
+  );
+
+  return results.join('\n');
+}
+
+function extractFonts(html: string, externalCss = ''): { detected: string[]; googleFonts: string[]; adobeFonts: string[] } {
   const detected: string[] = [];
   const googleFonts: string[] = [];
   const adobeFonts: string[] = [];
-  
-  // Font-family from CSS
-  const fontFamilyRegex = /font-family:\s*([^;}"']+)/gi;
+
+  const source = html + '\n' + externalCss;
+
+  const GENERIC = new Set([
+    'inherit', 'initial', 'unset', 'auto', 'revert', 'none', 'var', 'normal',
+    'sans-serif', 'serif', 'monospace', 'cursive', 'fantasy', 'sans serif',
+    'system-ui', 'ui-sans-serif', 'ui-serif', 'ui-monospace', 'ui-rounded',
+    'system ui', 'ui sans serif', 'ui serif', 'ui monospace', 'ui rounded',
+    '-apple-system', 'apple system', 'blinkmacsystemfont', 'blink mac system font',
+    'emoji', 'math', 'fangsong', 'fallback',
+  ]);
+
+  // Tokens that describe a weight/style variant in a font FILE name, never a family word.
+  const VARIANT_TOKENS = /^(thin|extralight|ultralight|semilight|book|medium|semibold|demibold|bold|extrabold|ultrabold|heavy|italic|oblique|variable|vf|subset|latinext|woff|woff2|otf|ttf|wght|opsz|wdth|slnt|\d{2,4})$/i;
+  const NOISE = new Set(['first child', 'last child', 'only child', 'fallback']);
+
+  // Only file-derived names get token cleanup + CamelCase splitting.
+  const prettifyFileName = (name: string) => {
+    const tokens = name.split(/[-_.\s]+/).filter(Boolean);
+    const kept = tokens.filter((t, i) => !(i > 0 && VARIANT_TOKENS.test(t)) && !/\d/.test(t) && !/^[0-9a-z]{7,}$/.test(t));
+    return (kept.length ? kept : tokens.slice(0, 1))
+      .join(' ')
+      .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .split(' ')
+      .map((w) => (w[0] ? w[0].toUpperCase() + w.slice(1) : w))
+      .join(' ');
+  };
+
+  const addFont = (raw: string, fromFile = false) => {
+    let font = raw.trim().replace(/^["']|["']$/g, '').replace(/\s+/g, ' ');
+    if (!font || font.includes('(') || font.includes(')')) return;
+    // reject values/units/hashes rather than family names
+    if (/^[\d.]/.test(font) || /\d(em|rem|px|%|pt|vh|vw)\b/i.test(font)) return;
+    if (fromFile) font = prettifyFileName(font);
+    else font = font.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!font || font.length > 50 || font.length < 2) return;
+    const lower = font.toLowerCase();
+    if (GENERIC.has(lower) || NOISE.has(lower)) return;
+    if (/^[0-9a-f]{6,}$/i.test(font.replace(/\s/g, ''))) return;
+    if (!/^[A-Za-z][A-Za-z0-9 '&.+]*$/.test(font)) return;
+    if (font.split(' ').length > 5) return;
+    if (detected.some((f) => f.toLowerCase() === lower)) return;
+    detected.push(font);
+  };
+
+
+
+  // Font-family declarations (inline styles, <style> blocks and external CSS)
+  const fontFamilyRegex = /font-family\s*:\s*([^;}{]+)/gi;
   let match;
-  while ((match = fontFamilyRegex.exec(html)) !== null) {
-    const fontNames = match[1].split(',').map(f => f.trim().replace(/["']/g, ''));
-    for (const font of fontNames) {
-      if (font && !detected.includes(font) && !['inherit', 'initial', 'unset', 'auto', 'sans-serif', 'serif', 'monospace', 'cursive', 'fantasy', 'system-ui', '-apple-system', 'BlinkMacSystemFont'].includes(font.toLowerCase())) {
-        detected.push(font);
-      }
-    }
+  while ((match = fontFamilyRegex.exec(source)) !== null) {
+    match[1].split(',').forEach(addFont);
   }
-  
+
+  // CSS custom properties holding font stacks: --font-regular: "Inter Variable", sans-serif
+  const fontVarRegex = /--[\w-]*(?:font|typeface|type)[\w-]*\s*:\s*([^;}{]+)/gi;
+  while ((match = fontVarRegex.exec(source)) !== null) {
+    const value = match[1];
+    if (/^\s*(\d|calc|var|clamp)/i.test(value)) continue;
+    value.split(',').forEach(addFont);
+  }
+
+
+  // CSS shorthand: font: 600 16px/1.2 "Some Font", sans-serif
+  const fontShorthandRegex = /(?:^|[;{\s])font\s*:\s*[^;}{]*?\d[^;}{]*?\s+((?:"[^"]+"|'[^']+'|[A-Za-z][\w -]*)(?:\s*,\s*(?:"[^"]+"|'[^']+'|[A-Za-z][\w -]*))*)/gi;
+  while ((match = fontShorthandRegex.exec(source)) !== null) {
+    match[1].split(',').forEach(addFont);
+  }
+
   // CSS @font-face
-  const fontFaceRegex = /@font-face[^}]*font-family:\s*["']?([^"';,}]+)["']?/gi;
-  while ((match = fontFaceRegex.exec(html)) !== null) {
-    const font = match[1].trim();
-    if (font && !detected.includes(font)) {
-      detected.push(font);
+  const fontFaceRegex = /@font-face[^}]*?font-family\s*:\s*["']?([^"';,}]+)["']?/gi;
+  while ((match = fontFaceRegex.exec(source)) !== null) {
+    addFont(match[1]);
+  }
+
+  // Google Fonts stylesheet URLs
+  const googleFontRegex = /fonts\.googleapis\.com\/css2?\?[^"'>\s)]*/gi;
+  while ((match = googleFontRegex.exec(source)) !== null) {
+    const url = 'https://' + match[0].replace(/^\/\//, '').replace(/&amp;/g, '&');
+    if (!googleFonts.includes(url)) googleFonts.push(url);
+    // Also register the family names themselves as detected fonts
+    const familyRegex = /family=([^&:]+)/gi;
+    let fm;
+    while ((fm = familyRegex.exec(url)) !== null) {
+      addFont(decodeURIComponent(fm[1].replace(/\+/g, ' ')));
     }
   }
-  
-  // Google Fonts
-  const googleFontRegex = /fonts\.googleapis\.com\/css2?\?[^"'>\s]*/gi;
-  while ((match = googleFontRegex.exec(html)) !== null) {
-    googleFonts.push('https://' + match[0].replace(/^\/\//, ''));
+
+  // Self-hosted / CDN font files: /fonts/Inter-Bold.woff2, /fonts/InterVariable.woff2
+  const fontFileRegex = /[\/"'(]([A-Za-z][A-Za-z0-9 _%.+-]{1,50})\.(?:woff2?|otf|ttf)\b/gi;
+  while ((match = fontFileRegex.exec(source)) !== null) {
+    const name = decodeURIComponent(match[1]).trim();
+    if (/^(font|fonts|assets|static|dist|build|css|webfont|webfonts|media|files)$/i.test(name)) continue;
+    addFont(name, true);
   }
-  
+
+
   // Adobe Fonts
-  const adobeRegex = /use\.typekit\.net\/([^"'>\s]+)/gi;
-  while ((match = adobeRegex.exec(html)) !== null) {
-    adobeFonts.push('https://use.typekit.net/' + match[1]);
+  const adobeRegex = /use\.typekit\.net\/([^"'>\s)]+)/gi;
+  while ((match = adobeRegex.exec(source)) !== null) {
+    const url = 'https://use.typekit.net/' + match[1];
+    if (!adobeFonts.includes(url)) adobeFonts.push(url);
   }
-  
+
   return {
-    detected: detected.slice(0, 20),
+    detected: detected.slice(0, 30),
     googleFonts: googleFonts.slice(0, 10),
     adobeFonts: adobeFonts.slice(0, 5)
   };
 }
+
 
 function extractColors(html: string): { hex: string[]; rgb: string[]; hsl: string[]; gradients: string[] } {
   const hex: string[] = [];
@@ -800,9 +927,12 @@ Deno.serve(async (req) => {
     console.log(`Fetched ${html.length} bytes from ${url}`);
 
     // Extract all data
+    const externalCss = await fetchExternalCss(html, baseUrl);
+    console.log(`Fetched ${externalCss.length} bytes of external CSS`);
+
     const images = extractAllImages(html, baseUrl);
     const videos = extractAllVideos(html, baseUrl);
-    const fonts = extractFonts(html);
+    const fonts = extractFonts(html, externalCss);
     const colors = extractColors(html);
     const icons = extractIcons(html);
     const animations = extractAnimations(html);
