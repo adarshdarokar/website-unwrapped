@@ -447,13 +447,14 @@ function extractFonts(html: string, externalCss = ''): { detected: string[]; goo
     }
   }
 
-  // Self-hosted / CDN font files: /fonts/Inter-Bold.woff2
-  const fontFileRegex = /[\/"'(]([A-Za-z0-9][A-Za-z0-9 _%-]{1,40})[-_.](?:thin|extralight|light|regular|book|medium|semibold|bold|extrabold|black|italic|variable|var|wght)?[^"')\/]*\.(?:woff2?|otf|ttf)/gi;
+  // Self-hosted / CDN font files: /fonts/Inter-Bold.woff2, /fonts/InterVariable.woff2
+  const fontFileRegex = /[\/"'(]([A-Za-z][A-Za-z0-9 _%.+-]{1,50})\.(?:woff2?|otf|ttf)\b/gi;
   while ((match = fontFileRegex.exec(source)) !== null) {
-    const name = decodeURIComponent(match[1]).replace(/[_]+/g, ' ').trim();
-    if (/^(font|fonts|assets|static|dist|build|css|webfont|webfonts)$/i.test(name)) continue;
+    const name = decodeURIComponent(match[1]).trim();
+    if (/^(font|fonts|assets|static|dist|build|css|webfont|webfonts|media|files)$/i.test(name)) continue;
     addFont(name);
   }
+
 
   // Adobe Fonts
   const adobeRegex = /use\.typekit\.net\/([^"'>\s)]+)/gi;
