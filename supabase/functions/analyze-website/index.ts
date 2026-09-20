@@ -369,32 +369,42 @@ function extractFonts(html: string, externalCss = ''): { detected: string[]; goo
 
   const GENERIC = new Set([
     'inherit', 'initial', 'unset', 'auto', 'revert', 'none', 'var', 'normal',
-    'sans-serif', 'serif', 'monospace', 'cursive', 'fantasy',
+    'sans-serif', 'serif', 'monospace', 'cursive', 'fantasy', 'sans serif',
     'system-ui', 'ui-sans-serif', 'ui-serif', 'ui-monospace', 'ui-rounded',
-    '-apple-system', 'blinkmacsystemfont', 'emoji', 'math', 'fangsong',
+    'system ui', 'ui sans serif', 'ui serif', 'ui monospace', 'ui rounded',
+    '-apple-system', 'apple system', 'blinkmacsystemfont', 'blink mac system font',
+    'emoji', 'math', 'fangsong', 'fallback',
   ]);
 
-  const prettify = (name: string) =>
-    name
-      // "sohne-var" / "Inter-Variable" -> "Sohne" / "Inter"
-      .replace(/[-_](var|variable|vf|subset|latin|web)$/i, '')
-      .replace(/[-_]+/g, ' ')
+  const WEIGHT_TOKENS = /^(thin|extralight|ultralight|light|book|regular|normal|text|medium|semibold|demibold|bold|extrabold|ultrabold|heavy|black|italic|oblique|roman|var|variable|vf|subset|latin|latin-ext|web|display|woff|woff2|otf|ttf|\d{2,4}|wght.*)$/i;
+
+  const prettify = (name: string) => {
+    const tokens = name.split(/[-_.\s]+/).filter(Boolean);
+    const kept = tokens.filter((t, i) => !(i > 0 && WEIGHT_TOKENS.test(t)) && !/^[0-9a-f]{8,}$/i.test(t));
+    return (kept.length ? kept : tokens)
+      .join(' ')
       // split CamelCase file names: SourceCodePro -> Source Code Pro
       .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
       .replace(/\s+/g, ' ')
       .trim();
+  };
 
   const addFont = (raw: string) => {
-    let font = raw.trim().replace(/^["']|["']$/g, '').replace(/\s+/g, ' ');
-    if (!font || font.includes('(') || font.includes(')')) return;
-    font = prettify(font);
+    const cleaned = raw.trim().replace(/^["']|["']$/g, '').replace(/\s+/g, ' ');
+    if (!cleaned || cleaned.includes('(') || cleaned.includes(')')) return;
+    if (GENERIC.has(cleaned.toLowerCase())) return;
+    // reject values/units/hashes rather than family names
+    if (/^[\d.]/.test(cleaned) || /\d(em|rem|px|%|pt|vh|vw)\b/i.test(cleaned)) return;
+    if (/^[0-9a-f]{8,}$/i.test(cleaned)) return;
+    const font = prettify(cleaned);
     if (!font || font.length > 50 || font.length < 2) return;
     const lower = font.toLowerCase();
     if (GENERIC.has(lower)) return;
-    if (!/[a-z]/i.test(font)) return;
+    if (!/^[A-Za-z][A-Za-z0-9 '&.+-]*$/.test(font)) return;
     if (detected.some((f) => f.toLowerCase() === lower)) return;
     detected.push(font);
   };
+
 
   // Font-family declarations (inline styles, <style> blocks and external CSS)
   const fontFamilyRegex = /font-family\s*:\s*([^;}{]+)/gi;
