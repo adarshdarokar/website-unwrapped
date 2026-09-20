@@ -879,6 +879,9 @@ Deno.serve(async (req) => {
     console.log(`Fetched ${html.length} bytes from ${url}`);
 
     // Extract all data
+    const externalCss = await fetchExternalCss(html, baseUrl);
+    console.log(`Fetched ${externalCss.length} bytes of external CSS`);
+
     const images = extractAllImages(html, baseUrl);
     const videos = extractAllVideos(html, baseUrl);
     const fonts = extractFonts(html, externalCss);
