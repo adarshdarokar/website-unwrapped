@@ -322,11 +322,21 @@ async function fetchExternalCss(html: string, baseUrl: string): Promise<string> 
     if (!hrefs.includes(resolved)) hrefs.push(resolved);
   }
 
-  const MAX_SHEETS = 8;
+  const MAX_SHEETS = 18;
   const MAX_BYTES = 400_000;
 
+  // Prioritise sheets most likely to declare typography.
+  const priority = (u: string) => {
+    const s = u.toLowerCase();
+    if (/font/.test(s)) return 0;
+    if (/(global|theme|typograph|root|variable|token|base|main|index|app|provider|layout|style)/.test(s)) return 1;
+    return 2;
+  };
+  const ordered = [...hrefs].sort((a, b) => priority(a) - priority(b));
+
   const results = await Promise.all(
-    hrefs.slice(0, MAX_SHEETS).map(async (href) => {
+    ordered.slice(0, MAX_SHEETS).map(async (href) => {
+
       try {
         const ctrl = new AbortController();
         const timer = setTimeout(() => ctrl.abort(), 6000);
