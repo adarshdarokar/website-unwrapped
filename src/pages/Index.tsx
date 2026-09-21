@@ -249,12 +249,14 @@ const Index = () => {
       </AnimatePresence>
 
       {/* Loading State */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isLoading && (
           <motion.div 
+            key="analysis-loading"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: 0, y: -8, filter: 'blur(4px)' }}
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-7xl mx-auto px-4 sm:px-6"
           >
             <LoadingState />
@@ -266,9 +268,11 @@ const Index = () => {
       <AnimatePresence>
         {result && !isLoading && (
           <motion.section
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            key={`analysis-results-${result.url}`}
+            initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.48, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 sm:pb-20"
           >
             {/* Result Header */}
