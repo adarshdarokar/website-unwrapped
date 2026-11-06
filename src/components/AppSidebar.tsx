@@ -16,7 +16,6 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { Logo } from "@/components/Logo";
 import { cn } from "@/lib/utils";
 
@@ -155,14 +154,13 @@ function RailContent({ expanded, onAction }: { expanded: boolean; onAction?: () 
 
       <div className={cn("mt-auto flex flex-col gap-2.5 pt-3.5", expanded ? "items-stretch" : "items-center")}>
         <div className="h-px bg-gradient-to-r from-transparent via-border/60 to-transparent mx-1" />
-        <div className={cn("flex items-center", expanded ? "justify-between px-0.5" : "flex-col gap-2 justify-center")}>
-          <ThemeToggle />
-          {expanded && (
+        {expanded && (
+          <div className="flex items-center justify-end px-0.5">
             <span className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70 font-medium">
               {isPaidUser ? "Pro" : "Free"}
             </span>
-          )}
-        </div>
+          </div>
+        )}
         <button
           onClick={() => go('/pricing')}
           aria-label={isPaidUser ? "Pro plan" : "Upgrade to Pro"}

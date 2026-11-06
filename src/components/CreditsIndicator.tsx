@@ -50,7 +50,7 @@ export function CreditsIndicator({ remaining, limit, isPaidUser, hasReachedLimit
           />
         </div>
         <span className={`text-xs font-medium ${
-          hasReachedLimit ? 'text-destructive' : isLow ? 'text-yellow-600 dark:text-yellow-400' : 'text-muted-foreground'
+          hasReachedLimit ? 'text-destructive' : isLow ? 'text-yellow-600' : 'text-muted-foreground'
         }`}>
           {remaining}/{limit} left
         </span>

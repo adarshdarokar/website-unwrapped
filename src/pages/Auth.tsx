@@ -10,7 +10,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { cn } from '@/lib/utils';
 
 /* --------------------------- Dashboard preview --------------------------- */
@@ -258,10 +257,6 @@ const Auth = () => {
 
   return (
     <div className="min-h-[100dvh] lg:h-[100dvh] lg:overflow-hidden bg-background text-foreground">
-      <div className="fixed top-4 right-4 z-30">
-        <ThemeToggle />
-      </div>
-
       <div className="min-h-[100dvh] lg:h-full grid lg:grid-cols-[1.45fr_1px_1fr]">
         {/* -------------------- LEFT: hero + dashboard preview -------------------- */}
         <section className="relative px-6 sm:px-10 lg:px-[clamp(1.5rem,3vw,4rem)] py-8 lg:py-[clamp(1rem,3vh,3rem)] flex flex-col lg:justify-center lg:overflow-hidden">

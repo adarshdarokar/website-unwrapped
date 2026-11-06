@@ -103,7 +103,7 @@ export function QualityScore({ score, meta }: QualityScoreProps) {
             transition={{ delay: 0.2 + index * 0.05 }}
              className={`flex items-center gap-2 p-2.5 chart-well transition-all ${
               metric.active 
-                ? 'bg-emerald-500/8 text-emerald-500 dark:text-emerald-300' 
+                ? 'bg-emerald-500/8 text-emerald-500' 
                 : 'text-muted-foreground'
             }`}
             style={{ boxShadow: 'var(--shadow-neu-sm)' }}>

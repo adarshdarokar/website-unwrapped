@@ -77,9 +77,9 @@ export function AccessibilityScore({ images, meta, colors, fonts }: Accessibilit
 
   const getStatusColor = (status: A11yCheck['status']) => {
     switch (status) {
-      case 'pass': return 'text-emerald-400 dark:text-emerald-300';
-      case 'warning': return 'text-amber-400 dark:text-amber-300';
-      case 'fail': return 'text-red-400 dark:text-red-300';
+      case 'pass': return 'text-emerald-400';
+      case 'warning': return 'text-amber-400';
+      case 'fail': return 'text-red-400';
     }
   };
 

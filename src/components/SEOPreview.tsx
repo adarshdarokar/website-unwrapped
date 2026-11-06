@@ -47,8 +47,8 @@ export function SEOPreview({ url, meta }: Props) {
               <span className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[10px]">🌐</span>
               <span className="text-xs text-muted-foreground">{host}</span>
             </div>
-            <p className="text-[#1a0dab] dark:text-blue-400 text-lg leading-snug truncate">{title}</p>
-            <p className="text-[#4d5156] dark:text-muted-foreground text-sm mt-1 line-clamp-2">{description}</p>
+            <p className="text-[#1a0dab] text-lg leading-snug truncate">{title}</p>
+            <p className="text-[#4d5156] text-sm mt-1 line-clamp-2">{description}</p>
           </motion.div>
         </CardContent>
       </Card>

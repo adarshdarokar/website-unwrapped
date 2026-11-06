@@ -10,7 +10,6 @@ import {
   Camera,
   Shield,
   Bell,
-  Palette,
   Globe,
   Trash2,
   LogOut,
@@ -42,7 +41,6 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { useUsageLimits } from '@/hooks/useUsageLimits';
 import { Crown } from 'lucide-react';
 
@@ -407,36 +405,6 @@ const Settings = () => {
                     checked={autoSaveAnalysis}
                     onCheckedChange={setAutoSaveAnalysis}
                   />
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Appearance Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card className="glass-card-elevated overflow-hidden">
-              <CardHeader className="pb-3 sm:pb-4 px-4 sm:px-6">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="p-2 sm:p-2.5 bg-secondary rounded-lg sm:rounded-xl">
-                    <Palette className="w-4 h-4 sm:w-5 sm:h-5 text-secondary-foreground" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-base sm:text-lg">Appearance</CardTitle>
-                    <CardDescription className="text-xs sm:text-sm">Customize how WebVision looks</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="px-4 sm:px-6">
-                <div className="flex items-center justify-between p-3 sm:p-4 bg-muted/30 rounded-lg sm:rounded-xl">
-                  <div className="space-y-0.5 flex-1 min-w-0 mr-3">
-                    <p className="font-medium text-sm sm:text-base">Dark Mode</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Toggle between light and dark themes</p>
-                  </div>
-                  <ThemeToggle />
                 </div>
               </CardContent>
             </Card>
