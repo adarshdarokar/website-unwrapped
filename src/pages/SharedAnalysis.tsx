@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { QualityScore } from '@/components/QualityScore';
 import { TechStack } from '@/components/TechStack';
 import { ImageGallery } from '@/components/ImageGallery';
@@ -165,7 +164,6 @@ const SharedAnalysis = () => {
                 )}
                 {copied ? 'Copied!' : 'Copy Link'}
               </Button>
-              <ThemeToggle />
             </div>
           </div>
         </header>

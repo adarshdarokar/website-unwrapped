@@ -61,10 +61,10 @@ export function AnalysisSummary({
   };
 
   const stats = [
-    { label: 'Colors', value: colorCount, icon: Palette, color: 'text-rose-400 dark:text-rose-300 bg-rose-500/10' },
-    { label: 'Fonts', value: fontCount, icon: Type, color: 'text-violet-400 dark:text-violet-300 bg-violet-500/10' },
-    { label: 'Images', value: imageCount, icon: Image, color: 'text-sky-400 dark:text-sky-300 bg-sky-500/10' },
-    { label: 'Animations', value: animationCount, icon: Zap, color: 'text-amber-400 dark:text-amber-300 bg-amber-500/10' },
+    { label: 'Colors', value: colorCount, icon: Palette, color: 'text-rose-400 bg-rose-500/10' },
+    { label: 'Fonts', value: fontCount, icon: Type, color: 'text-violet-400 bg-violet-500/10' },
+    { label: 'Images', value: imageCount, icon: Image, color: 'text-sky-400 bg-sky-500/10' },
+    { label: 'Animations', value: animationCount, icon: Zap, color: 'text-amber-400 bg-amber-500/10' },
   ];
 
   const chartData = [

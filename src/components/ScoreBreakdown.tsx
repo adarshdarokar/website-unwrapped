@@ -16,14 +16,14 @@ interface ScoreBreakdownProps {
 }
 
 const categoryConfig: Record<string, { label: string; icon: React.ElementType; maxPoints: number; color: string; chartColor: string }> = {
-  typography: { label: 'Typography', icon: Type, maxPoints: 12, color: 'text-sky-400 dark:text-sky-300', chartColor: 'hsl(200, 60%, 58%)' },
-  colors: { label: 'Colors', icon: Palette, maxPoints: 12, color: 'text-violet-400 dark:text-violet-300', chartColor: 'hsl(262, 55%, 62%)' },
-  icons: { label: 'Icons', icon: Shapes, maxPoints: 8, color: 'text-emerald-400 dark:text-emerald-300', chartColor: 'hsl(160, 50%, 50%)' },
-  animations: { label: 'Motion', icon: Zap, maxPoints: 8, color: 'text-amber-400 dark:text-amber-300', chartColor: 'hsl(40, 65%, 55%)' },
-  seo: { label: 'SEO', icon: Search, maxPoints: 20, color: 'text-cyan-400 dark:text-cyan-300', chartColor: 'hsl(185, 55%, 50%)' },
-  performance: { label: 'Perf', icon: Gauge, maxPoints: 15, color: 'text-orange-400 dark:text-orange-300', chartColor: 'hsl(25, 60%, 55%)' },
-  accessibility: { label: 'A11y', icon: Accessibility, maxPoints: 15, color: 'text-pink-400 dark:text-pink-300', chartColor: 'hsl(330, 50%, 58%)' },
-  images: { label: 'Images', icon: Image, maxPoints: 10, color: 'text-teal-400 dark:text-teal-300', chartColor: 'hsl(170, 50%, 48%)' },
+  typography: { label: 'Typography', icon: Type, maxPoints: 12, color: 'text-sky-400', chartColor: 'hsl(200, 60%, 58%)' },
+  colors: { label: 'Colors', icon: Palette, maxPoints: 12, color: 'text-violet-400', chartColor: 'hsl(262, 55%, 62%)' },
+  icons: { label: 'Icons', icon: Shapes, maxPoints: 8, color: 'text-emerald-400', chartColor: 'hsl(160, 50%, 50%)' },
+  animations: { label: 'Motion', icon: Zap, maxPoints: 8, color: 'text-amber-400', chartColor: 'hsl(40, 65%, 55%)' },
+  seo: { label: 'SEO', icon: Search, maxPoints: 20, color: 'text-cyan-400', chartColor: 'hsl(185, 55%, 50%)' },
+  performance: { label: 'Perf', icon: Gauge, maxPoints: 15, color: 'text-orange-400', chartColor: 'hsl(25, 60%, 55%)' },
+  accessibility: { label: 'A11y', icon: Accessibility, maxPoints: 15, color: 'text-pink-400', chartColor: 'hsl(330, 50%, 58%)' },
+  images: { label: 'Images', icon: Image, maxPoints: 10, color: 'text-teal-400', chartColor: 'hsl(170, 50%, 48%)' },
 };
 
 function getScoreLevel(score: number) {

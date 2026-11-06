@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -75,19 +75,12 @@ const Index = () => {
   const [activeResultTab, setActiveResultTab] = useState('overview');
   const urlInputRef = useRef<HTMLInputElement>(null);
 
-  const toggleTheme = useCallback(() => {
-    document.documentElement.classList.toggle('dark');
-    const isDark = document.documentElement.classList.contains('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  }, []);
-
   // Global keyboard shortcuts
   useKeyboardShortcuts({
     onSearch: () => setShowCommandPalette(true),
     onHistory: () => navigate('/history'),
     onCompare: () => setShowCompare(true),
     onExport: () => result && setShowExport(true),
-    onToggleTheme: toggleTheme,
     onEscape: () => {
       setShowCommandPalette(false);
       setShowCompare(false);

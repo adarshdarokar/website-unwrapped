@@ -79,9 +79,9 @@ export function DesignInsights({ colors, fonts, animations, score }: DesignInsig
 
   const getTypeStyles = (type: Insight['type']) => {
     switch (type) {
-      case 'positive': return 'bg-emerald-500/8 border-emerald-500/15 text-emerald-500 dark:text-emerald-300';
-      case 'suggestion': return 'bg-amber-500/8 border-amber-500/15 text-amber-500 dark:text-amber-300';
-      case 'info': return 'bg-sky-500/8 border-sky-500/15 text-sky-500 dark:text-sky-300';
+      case 'positive': return 'bg-emerald-500/8 border-emerald-500/15 text-emerald-500';
+      case 'suggestion': return 'bg-amber-500/8 border-amber-500/15 text-amber-500';
+      case 'info': return 'bg-sky-500/8 border-sky-500/15 text-sky-500';
     }
   };
 

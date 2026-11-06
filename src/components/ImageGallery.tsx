@@ -243,7 +243,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
                 <X className="w-4 h-4 text-foreground" />
               </button>
               
-              {/* Image - preserved brightness in dark mode */}
+              {/* Image preview */}
               <div className="bg-muted/10 flex items-center justify-center min-h-[300px] max-h-[70vh] image-preserve">
                 <img
                   src={selectedImage.src}

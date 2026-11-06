@@ -5,7 +5,6 @@ interface ShortcutHandlers {
   onHistory?: () => void;
   onCompare?: () => void;
   onExport?: () => void;
-  onToggleTheme?: () => void;
   onSearch?: () => void;
   onEscape?: () => void;
 }
@@ -63,7 +62,6 @@ export function useKeyboardShortcuts(handlers: ShortcutHandlers) {
         h: h.onHistory,
         c: h.onCompare,
         e: h.onExport,
-        t: h.onToggleTheme,
         k: h.onSearch,
       };
 
@@ -84,6 +82,5 @@ export const shortcuts = [
   { key: 'H', description: 'Go to history' },
   { key: 'C', description: 'Compare websites' },
   { key: 'E', description: 'Export analysis' },
-  { key: 'T', description: 'Toggle dark mode' },
   { key: 'Esc', description: 'Close dialogs' },
 ];

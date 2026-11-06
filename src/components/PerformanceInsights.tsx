@@ -71,9 +71,9 @@ export function PerformanceInsights({ meta, images, score }: PerformanceInsights
 
   const getStatusColor = (status: InsightItem['status']) => {
     switch (status) {
-      case 'good': return 'text-emerald-400 dark:text-emerald-300';
-      case 'warning': return 'text-amber-400 dark:text-amber-300';
-      case 'bad': return 'text-red-400 dark:text-red-300';
+      case 'good': return 'text-emerald-400';
+      case 'warning': return 'text-amber-400';
+      case 'bad': return 'text-red-400';
     }
   };
 

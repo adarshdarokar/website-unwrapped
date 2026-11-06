@@ -84,7 +84,7 @@ export function AnimationDisplay({ animations }: AnimationDisplayProps) {
                   transition={{ delay: index * 0.05 }}
                   whileHover={{ scale: 1.02 }}
                   onClick={() => copyCode(`@keyframes ${keyframe}`)}
-                  className="px-2.5 py-1.5 bg-green-500/10 text-green-600 dark:text-green-400 rounded-md text-xs font-mono border border-green-500/20 hover:bg-green-500/20 transition-colors flex items-center gap-1.5"
+                  className="px-2.5 py-1.5 bg-green-500/10 text-green-600 rounded-md text-xs font-mono border border-green-500/20 hover:bg-green-500/20 transition-colors flex items-center gap-1.5"
                 >
                   <span>@keyframes {keyframe}</span>
                   {copiedItem === `@keyframes ${keyframe}` ? (
