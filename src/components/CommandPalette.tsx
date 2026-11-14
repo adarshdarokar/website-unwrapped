@@ -1,6 +1,4 @@
 import { useSafeNavigate } from '@/hooks/useSafeNavigate';
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   CommandDialog,
   CommandEmpty,
@@ -11,15 +9,11 @@ import {
   CommandSeparator,
 } from '@/components/ui/command';
 import {
-  Search,
   History,
   GitCompare,
   Share2,
-  Globe,
   Keyboard,
   ExternalLink,
-  Sparkles,
-  Zap,
 } from 'lucide-react';
 
 interface CommandPaletteProps {

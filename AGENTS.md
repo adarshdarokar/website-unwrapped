@@ -1,0 +1,1 @@
+Keep color tokens in the single light palette under `:root` and avoid runtime theme management; this app has one permanent appearance.
